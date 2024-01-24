@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Streaming</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <script>
+        if (typeof Hls === 'undefined') {
+            // CDN 실패 시 로컬 hls.js 로드
+            var script = document.createElement('script');
+            script.src = '/node_modules/hls.js/dist/hls.min.js'; // 실제 프로젝트의 정적 리소스 경로로 변경해야 합니다.
+            document.head.appendChild(script);
+        }
+    </script>
+</head>
+<body>
+<video id="video" width="640" height="360" controls th:attr="src=@{${videoSrc}}"></video>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var video = document.getElementById('video');
+
+    if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(/*[[${videoSrc}]]*/ 'test.m3u8');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play();
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.addEventListener('loadedmetadata', function() {
+            video.play();
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+</html>
