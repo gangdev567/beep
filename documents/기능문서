@@ -10,6 +10,19 @@ static의 videos 디렉토리로 비디오 스트림 저장.
 웹사이트에 스트리밍 플레이어 설치.
 
 static 으로부터 HLS 스트림을 로드하여 재생.
+---
+웹서버, 웹 애플리케이션 서버 >> 다른 용어
+
+웹서버 : static resources 관련(이미지, 영상 등)
+웹 애플리케이션 서버 : 톰캣(백엔드 로직, DB 관련)
+---
+OBS Studio
+스트리밍 방송 시작 시 rtmp 데이터 전송 시작
+rtmp 데이터를 웹서버(Nginx, 80번 포트) 디렉토리 mtn/hls 저장(rtmp 데이터로 저장)
+rtmp 데이터를 Nginx에서 모듈 사용해서 hls(http live streaming)에 맞게 .m3u8 확장자 파일 전환.
+.m3u8 파일이 Nginx 에서 tomcat으로 전송되어 static resources에 저장됨.
+tomcat 웹페이지를 띄움(8081번 포트), hls.js 라이브러리를 사용한 동영상 플레이어를 설치.
+동영상 플레이어에 tomcat controller로 /video .m3u8 파일 전송 시 영상이 재생됨.
 ----
 <기능 우선 순위>
 1순위:(핵심 기능, 꼭 있어야 하는 것들)
