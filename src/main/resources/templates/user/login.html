@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head th:replace="~{./layout/fragments :: myhead}"></head>
+	<body>
+	   <div class="container">
+            <main class="my-2 card card-body">
+                <form method="post">
+                    <div class="my-2 text-danger" th:if="${param.error}">
+                        아이디와 비밀번호를 확인하세요.
+                    </div>
+                    <div class="my-2">
+                        <input type="text" class="form-control" 
+                            name="username" placeholder="username" autofocus required/>
+                    </div>
+                    <div class="my-2">
+                        <input type="password" class="form-control"
+                            name="password" placeholder="password" required/>
+                    </div>
+                    <div class="my-2">
+                        <input type="submit" class="form-control btn btn-success"
+                            value="로그인"/>
+                    </div>
+                </form>    
+                <div class="my-2">
+                    <a th:href="@{/user/signup}" class="form-control btn btn-primary">회원가입</a>
+                </div>
+            </main>
+        </div>
+		<script th:replace="~{./layout/fragments :: bootstrap_js}"></script>   		
+	</body>
+</html>
