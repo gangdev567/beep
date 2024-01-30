@@ -2,7 +2,7 @@ package com.itwill.beep.web;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.itwill.beep.web.service.FollowService;
+import com.itwill.beep.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

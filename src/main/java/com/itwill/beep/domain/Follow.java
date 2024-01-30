@@ -1,4 +1,4 @@
-package com.itwill.beep.web.domain;
+package com.itwill.beep.domain;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;

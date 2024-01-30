@@ -1,4 +1,4 @@
-package com.itwill.beep.web.service;
+package com.itwill.beep.service;
 
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.itwill.beep.web.service;
+package com.itwill.beep.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import com.api.igdb.request.IGDBWrapper;
 import com.api.igdb.request.ProtoRequestKt;
 import com.api.igdb.request.TwitchAuthenticator;
 import com.api.igdb.utils.TwitchToken;
-import com.itwill.beep.web.domain.Category;
-import com.itwill.beep.web.domain.CategoryRepository;
+import com.itwill.beep.domain.Category;
+import com.itwill.beep.domain.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import proto.Cover;
