@@ -1,23 +1,10 @@
 package com.itwill.beep.web;
 
-<<<<<<< HEAD
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
-@Slf4j
-public class HomeController {
-	
-	@GetMapping("/")
-	public String home() {
-		log.info("home()");
-		
-		return "home";
-	}
-
-=======
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,5 +48,5 @@ public class HomeController {
         }
         return "home";
     }
->>>>>>> d720cfe9960281dfbeacefda16d45b6632ec600f
+
 }
