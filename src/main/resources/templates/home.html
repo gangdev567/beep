@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html xmlns="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
@@ -176,39 +175,40 @@
     <!-- 간격 추가 -->
     <div class="my-4"></div>
 
- <main class="container mt-5 streaming-content my-2">
-    <div class="row">
+<main class="container mt-5 streaming-content my-2">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
         <!-- Thymeleaf의 반복문을 사용하여 동적으로 동영상 카드를 생성 -->
-        <div th:each="index : ${#numbers.sequence(1, 100)}" class="col-md-3">
+        <div th:each="index : ${#numbers.sequence(1, 100)}" class="col">
             <!-- 더미 데이터를 사용하여 동영상 정보 표시 -->
-            <div class="card bg-warning mb-4">
-                <a class="video-card-thumbnail" href="/live/1b0561f3051c10a24b9d8ec9a6cb3374">
-                    <img width="100%" height="100%" alt="" src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top">
-                    <div class="live-badge-container">
+            <div class="card border-primary h-100">
+                <a class="video-card-thumbnail position-relative" href="/live/1b0561f3051c10a24b9d8ec9a6cb3374">
+                    <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
+                    <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
                         <span class="badge bg-danger">LIVE</span>
-                    </div>
-                    <div class="video-card-description">
-                        <span class="viewer-count">671명 시청</span>
+                        <span class="badge bg-secondary ms-1">671명 시청</span>
                     </div>
                 </a>
-                <div class="video-card-wrapper">
-                    <div class="video-card-profile">
+                <div class="card-body d-flex flex-column">
+                    <div class="video-card-profile mb-2">
                         <a class="video-card-image" href="/1b0561f3051c10a24b9d8ec9a6cb3374">
-                            <img width="40" height="40" src="https://nng-phinf.pstatic.net/MjAyNDAxMDFfMTQx/MDAxNzA0MDk3MDE3MTE5.ti8d5qLvJeZs0cfg6LZO5V5-rv4ZkWzFE_61jIY2hlwg.L0kBkJh_hcxxZm8Nu-XPIEs0zxxVuJewWpff0vL3Ps8g.PNG/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_2024-01-01_122144.png?type=f120_120_na" alt="">
-                            <span class="blind">둥그레 채널로 이동</span>
+                            <img src="https://nng-phinf.pstatic.net/MjAyNDAxMDFfMTQx/MDAxNzA0MDk3MDE3MTE5.ti8d5qLvJeZs0cfg6LZO5V5-rv4ZkWzFE_61jIY2hlwg.L0kBkJh_hcxxZm8Nu-XPIEs0zxxVuJewWpff0vL3Ps8g.PNG/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_2024-01-01_122144.png?type=f120_120_na" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                            <span class="visually-hidden">둥그레 채널로 이동</span>
                         </a>
                     </div>
-                    <div class="video-card-area">
-                        <a class="video-card-title" href="/live/1b0561f3051c10a24b9d8ec9a6cb3374">1인칭 트러커 시점</a>
-                        <div class="video-card-name">
-                            <a class="video-card-channel" href="/1b0561f3051c10a24b9d8ec9a6cb3374">
-                                <span class="name-ellipsis"><span class="name-text">둥그레</span></span>
-                                <span class="blind">스트리머 채널로 이동</span>
-                            </a>
-                        </div>
-                        <div class="video-card-information">
-                            <a class="video-card-item" href="/search?query=유로 트럭 시뮬레이터 2">
-                                <span class="video-card-category">유로 트럭 시뮬레이터 2</span>
+			              <div class="video-card-area mb-2">
+							    <a class="video-card-title text-decoration-none" href="/live/1b0561f3051c10a24b9d8ec9a6cb3374">
+							        <span class="video-title" style="text-decoration: none; color: black; font-weight: bold;">1인칭 트러커 시점</span>
+							    </a>
+							    <div class="video-card-name">
+							        <a class="video-card-channel text-decoration-none" href="/1b0561f3051c10a24b9d8ec9a6cb3374">
+							            <span class="name-ellipsis"><span class="name-text" style="text-decoration: none; color: black; font-weight: bold;">둥그레</span></span>
+							            <span class="visually-hidden">스트리머 채널로 이동</span>
+							        </a>
+							    </div>
+							</div>
+                        <div class="video-card-information mt-2">
+                            <a class="video-card-item text-decoration-none" href="/search?query=유로 트럭 시뮬레이터 2">
+                                <span class="badge bg-secondary">유로 트럭 시뮬레이터 2</span>
                             </a>
                         </div>
                     </div>
@@ -217,6 +217,8 @@
         </div>
     </div>
 </main>
+
+
     
     
     <footer th:replace="layout/fragments :: myfooter"></footer>
@@ -225,37 +227,4 @@
 </body>
 
 </html>
-=======
-<html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: myhead}"></head>
-	<body>
-		<!-- 임시 메인 화면 회원가입과 로그인만 만들어 놓음 차후 수정 바람-->
-		<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    		<div>
-        		<h1>Beep</h1>
-        	</div>
-            <div class="">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <th:block sec:authorize="isAnonymous()">
-                        <li class = "nav-item">     
-                            <a class="nav-link active" th:href="@{/user/login}">로그인</a>
-                        </li>
-                        <li class = "nav-item">
-                            <a class="nav-link active" th:href="@{/user/signup}">회원가입</a>
-                        </li>
-                    </th:block>
-                    <th:block sec:authorize="isAuthenticated()">
-                        <li class = "nav-item">
-                            <a class="nav-link active" th:href="@{/logout}">
-                                <span th:text="${user.userNickname}"></span> 로그아웃
-                            </a>
-                        </li>
-                    </th:block>
-                </ul>
-            </div>
-        </nav>
-        
-		<script th:replace="~{/layout/fragments :: bootstrap_js}"></script>	
-	</body>
-</html>
->>>>>>> d720cfe9960281dfbeacefda16d45b6632ec600f
+	
