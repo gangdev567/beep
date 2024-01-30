@@ -1,0 +1,248 @@
+<-- 정리 -->
+
+hls.js는 HTTP Live Streaming (HLS) 프로토콜을 구현하는 JavaScript 라이브러리입니다. 
+HLS는 Apple이 개발한 스트리밍 프로토콜로, 주로 웹에서 비디오 및 오디오를 스트리밍하는 데 사용됩니다. 
+이 프로토콜은 동적으로 조정 가능한 비트레이트를 지원하며, 이는 네트워크 조건에 따라 최적의 품질을 제공하는 데 도움이 됩니다.
+hls.js는 브라우저에서 HLS 스트리밍을 지원하지 않는 경우에도 HLS를 구현하도록 도와주는 라이브러리로, JavaScript로 작성되어 있습니다. 
+이를 사용하면 브라우저에서 HLS를 지원하지 않더라도 동영상 및 오디오를 효과적으로 스트리밍할 수 있습니다.
+주요 기능과 특징은 다음과 같습니다:
+
+HTML5 비디오 태그 지원: hls.js는 HTML5 비디오 태그와 통합되어 브라우저에서 쉽게 사용할 수 있습니다.
+  
+네트워크 조건 대응: 네트워크 조건에 따라 동적으로 비트레이트를 조절하여 최상의 시청 경험을 제공합니다.
+  
+브라우저 호환성: 다양한 브라우저에서 동작하도록 설계되어 있으며, HLS를 지원하지 않는 브라우저에 대한 대체 솔루션을 제공합니다.
+  
+라이브 스트리밍 및 VOD (Video on Demand) 지원: 실시간 미디어 스트리밍 및 사전 녹화된 미디어 콘텐츠를 모두 처리할 수 있습니다.
+  
+사용자는 웹 페이지에 hls.js 스크립트를 포함시키고, 비디오 요소의 src 속성에 HLS 스트리밍 URL을 설정하여 간단히 사용할 수 있습니다. 이를 통해 브라우저에서 HLS를 지원하지 않더라도 hls.js가 해당 기능을 대신하게 됩니다.
+  
+hls.js는 오픈 소스로 제공되며, GitHub에서 소스 코드를 확인하고 프로젝트에 기여할 수 있습니다.
+
+*** properties ***
+
+allAudioTracks (읽기 전용): 모든 미디어 그룹을 통틀어 전체 오디오 트랙 목록을 가져옵니다.
+allSubtitleTracks (읽기 전용): 모든 미디어 그룹을 통틀어 전체 자막 트랙 목록을 가져옵니다.
+audioTrack: 선택된 오디오 트랙의 인덱스 (오디오 트랙 목록의 인덱스).
+audioTracks (읽기 전용): 선택 가능한 오디오 트랙 목록을 가져옵니다.
+autoLevelCapping: 자동 레벨 선택 알고리즘(ABRController)에서 사용할 캡핑/최대 레벨 값.
+autoLevelEnabled (읽기 전용): 자동 레벨 선택이 활성화되어 있는 경우 true.
+bandwidthEstimate: 현재 대역폭 추정치(초당 비트 수)를 반환하며, 사용 불가능한 경우 NaN을 반환합니다.
+capLevelToPlayerSize: 레벨 캡핑이 활성화되어 있는지 여부. 기본값은 config.capLevelToPlayerSize를 통해 설정됩니다.
+config (읽기 전용): 플레이어에서 사용하는 런타임 구성.
+currentLevel: 현재 재생 중인 품질 레벨(변형)의 인덱스.
+DefaultConfig (정적): 새로운 인스턴스에 적용되는 기본 구성을 가져옵니다.
+drift (읽기 전용): 현재 라이브 플레이리스트의 가장자리가 진행되는 속도 또는 없는 경우 1.
+ErrorDetails (정적, 읽기 전용): ErrorDetails의 타입.
+ErrorTypes (정적, 읽기 전용): ErrorTypes의 타입.
+Events (정적, 읽기 전용): 이벤트의 타입.
+firstAutoLevel (읽기 전용): 첫 번째 자동 레벨.
+firstLevel: "첫 번째 레벨"을 반환하며, 설정되지 않은 경우 매니페스트에서 참조된 첫 번째 레벨의 인덱스로 대체됩니다.
+forceStartLoad (읽기 전용): MANIFEST_PARSED 이벤트 이전에 startLoad가 호출될 때 true로 설정.
+latency (읽기 전용): 추정된 라이브 엣지의 위치(초 단위).
+levels (읽기 전용): 레벨 배열.
+liveSyncPosition (읽기 전용): 라이브 싱크 지점의 위치(초 단위). (즉, 라이브 위치의 가장자리에서 hls.config.liveSyncDuration에 정의된 안전 지연을 뺀 값)
+loadLevel: 현재 또는 마지막 세그먼트의 품질 레벨을 반환합니다 (현재 로드 중인 것이 없는 경우).
+lowLatencyMode: 저지연 Low-Latency HLS 로딩 모드를 가져옵니다.
+mainForwardBufferInfo (읽기 전용): 주 버퍼의 정보를 나타내는 BufferInfo 또는 null을 가져옵니다.
+manualLevel (읽기 전용): 수동으로 설정된 레벨 (있는 경우).
+maxAutoLevel (읽기 전용): 자동 모드에서 선택 가능한 최대 레벨로, autoLevelCapping에 따라 결정됩니다.
+maxHdcpLevel: 최대 HDCP 레벨.
+maxLatency (읽기 전용): 플레이어가 hls.liveSyncPosition으로 전진 시키기 전에 엣지에서의 최대 거리를 나타냅니다. 이는 liveMaxLatencyDurationCount (대상 지속 기간의 배수) 또는 liveMaxLatencyDuration를 사용하여 구성됩니다.
+media (읽기 전용): 현재의 HTMLMediaElement 또는 null.
+minAutoLevel (읽기 전용): 자동 모드에서 선택 가능한 최소 레벨로, config.minAutoBitrate에 따라 결정됩니다.
+nextAutoLevel: 다음 자동으로 선택된 품질 레벨.
+nextLevel: 스트림 컨트롤러에 의해 예약된 다음 품질 레벨의 인덱스.
+nextLoadLevel: 다음으로 로드될 품질 레벨을 가져옵니다.
+playingDate (읽기 전용): 활성 레벨의 프로그램 날짜 및 시간에 대한 media.currentTime과 관련된 날짜 및 시간 값을 가져옵니다.
+startLevel: 로드될 첫 번째 조각에 대한 시작 레벨을 반환합니다. -1의 기본 값은 자동 시작 레벨 선택을 나타냅니다. startLevel을 설정하지 않고 hls.nextAutoLevel을 설정하면 nextAutoLevel 값이 한 번의 조각 로드에 사용됩니다.
+subtitleDisplay: 자막 표시가 활성화되어 있는지 여부.
+subtitleTrack: 선택된 자막 트랙의 인덱스 (자막 트랙 목록의 인덱스).
+subtitleTracks (읽기 전용): 재생 목록에서 대체 자막 트랙 목록을 가져옵니다.
+targetLatency (읽기 전용): 레이턴시 컨트롤러에 의해 계산된 엣지에서의 목표 거리.
+ttfbEstimate (읽기 전용): 첫 번째 바이트까지의 추정 시간을 가져옵니다.
+userConfig (읽기 전용): 플레이어 인스턴스 생성 시 제공된 구성 객체.
+version (정적, 읽기 전용): video-dev/hls.js 패키지 버전을 가져옵니다.
+
+*** 메서드 ***
+
+attachMedia(media): 미디어 요소에 Hls.js를 연결합니다.
+createController(ControllerClass, components): 컨트롤러 클래스 및 구성 요소를 사용하여 컨트롤러를 생성합니다.
+destroy(): 인스턴스를 폐기합니다.
+detachMedia(): Hls.js를 미디어에서 분리합니다.
+emit(event, name, eventObject): 이벤트를 발생시킵니다.
+getMediaSource(): MSE(MediaSource Extensions) 재생에 사용되는 전역 MediaSource를 가져옵니다.
+isMSESupported(): 필요한 MediaSource Extensions가 사용 가능한지 확인합니다.
+isSupported(): MediaSource Extensions가 사용 가능하며 기본적인 코덱 검사가 통과되었는지 확인합니다.
+listenerCount(event): 이벤트 리스너의 수를 반환합니다.
+listeners(event): 이벤트에 등록된 모든 리스너를 반환합니다.
+loadSource(url): 소스 URL을 설정합니다. 상대 또는 절대 경로가 될 수 있습니다.
+off(event, listener, context, once): 이벤트 리스너를 제거합니다.
+on(event, listener, context): 이벤트에 리스너를 추가합니다.
+once(event, listener, context): 한 번만 실행할 리스너를 추가합니다.
+pauseBuffering(): 스트림 컨트롤러 세그먼트 로딩을 중지하고 'started' 상태를 변경하지 않고 미디어 버퍼링을 일시 중지합니다.
+recoverMediaError(): 미디어 요소가 실패할 때, 이를 한 번에 분리하고 다시 연결하는 것을 허용합니다. 이 과정에서 미디어 오류의 자동 복구가 가능하며, 이는 설정에 따라 조절될 수 있습니다.
+removeAllListeners(event): 특정 이벤트에 등록된 모든 리스너를 제거합니다.
+removeLevel(levelIndex): 특정 레벨을 제거합니다.
+resumeBuffering(): 이전에 시작된 경우 스트림 컨트롤러 세그먼트 로딩을 다시 시작합니다.
+setAudioOption(audioOption): 최적의 오디오 트랙을 찾아 선택하고, 그룹 변경이 필요한 경우 레벨 전환을 수행합니다. hls.config.audioPreference를 업데이트하고 선택된 트랙을 반환하거나, 일치하는 트랙이 없을 경우 null을 반환합니다.
+setSubtitleOption(subtitleOption): 최적의 자막 트랙을 찾아 선택하고, 그룹 변경이 필요한 경우 레벨 전환을 수행합니다. hls.config.subtitlePreference를 업데이트하고 선택된 트랙을 반환하거나, 일치하는 트랙이 없을 경우 null을 반환합니다.
+startLoad(startPosition): 스트림 소스에서 데이터 로딩을 시작합니다. 기본 설정에 따라 소스가 설정되면 클라이언트가 자동으로 로딩을 시작합니다.
+stopLoad(): 어떠한 스트림 데이터의 로딩도 중지합니다.
+swapAudioCodec(): 스트림에서 가능한 오디오 코덱을 전환합니다 (예: 스테레오에서 5.1로 전환).
+trigger(event, eventObject): 이벤트를 트리거합니다.
+
+*** hls.js 시작 예제 ***
+
+*첫 번째 단계: 설정 및 지원
+먼저 웹 페이지에 https://cdn.jsdelivr.net/npm/hls.js@1을 포함하세요 (미니파이된 경우 /hls.js).
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+
+다음 정적 메서드인 Hls.isSupported()를 호출하여 브라우저가 미디어 소스 확장을 지원하는지 기본 코덱과 함께 확인하세요.
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<script>
+  if (Hls.isSupported()) {
+    console.log('Hello HLS.js!');
+  }
+</script>
+
+만약 기본 코덱을 테스트하지 않고 MSE 지원 여부를 확인하려면 isMSESupported를 사용하세요.
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<script>
+  if (
+    Hls.isMSESupported() &&
+    Hls.getMediaSource().isTypeSupported('video/mp4;codecs="av01.0.01M.08"')
+  ) {
+    console.log('Hello AV1 playback! AVC who?');
+  }
+</script>
+
+*두 번째 단계: Hls 객체 생성 및 <video> 요소에 바인딩
+
+<video> 요소를 생성합니다.
+새로운 Hls 객체를 생성합니다.
+<video> 요소를 Hls 객체에 바인딩합니다.
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+
+<video id="video"></video>
+<script>
+  if (Hls.isSupported()) {
+    var video = document.getElementById('video');
+    var hls = new Hls();
+
+    // 두 요소를 연결합니다.
+    hls.attachMedia(video);
+
+    // MEDIA_ATTACHED 이벤트는 MediaSource가 준비되면 hls 객체에서 발생합니다.
+    hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+      console.log('video and hls.js are now bound together !');
+    });
+  }
+</script>
+
+*세 번째 단계: 매니페스트 로드
+아래와 같이 매니페스트 URL을 제공해야 합니다.
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+
+<video id="video"></video>
+<script>
+  if (Hls.isSupported()) {
+    var video = document.getElementById('video');
+    var hls = new Hls();
+
+    hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+      console.log('video and hls.js are now bound together !');
+    });
+
+    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+      console.log(
+        'manifest loaded, found ' + data.levels.length + ' quality level',
+      );
+    });
+
+    hls.loadSource('http://my.streamURL.com/playlist.m3u8');
+
+    // 두 요소를 연결합니다.
+    hls.attachMedia(video);
+  }
+</script>
+
+*네 번째 단계: <video> 요소를 통한 제어
+비디오는 HTML <video> 요소를 통해 제어됩니다. HTMLVideoElement 제어 및 이벤트는 원활하게 사용될 수 있습니다.
+
+video.play();
+
+*다섯 번째 단계: 오류 처리
+모든 오류는 고유한 단일 이벤트를 통해 신호화됩니다.
+
+각 오류는 오류 유형, 오류 세부 정보 및 해당 오류가 치명적인지 여부로 구분됩니다.
+
+오류 유형:
+
+Hls.ErrorTypes.NETWORK_ERROR: 네트워크 관련 오류
+Hls.ErrorTypes.MEDIA_ERROR: 미디어/비디오 관련 오류
+Hls.ErrorTypes.KEY_SYSTEM_ERROR: EME(암호화 미디어 확장) 관련 오류
+Hls.ErrorTypes.MUX_ERROR: 뎀러크싱/리뎀러크싱 관련 오류
+Hls.ErrorTypes.OTHER_ERROR: 기타 모든 오류
+오류 세부 정보:
+
+에러 세부 정보에 대한 내용은 에러 세부 정보를 참조하세요.
+오류가 치명적인지 여부:
+
+false: 오류가 치명적이지 않으며, hls.js는 복구를 시도합니다.
+true: 오류가 치명적이며, 모든 복구 시도가 수행되었습니다. 재시도를 구성하는 방법에 대한 자세한 내용은 로드 정책 정보를 참조하세요.
+아래 예제 코드는 오류를 수신하기 위해 이벤트를 청취합니다.
+
+hls.on(Hls.Events.ERROR, function (event, data) {
+  var errorType = data.type;
+  var errorDetails = data.details;
+  var errorFatal = data.fatal;
+
+  switch (data.details) {
+    case Hls.ErrorDetails.FRAG_LOAD_ERROR:
+      // ....
+      break;
+    default:
+      break;
+  }
+});
+
+치명적인 오류 복구
+hls.js는 치명적인 미디어 오류를 복구하기 위한 수단을 제공합니다.
+
+hls.recoverMediaError(): 미디어 오류를 복구하기 위해 호출되어야 합니다.
+오류 복구 샘플 코드:
+
+hls.on(Hls.Events.ERROR, function (event, data) {
+  if (data.fatal) {
+    switch (data.type) {
+      case Hls.ErrorTypes.MEDIA_ERROR:
+        console.log('fatal media error encountered, try to recover');
+        hls.recoverMediaError();
+        break;
+      case Hls.ErrorTypes.NETWORK_ERROR:
+        console.error('fatal network error encountered', data);
+        // 모든 재시도 및 미디어 옵션을 소진했습니다.
+        // 즉시 로딩을 다시 시작하면 루프 로딩이 발생할 수 있습니다.
+        // 자산 및 네트워크 조건에 가장 잘 맞는 로딩 정책을 수정하는 것을 고려하세요
+        // (manifestLoadPolicy, playlistLoadPolicy, fragLoadPolicy).
+        break;
+      default:
+        // 복구할 수 없음
+        hls.destroy();
+        break;
+    }
+  }
+});
+
+hls.swapAudioCodec(): hls.recoverMediaError()를 호출한 후에도 미디어 오류가 계속 발생하는 경우, 오디오 코덱 불일치를 해결하기 위해 이 메서드를 호출하는 것이 유용할 수 있습니다. 워크플로는 다음과 같습니다:
+첫 번째 미디어 오류 발생 시: hls.recoverMediaError() 호출
+이후에 빠르게 다른 미디어 오류가 발생하면: 먼저 hls.swapAudioCodec() 호출, 그런 다음 hls.recoverMediaError() 호출.
+
+*마지막 단계: 해제 및 스트림 간 전환
+hls.destroy()를 호출하여 사용된 리소스를 해제하고 hls 컨텍스트를 파괴해야 합니다.
