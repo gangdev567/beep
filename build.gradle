@@ -30,7 +30,6 @@ dependencies {
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'net.bramp.ffmpeg:ffmpeg:0.8.7'
 }
 
 tasks.named('test') {
