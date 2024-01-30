@@ -2,9 +2,12 @@ package com.itwill.beep.domain;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,22 +29,10 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long followId;
 
-    // @ToString.Exclude
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "from_user")
-    // private User fromUser;
-    //
-    // @ToString.Exclude
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "toUser")
-    // private User toUser;
-
-    // 유저 테이블에 추가해야 할 필드
-    // @OneToMany(mappedBy = "follower")
-    // private List<Follow> followerList;
-    //
-    // @OneToMany(mappedBy = "following")
-    // private List<Follow> followingList;
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Account fromUser;
 
     private LocalDateTime createTime;
 }

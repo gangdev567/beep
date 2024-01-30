@@ -1,7 +1,6 @@
 package com.itwill.beep.domain;
 
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,4 +13,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     // 물론 Optional에서 Account를 뽑아쓰면 문제 없겠지만 오히려 그게 코드가 길어지는 상황
     // 그래서 그냥 똑같은 쿼리를 실행하지만 이름이 다른 메서드를 하나 더 만들었다.
     Account findByUsernameIs(String username);
+
+    /* follow 기능에 필요한 메서드 */
+    Account findById(String id);
 }

@@ -30,6 +30,12 @@ public class CategoryService {
     @Value("${spring.security.oauth2.client.registration.twitch.client-secret}")
     private String clientSecret;
 
+    public List<Category> findByTotalViewers() {
+        log.info("findByTotalViewers()");
+
+        return categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
+    }
+
     /**
      * IGDB API를 통해 게임 목록을 가져와 카테고리로 저장합니다.
      *

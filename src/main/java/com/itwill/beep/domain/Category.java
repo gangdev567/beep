@@ -28,6 +28,8 @@ public class Category {
 
     private String imageUrl;
 
+    private Long totalView;
+
     // @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     // private List<Video> videos;
 }

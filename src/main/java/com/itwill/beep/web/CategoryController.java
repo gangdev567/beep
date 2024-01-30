@@ -25,6 +25,7 @@ public class CategoryController {
     public String showCategories(Model model) {
         log.info("showCategories()");
         model.addAttribute("categories", categoryService.findAllAndSaveCategories());
+        model.addAttribute("mostViewers", categoryService.findByTotalViewers());
 
         return "categories";
     }

@@ -1,18 +1,16 @@
 package com.itwill.beep.domain;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    // Long countByToUser(User toUser);
-    //
-    // Long countByFromUser(User fromUser);
-    //
-    // List<Follow> findByFromUser(User fromUser);
-    //
-    // List<Follow> findByToUser(User toUser);
-    //
-    // void deleteFollowByFromUser(User fromUser);
-    //
-    // @Query("select f from Follow f where f.fromUser = :from and f.toUser = :to")
-    // Optional<Follow> findFollow(@Param("from") User fromUser, @Param("to") User toUser);
+    Long countByFromUser(Account fromUser);
+
+    List<Follow> findByFromUser(Account fromUser);
+
+    void deleteFollowByFromUser(Account fromUser);
+
+    Optional<Follow> findByFromUserAndToUser(Account fromUser, Account toUser);
+
 }
