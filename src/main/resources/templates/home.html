@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: myhead}"></head>
+	<body>
+		<!-- 임시 메인 화면 회원가입과 로그인만 만들어 놓음 차후 수정 바람-->
+		<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    		<div>
+        		<h1>Beep</h1>
+        	</div>
+            <div class="">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <th:block sec:authorize="isAnonymous()">
+                        <li class = "nav-item">     
+                            <a class="nav-link active" th:href="@{/user/login}">로그인</a>
+                        </li>
+                        <li class = "nav-item">
+                            <a class="nav-link active" th:href="@{/user/signup}">회원가입</a>
+                        </li>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <li class = "nav-item">
+                            <a class="nav-link active" th:href="@{/logout}">
+                                <span th:text="${user.userNickname}"></span> 로그아웃
+                            </a>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+        </nav>
+        
+		<script th:replace="~{/layout/fragments :: bootstrap_js}"></script>	
+	</body>
+</html>
