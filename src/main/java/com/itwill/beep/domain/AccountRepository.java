@@ -15,5 +15,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByUsernameIs(String username);
 
     /* follow 기능에 필요한 메서드 */
-    Account findById(String id);
+    Account findByIdIs(Long id);
 }

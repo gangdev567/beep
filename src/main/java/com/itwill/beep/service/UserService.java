@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
 
     /* follow 기능에 필요한 메서드 */
     public Account findByUserId(Long id) {
-        Account user = AccDao.findById(id).orElseThrow();
+        Account user = AccDao.findByIdIs(id);
 
         return user;
     }

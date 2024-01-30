@@ -33,12 +33,6 @@
             max-width: 1200px;
         }
 
-        /* 추가된 스타일 */
-        .mb-4 {
-            text-align: center;
-        }
-
-        /* 검색 폼 스타일 추가 */
         .search-form {
             display: flex;
             align-items: center;
@@ -79,7 +73,6 @@
     <!-- 검색 결과 표시 컨테이너 -->
     <div id="searchResults" class="row"></div>
 
-    <!-- 기존 Thymeleaf 코드 유지 -->
     <h2 class="mb-4 text-center">인기 게임 카테고리</h2>
     
     <div class="row">
@@ -92,47 +85,25 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- 추가된 토글 창 부분 -->
-<div id="mostViewersSection" class="mb-4 text-center">
-    <!-- 내용을 mostViewers에 대한 내용으로 변경하면 됩니다. -->
-    <h2>총 시청자 카테고리</h2>
+
+    <h2 class="mb-4 text-center">시청자 순 카테고리</h2>
+    
     <div class="row">
         <div th:each="mostViewers, iterStat : ${mostViewers}" class="col-lg-3 col-md-4 mb-4">
             <div class="card category-card">
+                    <h5 class="card-title category-title text-center" th:text="|전체 시청자 ${mostViewers.totalView}|">TotalViewer</h5>
                 <img th:src="${mostViewers.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
                 <div class="card-body">
                     <h5 class="card-title category-title text-center" th:text="${mostViewers.categoryName}">Category Name</h5>
-                    <h5 class="card-title category-title text-center" th:text="${mostViewers.totalView}">TotalViewer</h5>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-<!-- 토글 창 끝 -->
-
 <footer th:replace="layout/fragments :: myfooter"></footer>
 
 <script src="/js/categories-search.js"></script>
-<script>
-    // JavaScript 코드 추가
-    document.addEventListener("DOMContentLoaded", function() {
-        let categorySectionTitle = document.getElementById("categorySectionTitle");
-        let mostViewersSection = document.getElementById("mostViewersSection");
-
-        // 카테고리 섹션 클릭 이벤트
-        categorySectionTitle.addEventListener("click", function() {
-            // 토글 처리
-            if (mostViewersSection.style.display === "none") {
-                mostViewersSection.style.display = "block";
-            } else {
-                mostViewersSection.style.display = "none";
-            }
-        });
-    });
-</script>
     
 </body>
 </html>

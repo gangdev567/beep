@@ -30,10 +30,17 @@ public class CategoryService {
     @Value("${spring.security.oauth2.client.registration.twitch.client-secret}")
     private String clientSecret;
 
+    /**
+     * TotalView 컬럼의 값의 내림차순으로 카테고리를 정렬 한 값을 리스트에 저장합니다.
+     * 
+     * @return 시청자 로그인 수로 정렬한 카테고리 목록
+     */
+
     public List<Category> findByTotalViewers() {
         log.info("findByTotalViewers()");
+        List<Category> list = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
 
-        return categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
+        return list;
     }
 
     /**
