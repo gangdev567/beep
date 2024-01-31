@@ -31,13 +31,13 @@ public class Follow {
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fromUser")
-    private Account fromUser;
+    @JoinColumn(name = "fromUserNo")
+    private Account fromUserNo;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "toUser")
-    private Account toUser;
+    @JoinColumn(name = "toUserNo")
+    private Account toUserNo;
 
     private LocalDateTime createTime;
 }

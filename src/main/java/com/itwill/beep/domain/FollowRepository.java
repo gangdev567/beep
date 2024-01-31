@@ -5,12 +5,14 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    Long countByFromUser(Account fromUser);
+    void deleteByFromUserNoAndToUserNo(Account fromUserNo, Account toUserNo);
 
-    List<Follow> findByFromUser(Account fromUser);
+    Long countByFromUserNo(Account fromUserNo);
 
-    void deleteFollowByFromUser(Account fromUser);
+    Long countByToUserNo(Account toUserNo);
 
-    Optional<Follow> findByFromUserAndToUser(Account fromUser, Account toUser);
+    List<Follow> findByFromUserNo(Account fromUserNo);
+
+    Optional<Follow> findByFromUserNoAndToUserNo(Account fromUserNo, Account toUserNo);
 
 }

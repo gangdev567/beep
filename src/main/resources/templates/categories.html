@@ -1,12 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-          crossorigin="anonymous">
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="layout/fragments :: myhead">
     <style>
         body {
             background-color: #000;
@@ -34,76 +29,95 @@
         }
 
         .search-form {
-            display: flex;
-            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
         }
 
         .search-input {
-            flex: 1;
-            border: none;
-            padding: 8px;
             border-radius: 5px 0 0 5px;
         }
 
         .search-button {
-            background-color: #007bff;
-            border: none;
-            color: #fff;
-            padding: 8px 12px;
             border-radius: 0 5px 5px 0;
-            cursor: pointer;
         }
 
-        .search-button:hover {
-            background-color: #0056b3;
+        .tab-content {
+            padding-top: 20px;
         }
-    </style>
-    <title>카테고리</title>
+
+        .section-title, .nav-link {
+            color: #fff; 
+        }
+
+        .nav-link.active {
+            color: #007bff; 
+        }
+    </style>    
 </head>
 <body>
-<header th:replace="layout/fragments :: myheader" style="position: relative; z-index: 2;"></header>
+    <header th:replace="layout/fragments :: myheader" style="position: relative; z-index: 2;"></header>
 
-<div class="container mt-5">
-    <!-- 검색 입력 폼 -->
-    <div class="my-4 search-form">
-        <input type="text" id="searchKeyword" class="search-input" placeholder="게임 검색" />
-        <button th:onclick="searchGames()" class="btn btn-secondary mx-3">게임 검색</button>
-    </div>
+    <div class="container mt-5">
+        <h1 class="my-5 pt-5 text-left section-title">카테고리</h1>
+        
+        <!-- 카테고리 탭 -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="popular-tab" data-bs-toggle="tab" href="#popular" role="tab" aria-controls="popular" aria-selected="true">인기 게임 카테고리</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="viewers-tab" data-bs-toggle="tab" href="#viewers" role="tab" aria-controls="viewers" aria-selected="false">시청자 순 카테고리</a>
+            </li>
+        </ul>
 
-    <!-- 검색 결과 표시 컨테이너 -->
-    <div id="searchResults" class="row"></div>
+        <!-- 검색 입력 폼과 검색 결과 표시 컨테이너 -->
+        <div class="search-form mt-3 mb-4">
+            <div class="input-group">
+                <input type="text" id="searchKeyword" class="form-control" placeholder="게임 검색" />
+                <button th:onclick="searchGames()" class="btn btn-primary mx-3">게임 검색</button>
+            </div>
+        </div>
+        <div id="searchResults" class="row"></div>
 
-    <h2 class="mb-4 text-center">인기 게임 카테고리</h2>
-    
-    <div class="row">
-        <div th:each="category, iterStat : ${categories}" class="col-lg-3 col-md-4 mb-4">
-            <div class="card category-card">
-                <img th:src="${category.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
-                <div class="card-body">
-                    <h5 class="card-title category-title text-center" th:text="${category.categoryName}">Category Name</h5>
+        <!-- 카테고리 탭 내용 -->
+        <div class="tab-content">
+            <!-- 인기 게임 카테고리 섹션 -->
+            <div class="tab-pane fade show active" id="popular" role="tabpanel">
+                <h2 class="mb-4 text-center mt-3 section-title">인기 게임 카테고리</h2>
+                <div class="row">
+                    <div th:each="category, iterStat : ${categories}" class="col-lg-3 col-md-4 mb-4">
+                        <div class="card category-card">
+                            <img th:src="${category.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
+                            <div class="card-body">
+                                <h5 class="card-title category-title text-center text-truncate" th:text="${category.categoryName}">Category Name</h5>
+                                <h5 class="card-title category-title text-center text-truncate" th:text="${category.totalView != null ? '시청자 ' + category.totalView + '명' : '시청자 0명'}"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 시청자 순 카테고리 섹션 -->
+            <div class="tab-pane fade" id="viewers" role="tabpanel">
+                <h2 class="mb-4 text-center mt-3 section-title">시청자 순 카테고리</h2>
+                <div class="row">
+                    <div th:each="mostViewers, iterStat : ${mostViewers}" class="col-lg-3 col-md-4 mb-4">
+                        <div class="card category-card">
+                            <img th:src="${mostViewers.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
+                            <div class="card-body">
+                                <h5 class="card-title category-title text-center text-truncate" th:text="${mostViewers.categoryName}">Category Name</h5>
+                                <h5 class="card-title category-title text-center text-truncate" th:text="|시청자 ${mostViewers.totalView}명|"></h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer th:replace="layout/fragments :: myfooter"></footer>
 
-    <h2 class="mb-4 text-center">시청자 순 카테고리</h2>
-    
-    <div class="row">
-        <div th:each="mostViewers, iterStat : ${mostViewers}" class="col-lg-3 col-md-4 mb-4">
-            <div class="card category-card">
-                    <h5 class="card-title category-title text-center" th:text="|전체 시청자 ${mostViewers.totalView}|">TotalViewer</h5>
-                <img th:src="${mostViewers.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
-                <div class="card-body">
-                    <h5 class="card-title category-title text-center" th:text="${mostViewers.categoryName}">Category Name</h5>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<footer th:replace="layout/fragments :: myfooter"></footer>
-
-<script src="/js/categories-search.js"></script>
-    
+    <script src="/js/categories-search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

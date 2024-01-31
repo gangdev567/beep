@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow Test</title>
+</head>
+<body>
+
+<h1>Follow Test</h1>
+
+<!-- Follow Button -->
+<input class="d-none" id="following" value="21"/>
+<button id="followBtn" onclick="follow()">Follow</button>
+
+<!-- Unfollow Button -->
+<input class="d-none" id="unfollowing" value="21"/>
+<button id="unfollowBtn" onclick="unfollow()">Unfollow</button>
+
+<div>
+    <!-- Check if Model Attribute 1 is not null -->
+    <p th:if="${one != null}"><span th:text="|${#authentication.name}의 팔로우 수: ${one}|"></span></p>
+    <p th:unless="${one != null}">사용자의 팔로우 수: is null.</p>
+
+    <!-- Check if Model Attribute 2 is not null -->
+    <p th:if="${two != null}">USER_NO 21의 팔로워 수: <span th:text="${two}"></span></p>
+    <p th:unless="${two != null}">USER_NO 21의 팔로워 수 is null.</p>
+    
+    <!-- Iterate over the list (Model Attribute 3) -->
+    <p>사용자의 팔로우 한 사람들의 정보들 :</p>
+    <ul th:if="${three != null}">
+        <li th:each="follow : ${three}">
+            <!-- Access properties of Follow object -->
+            <span th:text="${follow.toUserNo}"></span>
+        </li>
+    </ul>
+    <p th:unless="${three != null}">사용자의 팔로우 한 사람들의 정보들 is null.</p>
+
+    <!-- Conditionally display content for Optional (Model Attribute 4) -->
+    <p th:if="${four != null and four.isPresent()}">
+        두 회원간 연결되어있는가: <span th:text="${four.get()}"></span>
+    </p>
+    <p th:unless="${four != null and four.isPresent()}">
+        두 회원간 연결되어있는가 is empty or null.
+    </p>
+</div>
+
+<script src="/js/follow.js"></script>
+
+</body>
+</html>
