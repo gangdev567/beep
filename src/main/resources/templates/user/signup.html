@@ -1,33 +1,244 @@
 <!DOCTYPE html>
-<html>
-	<head th:replace="~{./layout/fragments :: myhead}"></head>
-	<body>
-        <div class="container">
-            <main class="card card-body">
-                <form method="post">
-                         <div class="my-2">
-                            <label class="form-label">사용자 아이디</label>
-                            <input type="text" class="form-control"name="username" required/>
-                        </div>
-                        <div class="my-2">
-                            <label class="form-label">비밀번호</label>
-                            <input type="password" class="form-control" name="password" id="password" required/>
-                        </div>
-                        <div class="my-2">
-                            <label class="form-label">이메일</label>
-                            <input type="email" class="form-control" name="email" id="email"/>
-                        </div>
-                        <div class="my-2">
-                            <label class="form-label">사용자 닉네임</label>
-                            <input type="text" class="form-control" name="nickname"/>
-                        </div>
-                        <div class="my-2">
-                            <input type="submit" class="form-control btn btn-success" value="계정생성"/>
-                        </div>
-                </form>
-            </main>
-        </div>
+<html lang="ko">
 
-		<script th:replace="~{./layout/fragments :: bootstrap_js}"></script> 			
-	</body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #000;
+            font-family: consolas;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 불꽃놀이 애니메이션 */
+        .fireworks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://png.pngtree.com/background/20210715/original/pngtree-fireworks-texture-atmospheric-purple-gradient-banner-year-background-picture-image_1298003.jpg') center/cover no-repeat;
+            z-index: 0;
+            opacity: 0.5; /* 어두운 배경 */
+            animation: animateFireworks 10s linear infinite;
+        }
+
+        @keyframes animateFireworks {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: 100% 100%;
+            }
+        }
+
+        .container {
+            position: relative;
+            width: 450px;
+            min-height: 400px;
+            background: rgba(0, 0, 0, 0.8); /* 배경 색상 조절 */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 1);
+            opacity: 0;
+            transform: translateY(-100%);
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+
+        .container:after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #ff0047, #6eff00);
+            pointer-events: none;
+            animation: animate 10s linear infinite;
+        }
+
+        @keyframes animate {
+            0% {
+                filter: blur(60px) hue-rotate(0deg);
+            }
+
+            100% {
+                filter: blur(60px) hue-rotate(360deg);
+            }
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: logoAnimation 3s infinite;
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        @keyframes logoAnimation {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.2);
+            }
+        }
+
+        .form {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form h2 {
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .form .inputBox {
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form .inputBox input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            outline: none;
+            font-size: 18px;
+            color: #fff;
+            padding: 5px 0;
+            font-family: consolas;
+        }
+
+        .form .inputBox .error-message {
+            font-size: 16px;
+            color: #ff4d4d;
+            margin-top: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .form .inputBox .error-message::before,
+        .form .inputBox .error-message::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: #ff4d4d;
+            margin: 0 10px;
+        }
+
+        .form .inputBox .error-message::before {
+            transform: rotate(45deg);
+        }
+
+        .form .inputBox .error-message::after {
+            transform: rotate(-45deg);
+        }
+
+        ::placeholder {
+            color: #eee;
+        }
+
+        .form .inputBox input[type="submit"],
+        .form .inputBox a {
+            background: #fff;
+            color: #000;
+            border: none;
+            font-weight: 900;
+            max-width: 100px;
+            cursor: pointer;
+            transition: background 0.3s ease-out;
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px 10px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .form .inputBox input[type="submit"]:hover,
+        .form .inputBox a:hover {
+            background: linear-gradient(to right, #ff5f6d, #ffc371);
+        }
+
+        .form p {
+            color: #eee;
+            margin-top: 20px;
+        }
+
+        .form p a {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logo">Your Logo</div>
+    <div class="fireworks"></div>
+    <div class="container">
+        <form method="post" class="form">
+            <h2>Sign Up Form</h2>
+            <div class="inputBox">
+                <input type="text" name="username" placeholder="Username" required />
+            </div>
+            <div class="inputBox">
+                <input type="password" name="password" placeholder="Password" required />
+            </div>
+            <div class="inputBox">
+                <input type="email" name="email" placeholder="Email" />
+            </div>
+            <div class="inputBox">
+                <input type="text" name="nickname" placeholder="Nickname" />
+            </div>
+            <div class="inputBox">
+                <input type="submit" value="Sign Up" />
+            </div>
+        </form>
+    </div>
+
+    <script th:replace="~{./layout/fragments :: bootstrap_js}"></script>
+</body>
+
 </html>
