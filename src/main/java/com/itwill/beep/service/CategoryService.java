@@ -48,6 +48,7 @@ public class CategoryService {
      *
      * @return 저장된 카테고리 목록
      */
+
     public List<Category> findAllAndSaveCategories() {
         log.info("findAllAndSaveCategories()");
         List<Category> savedCategories = new ArrayList<>();
@@ -59,25 +60,28 @@ public class CategoryService {
 
         // IGDB API를 통해 인기 게임 목록 조회
         APICalypse gamesQuery =
-                new APICalypse().fields("*").limit(4).sort("total_rating_count", Sort.DESCENDING);
+                new APICalypse().fields("*").limit(6).sort("total_rating_count", Sort.DESCENDING);
 
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gamesQuery);
 
             for (var game : games) {
-                log.info("Game ID: {}", game.getId());
-                log.info("Game Name: {}", game.getName());
-
                 // 각 게임에 대한 커버 정보 가져오기
                 Cover cover = getCoverForGame(game.getId());
                 if (cover != null) {
-                    log.info("Cover URL: {}", cover.getUrl());
                     String originalUrl = cover.getUrl();
                     String modifiedUrl = originalUrl.replace("/t_thumb/", "/t_cover_big/");
 
                     // Category 엔터티 생성 및 저장
                     Category category = Category.builder().categoryId(game.getId())
                             .categoryName(game.getName()).imageUrl(modifiedUrl).build();
+
+                    savedCategories.add(categoryRepository.save(category));
+                } else {
+                    // 커버가 없는 경우 기본 URL 사용
+                    String defaultStaticUrl = "/images/no_cover_image.jpg";
+                    Category category = Category.builder().categoryId(game.getId())
+                            .categoryName(game.getName()).imageUrl(defaultStaticUrl).build();
 
                     savedCategories.add(categoryRepository.save(category));
                 }
@@ -105,24 +109,19 @@ public class CategoryService {
         TwitchAuthenticator tAuth = TwitchAuthenticator.INSTANCE;
         TwitchToken token = tAuth.requestTwitchToken(clientId, clientSecret);
         IGDBWrapper.INSTANCE.setCredentials(clientId, token.getAccess_token());
-        log.info(token.toString());
 
         // IGDB API를 통해 키워드로 게임 검색
-        APICalypse gameFindQuery = new APICalypse().search(keyword).fields("*").limit(4);
+        APICalypse gameFindQuery = new APICalypse().search(keyword).fields("*").limit(6);
 
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gameFindQuery);
 
             // 검색 결과가 없을 경우
             if (games.isEmpty()) {
-                log.info("No games found for the keyword: {}", keyword);
                 return foundGames; // 빈 리스트 반환
             }
 
             for (var game : games) {
-                log.info("Game ID: {}", game.getId());
-                log.info("Game Name: {}", game.getName());
-
                 // 커버가 null이 아닌 경우에만 처리
                 Cover cover = getCoverForGame(game.getId());
                 if (cover != null) {
@@ -136,7 +135,7 @@ public class CategoryService {
                     foundGames.add(categoryRepository.save(category));
                 } else {
                     // 커버가 없는 경우 기본 URL 사용
-                    String defaultStaticUrl = "";
+                    String defaultStaticUrl = "/images/no_cover_image.jpg";
                     Category category = Category.builder().categoryId(game.getId())
                             .categoryName(game.getName()).imageUrl(defaultStaticUrl).build();
 

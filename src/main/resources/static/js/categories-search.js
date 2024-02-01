@@ -1,6 +1,6 @@
 // categories-search.js
 
-async function searchGames() {
+async function searchKeyword() {
     // 검색 키워드 가져오기
     const searchKeyword = document.getElementById("searchKeyword").value;
 
@@ -36,13 +36,13 @@ function displaySearchResults(results) {
 
         // 카드 생성 및 속성 설정
         const card = document.createElement("div");
-        card.className = "col-lg-3 col-md-4 mb-4";
+        card.className = "col-lg-2 col-md-4 mb-4";
         card.innerHTML = `
             <div class="card category-card">
                 <img src="${category.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
                 <div class="card-body">
-                    <h5 class="card-title category-title text-center text-truncate">${category.categoryName}</h5>
-                    <h5 class="card-title category-title text-center text-truncate">
+                    <h5 class="card-title category-title text-left text-truncate fs-5">${category.categoryName}</h5>
+                    <h5 class="card-title category-title text-left text-truncate fs-6">
                         <span class="totalViewSpan"></span>
                     </h5>
                 </div>

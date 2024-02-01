@@ -84,6 +84,17 @@ public class FollowService {
     }
 
     /**
+     * 주어진 사용자가 다른 사용자를 팔로우 중인지 여부를 반환합니다.
+     *
+     * @param fromUser 팔로우를 시작하는 사용자
+     * @param toUser 팔로우를 받는 사용자
+     * @return 팔로우 중인지 여부
+     */
+    public boolean isFollowing(Account fromUser, Account toUser) {
+        return followRepository.existsByFromUserNoAndToUserNo(fromUser, toUser);
+    }
+
+    /**
      * 두 사용자가 동일한지 확인하고, 동일한 경우 IllegalArgumentException을 던집니다.
      *
      * @param fromUser 팔로우를 시작하는 사용자

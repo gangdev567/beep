@@ -1,9 +1,12 @@
 package com.itwill.beep.web;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +53,23 @@ public class FollowRestController {
         log.info("{} 님이 언팔로우합니다.", loggedInUser.getUsername());
 
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("status/{toUserId}")
+    public ResponseEntity<Map<String, Boolean>> getFollowStatus(
+            @PathVariable("toUserId") Long toUserId) {
+        log.info("getFollowStatus(toUserId: {})", toUserId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account fromUser = userService.loginUser(authentication.getName());
+        Account toUser = userService.findByUserId(toUserId);
+
+        boolean isFollowing = followService.isFollowing(fromUser, toUser);
+
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isFollowing", isFollowing);
+
+        return ResponseEntity.ok(response);
     }
 
 }
