@@ -14,6 +14,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     // 그래서 그냥 똑같은 쿼리를 실행하지만 이름이 다른 메서드를 하나 더 만들었다.
     Account findByUsernameIs(String username);
 
+    Account findByUserNickname(String nickname);
+
     /* follow 기능에 필요한 메서드 */
     Account findByIdIs(Long id);
+
 }

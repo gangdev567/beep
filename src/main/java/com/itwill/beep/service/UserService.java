@@ -54,6 +54,14 @@ public class UserService implements UserDetailsService {
 
         return user;
     }
+  
+    public Account loadUserByNickname(String nickname) {
+        
+        Account user = AccDao.findByUserNickname(nickname);
+        
+        return user;
+    }
+    
 
     /* follow 기능에 필요한 메서드 */
     public Account findByUserId(Long id) {

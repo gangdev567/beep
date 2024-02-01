@@ -1,12 +1,17 @@
 package com.itwill.beep.web;
 
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import com.itwill.beep.domain.Account;
+import com.itwill.beep.dto.ChatRoom;
+import com.itwill.beep.service.ChatService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class HomeController {
 
-	private final UserService userSvc;
+    private final UserService userSvc;
+    private final ChatService chatService;
 
 	@GetMapping("/")
 	@PreAuthorize("permitAll")
@@ -37,6 +43,13 @@ public class HomeController {
 
 			// model에 user를 보낸다.
 			model.addAttribute("user", user);
+            // model에 user를 보낸다.
+            model.addAttribute("user", user);
+            
+            //현재 진행중인 방송의 리스트를 홈으로 보낸다.
+            List<ChatRoom> broadcastList = chatService.findAllRoom();
+            model.addAttribute("broadcastList",broadcastList);
+            
 
 		}
 		return "home";
