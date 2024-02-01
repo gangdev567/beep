@@ -1,8 +1,10 @@
 package com.itwill.beep;
 
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import com.api.igdb.apicalypse.APICalypse;
 import com.api.igdb.apicalypse.Sort;
 import com.api.igdb.exceptions.RequestException;
@@ -14,6 +16,7 @@ import com.api.igdb.utils.ImageBuilderKt;
 import com.api.igdb.utils.ImageSize;
 import com.api.igdb.utils.ImageType;
 import com.api.igdb.utils.TwitchToken;
+
 import proto.Cover;
 import proto.Game;
 import proto.Search;
@@ -55,7 +58,7 @@ class TestJavaWrapper {
         String date = String.valueOf((System.currentTimeMillis() / 1000));
         APICalypse query =
                 new APICalypse().fields("*").where("platforms = 48 & release_dates.date > " + date)
-                        .sort("release_dates.date", Sort.ASCENDING);
+                        .sort("release_dates.date",Sort.ASCENDING);
 
         try {
             List<Game> ps4Games = ProtoRequestKt.games(wrapper, query);
