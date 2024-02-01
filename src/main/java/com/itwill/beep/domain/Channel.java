@@ -27,14 +27,14 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity @Table(name = "channels")
-public class channel {
+public class Channel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 열시퀸스
     private Long channel_id;
     
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_no")
     private Account account;
     
     private String title;

@@ -19,7 +19,6 @@ public class UserCountListener implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent e) {
         HttpSession session = e.getSession();
         count ++;
-        log.info("session = {}, count = {}", session.getId(), count);
     }
     
     public void sessionDestroyed(HttpSessionEvent e) {

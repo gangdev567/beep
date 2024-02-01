@@ -17,6 +17,12 @@
                         </li>
                     </th:block>
                     <th:block sec:authorize="isAuthenticated()">
+                        <li>
+                            <form th:action="@{/broadcast/on}" th:method="post" style="margin-bottom: 0px;">
+                                <input type="text" th:name="${user.username}" class="d-none" th:value="${user.username}">
+                                <button type="submit" class="nav-link active">방송하기</button>
+                            </form>
+                        </li>
                         <li class = "nav-item">
                             <a class="nav-link active" th:href="@{/logout}">
                                 <span th:text="${user.userNickname}"></span> 로그아웃
@@ -26,6 +32,14 @@
                 </ul>
             </div>
         </nav>
+        <table>
+            <tr th:each="broadcast : ${broadcastList}" >
+                <td>
+                    <a th:href="@{/channel/{roomId}(roomId=${broadcast.name})}"
+                       th:text="${broadcast.name}"></a>
+                </td>
+            </tr>
+        </table>
         
 		<script th:replace="~{/layout/fragments :: bootstrap_js}"></script>	
 	</body>
