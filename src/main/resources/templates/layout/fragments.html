@@ -10,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="canonical" href="https://getbootstrap.kr/docs/5.3/examples/footers/">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.15.0/font/bootstrap-icons.css" rel="stylesheet">
-
     <script src="https://kit.fontawesome.com/1306328925.js" crossorigin="anonymous"></script>
 </head>
 
@@ -55,6 +54,12 @@
 
     <!-- 로그아웃 버튼 -->
     <th:block sec:authorize="isAuthenticated()">
+        <li>
+            <form th:action="@{/broadcast/on}" th:method="post" style="margin-bottom: 0px;">
+                <input type="text" th:name="${user.username}" class="d-none" th:value="${user.username}">
+                <button type="submit" class="nav-link active">방송하기</button>
+            </form>
+        </li>
         <li class="nav-item">
             <a class="btn btn-outline-secondary mx-2" th:href="@{/logout}" role="button" style="color: #ffffff;">
                 <span th:text="${user.userNickname}"></span> 로그아웃

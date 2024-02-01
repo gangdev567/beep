@@ -1,7 +1,6 @@
 package com.itwill.beep.domain;
 
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +15,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByUsernameIs(String username);
 
     Account findByUserNickname(String nickname);
+
+    /* follow 기능에 필요한 메서드 */
+    Account findByIdIs(Long id);
+
 }
