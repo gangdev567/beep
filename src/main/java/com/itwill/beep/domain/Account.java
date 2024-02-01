@@ -55,11 +55,16 @@ public class Account {
     @Basic(optional = false)
     private String email;
     
-    @Builder.Default // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
+    // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을 
+    // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
+    @Builder.Default 
     @ToString.Exclude 
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_no"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_no")) 
+    // 애너테이션 안에서 애너테이션을 한 번 더 사용할 수 있다는 놀라운 사실!
+    // 쉽게 설명해서 @CollectionTable 가 조인할 테이블의 이름을 설정하고
+    // 애너테이션 안에 @JoinColumn(name = "user_no")을 사용하여 설정한 테이블의 설정한 컬럼과 조인하도록 만든 것이다.
     private Set<UserRole> roles = new HashSet<>();
     
     public Account addRole(UserRole role) {
