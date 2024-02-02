@@ -30,6 +30,19 @@ public class Category {
 
     private Long totalView;
 
+    /**
+     * 토탈뷰 바꿔야할 값 예시
+     */
+    // @OneToMany(mappedBy = "category")
+    // private Set<Channel> channels = new HashSet<>();
+    //
+    // public Long getTotalView() {
+    // return channels.stream()
+    // .mapToLong(Channel::getViewers)
+    // .sum();
+
+
+
     // @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     // private List<Video> videos;
 }

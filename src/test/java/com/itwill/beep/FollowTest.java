@@ -1,8 +1,8 @@
 package com.itwill.beep;
 
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.itwill.beep.domain.Account;
@@ -17,27 +17,58 @@ public class FollowTest {
     @Autowired
     private FollowService followService;
 
-    // @Test
-    public void test() {
-        log.info("test()");
+    /**
+     * 시작 조건: fromUser가 toUser를 팔로우하고 있지 않은 상태여야 합니다.
+     */
+    @Test
+    public void testFollowService() {
+        log.info("testFollowService()");
 
-        long countByFromUser = followService.countByFromUser(Account.builder().id(22L).build());
-        Long countFollowersByToUser =
-                followService.countFollowersByToUser(Account.builder().id(21L).build());
-        List<Follow> findByFromUser =
-                followService.findByFromUser(Account.builder().id(22L).build());
-        Optional<Follow> findFollow = followService.findFollow(Account.builder().id(22L).build(),
-                Account.builder().id(21L).build());
+        // 테스트에 사용할 사용자 객체 생성 (임의의 값 사용)
+        Account fromUser = Account.builder().id(22L).build();
+        Account toUser = Account.builder().id(21L).build();
 
+        // 팔로잉 수 확인
+        Long countByFromUser = followService.countByFromUser(fromUser);
         Assertions.assertNotNull(countByFromUser);
-        log.info("countByFromUser : {}", countByFromUser);
+        log.info("countByFromUser: {}", countByFromUser);
+
+        // 팔로워 수 확인
+        Long countFollowersByToUser = followService.countFollowersByToUser(toUser);
         Assertions.assertNotNull(countFollowersByToUser);
-        log.info("countFollowersByToUser : {}", countFollowersByToUser);
-        Assertions.assertNotNull(findByFromUser);
-        log.info("findByFromUser : {}", findByFromUser.get(0).toString());
-        Assertions.assertNotNull(findFollow);
-        log.info("findFollow : {}", findFollow.get().toString());
+        log.info("countFollowersByToUser: {}", countFollowersByToUser);
 
+        // 팔로잉 목록 확인
+        List<Follow> followList = followService.findByFromUser(fromUser);
+        Assertions.assertNotNull(followList);
+        if (!followList.isEmpty()) {
+            log.info("findByFromUser: {}", followList.get(0).toString());
+        }
+
+        // 팔로잉 여부 확인
+        boolean isFollowing = followService.isFollowing(fromUser, toUser);
+        log.info("isFollowing: {}", isFollowing);
+
+        // 팔로우
+        followService.follow(fromUser, toUser);
+        isFollowing = followService.isFollowing(fromUser, toUser);
+        Assertions.assertTrue(isFollowing);
+
+        // 언팔로우
+        followService.unfollow(fromUser, toUser);
+        isFollowing = followService.isFollowing(fromUser, toUser);
+        Assertions.assertFalse(isFollowing);
+
+        // 팔로우한 후 팔로워 수 확인
+        countFollowersByToUser = followService.countFollowersByToUser(toUser);
+        Assertions.assertNotNull(countFollowersByToUser);
+        log.info("countFollowersByToUser: {}", countFollowersByToUser);
+
+        // 팔로우한 후 팔로잉 목록 확인
+        followList = followService.findByFromUser(fromUser);
+        Assertions.assertNotNull(followList);
+        if (!followList.isEmpty()) {
+            log.info("findByFromUser: {}", followList.get(0).toString());
+        }
     }
-
 }

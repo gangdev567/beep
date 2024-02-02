@@ -30,20 +30,18 @@ async function updateButtonVisibility() {
             }
         } else {
             console.error(response);
-            alert("팔로우 상태를 확인하는 중 오류가 발생했습니다!");
+            console.log("팔로우 상태를 확인하는 중 오류가 발생했습니다!");
         }
     } catch (error) {
         console.error(error);
-        alert("팔로우 상태를 확인하는 중 오류가 발생했습니다!");
+        console.log("팔로우 상태를 확인하는 중 오류가 발생했습니다!");
     }
 }
 
 async function followOrUnfollow(isFollow) {
     if (!isLoggedIn()) {
         alert("로그인이 필요합니다!");
-        // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
-        const returnUrl = encodeURIComponent(window.location.pathname);
-        window.location.href = `/user/login?returnUrl=${returnUrl}`;
+        
         return;
     }
 

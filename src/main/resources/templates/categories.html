@@ -80,38 +80,40 @@
 
         <!-- 카테고리 탭 내용 -->
         <div class="tab-content">
-            <!-- 인기 게임 카테고리 섹션 -->
             <div class="tab-pane fade show active" id="popular" role="tabpanel">
                 <h2 class="mb-4 text-center mt-3 section-title">시청자 순 카테고리</h2>
                 <div class="row">
                     <div th:each="mostViewers, iterStat : ${mostViewers}" class="col-lg-2 col-md-4 mb-4">
                         <div class="card category-card">
-                            <img th:src="${mostViewers.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
-                            <div class="card-body">
-                                <h5 class="card-title category-title text-left text-truncate fs-5" th:text="${mostViewers.categoryName}">Category Name</h5>
-                                <h5 class="card-title category-title text-left text-truncate fs-6" th:text="|시청자 ${mostViewers.totalView}명|"></h5>
-                            </div>
+                            <a th:href="@{http://www.naver.com}" class="card-link text-decoration-none text-white">
+                                <img th:src="${mostViewers.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
+                                <div class="card-body">
+                                    <h5 class="card-title category-title text-left text-truncate fs-5" th:text="${mostViewers.categoryName}">Category Name</h5>
+                                    <h5 class="card-title category-title text-left text-truncate fs-6" th:text="|시청자 ${mostViewers.totalView}명|"></h5>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 시청자 순 카테고리 섹션 -->
             <div class="tab-pane fade" id="viewers" role="tabpanel">
                 <h2 class="mb-4 text-center mt-3 section-title">추천 카테고리</h2>
                 <div class="row">
                     <div th:each="category, iterStat : ${categories}" class="col-lg-2 col-md-4 mb-4">
                         <div class="card category-card">
-                            <img th:src="${category.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
-                            <div class="card-body">
-                                <h5 class="card-title category-title text-center text-truncate fs-5" th:text="${category.categoryName}">Category Name</h5>
-                                <h5 class="card-title category-title text-center text-truncate fs-6" th:text="${category.totalView != null ? '시청자 ' + category.totalView + '명' : '시청자 0명'}"></h5>
-                            </div>
+                            <a th:href="@{http://www.naver.com}" class="card-link text-decoration-none text-white">
+                                <img th:src="${category.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
+                                <div class="card-body">
+                                    <h5 class="card-title category-title text-center text-truncate fs-5" th:text="${category.categoryName}">Category Name</h5>
+                                    <h5 class="card-title category-title text-center text-truncate fs-6" th:text="${category.totalView != null ? '시청자 ' + category.totalView + '명' : '시청자 0명'}"></h5>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                </div>
-                
+                </div>                
             </div>
+            
         </div>
     </div>
 

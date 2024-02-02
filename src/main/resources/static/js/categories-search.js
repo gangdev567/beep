@@ -39,13 +39,15 @@ function displaySearchResults(results) {
         card.className = "col-lg-2 col-md-4 mb-4";
         card.innerHTML = `
             <div class="card category-card">
-                <img src="${category.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
-                <div class="card-body">
-                    <h5 class="card-title category-title text-left text-truncate fs-5">${category.categoryName}</h5>
-                    <h5 class="card-title category-title text-left text-truncate fs-6">
-                        <span class="totalViewSpan"></span>
-                    </h5>
-                </div>
+                <a th:href="@{http://www.naver.com}" class="card-link text-decoration-none text-white">
+                    <img src="${category.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
+                    <div class="card-body">
+                        <h5 class="card-title category-title text-left text-truncate fs-5">${category.categoryName}</h5>
+                        <h5 class="card-title category-title text-left text-truncate fs-6">
+                            <span class="totalViewSpan"></span>
+                        </h5>
+                    </div>
+                </a>
             </div>
         `;
 

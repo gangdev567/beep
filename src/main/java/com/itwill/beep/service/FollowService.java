@@ -2,7 +2,6 @@ package com.itwill.beep.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.itwill.beep.domain.Account;
 import com.itwill.beep.domain.Follow;
@@ -73,15 +72,15 @@ public class FollowService {
     }
 
     /**
-     * 주어진 두 사용자 간의 팔로우 관계를 조회합니다.
+     * 주어진 사용자를 팔로우하는 사용자 목록을 반환합니다.
      *
-     * @param fromUser 팔로우를 시작하는 사용자
-     * @param toUser 팔로우를 받는 사용자
-     * @return 팔로우 관계(Optional)
+     * @param toUserNo 팔로우를 받는 사용자
+     * @return 팔로워 목록
      */
-    public Optional<Follow> findFollow(Account fromUserNo, Account toUserNo) {
-        return followRepository.findByFromUserNoAndToUserNo(fromUserNo, toUserNo);
+    public List<Follow> findByToUser(Account toUserNo) {
+        return followRepository.findByToUserNo(toUserNo);
     }
+
 
     /**
      * 주어진 사용자가 다른 사용자를 팔로우 중인지 여부를 반환합니다.
@@ -101,7 +100,7 @@ public class FollowService {
      * @param toUser 팔로우를 받는 사용자
      */
     private void validateSameUser(Account fromUserNo, Account toUserNo) {
-        if (fromUserNo.equals(toUserNo)) {
+        if (fromUserNo.getId().equals(toUserNo.getId())) {
             throw new IllegalArgumentException("팔로우 대상이 자기 자신과 동일합니다.");
         }
     }
