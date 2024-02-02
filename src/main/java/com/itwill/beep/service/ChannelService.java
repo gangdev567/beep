@@ -19,5 +19,10 @@ public class ChannelService {
     public Channel findChannelByAccount(Account acconut) {
         Channel channel = channelDao.findByAccount(acconut);
         return channel;
+    }
+
+    public Channel findChannelById(Long channelId) {
+        Channel channel = channelDao.findByChannelId(channelId);
+        return channel;
     };
 }

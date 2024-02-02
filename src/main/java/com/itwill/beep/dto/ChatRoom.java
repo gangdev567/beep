@@ -12,11 +12,13 @@ import lombok.Getter;
 public class ChatRoom {
     private Long roomId;
     private String name;
+    private Long viewers;
     private Set<WebSocketSession> sessions = new HashSet<>();
 
     @Builder
-    public ChatRoom(Long roomId, String name) {
+    public ChatRoom(Long roomId, String name, Long viewers) {
         this.roomId = roomId;
         this.name = name;
+        this.viewers = viewers;
     }
 }

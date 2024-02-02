@@ -1,6 +1,7 @@
 package com.itwill.beep.web;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -10,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.Channel;
 import com.itwill.beep.dto.ChatRoom;
+import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class HomeController {
 
     private final UserService userSvc;
     private final ChatService chatService;
+    private final ChannelService channelSvc;
 
     @GetMapping("/")
     @PreAuthorize("permitAll")
@@ -44,13 +48,29 @@ public class HomeController {
             // model에 user를 보낸다.
             model.addAttribute("user", user);
             
-            //현재 진행중인 방송의 리스트를 홈으로 보낸다.
-            List<ChatRoom> broadcastList = chatService.findAllRoom();
-            model.addAttribute("broadcastList",broadcastList);
-            
-
         }
+        //현재 진행중인 방송의 리스트를 홈으로 보낸다.
+        List<ChatRoom> broadcastList = chatService.findAllRoom();
+        
+        // 처음에 구조 설계를 잘못잡고 들어가서 chatroom을 따로 만들고 그 정보로 다시 채널 정보를 가져온다.
+        // 잘 정리하면 콘트롤러에서 쓰이는 코드가 좀 줄어들 것 같기는 하지만 
+        // 여러군데에서 쓸 코드도 아니고 그냥 여기서 한 번 고생했다.
+        List<Channel> channelList = broadcastList.stream()
+                                        .map(room -> convertToChannel(room))
+                                        .collect(Collectors.toList());
+        
+        
+        model.addAttribute("channelList",channelList);
+
         return "home";
+    }
+    
+    private Channel convertToChannel(ChatRoom room) {
+        Long channelId = room.getRoomId();
+        log.info("channelId = {}", channelId);
+        Channel channel = channelSvc.findChannelById(channelId);
+        log.info("channel = {}", channel);
+        return channel;
     }
 
 }
