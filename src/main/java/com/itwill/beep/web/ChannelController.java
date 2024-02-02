@@ -58,7 +58,11 @@ public class ChannelController {
             ChatRoom room = chatSvc.findRoomById(channelId);
             log.info("room = {}", room);
             model.addAttribute("room", room);
-            
+
+            // 여기에 스트리밍 URL 추가
+            String streamingUrl = "http://192.168.20.25:8088/stream/hls/live.m3u8"; // WSL Nginx 서버의 HLS 스트리밍 URL
+            model.addAttribute("streamingUrl", streamingUrl);
+
             // TODO: 여기서 만들어져있는 방송으로 이동하는 메서드를 만들어야 함
             
         }

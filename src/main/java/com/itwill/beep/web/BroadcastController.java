@@ -59,7 +59,11 @@ public class BroadcastController {
             ChatRoom room = chatSvc.createRoom(nickName, channelId);
             log.info("room = {}", room);
             model.addAttribute("room", room);
-            
+
+            // 여기에 스트리밍 URL 추가
+            String streamingUrl = "http://192.168.20.25:8088/stream/hls/live.m3u8"; // WSL Nginx 서버의 HLS 스트리밍 URL
+            model.addAttribute("streamingUrl", streamingUrl);
+
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
             
         }
