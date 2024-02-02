@@ -52,7 +52,7 @@ public class ChannelController {
             // streamer정보로 channel정보를 불러온다.
             Channel channel = channelSvc.findChannelByAccount(streamer);
             log.info("channel = {}", channel);
-            Long channelId = channel.getChannel_id();
+            Long channelId = channel.getChannelId();
             
             // channelId로 room 정보를 찾는다.
             ChatRoom room = chatSvc.findRoomById(channelId);

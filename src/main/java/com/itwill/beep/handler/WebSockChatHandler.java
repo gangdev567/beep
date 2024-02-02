@@ -61,10 +61,8 @@ public class WebSockChatHandler extends TextWebSocketHandler {
     }
 
 
-
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-       //javascript에서  session.close해서 연결 끊음. 그리고 이 메소드 실행.
-        //session은 연결 끊긴 session을 매개변수로 이거갖고 뭐 하세요.... 하고 제공해주는 것 뿐
+
     }
 }

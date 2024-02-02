@@ -32,9 +32,6 @@ public class BroadcastController {
     @PostMapping("/on")
     public String createRoom(Model model) {
         
-        Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
-        String username1 = authentication1.getName();
-        
         if(SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
             
             // 로그인한 유저 정보를 불러온다.
@@ -53,10 +50,12 @@ public class BroadcastController {
             // 이 아래는 웹소켓 정보를 만드는 코드
             Channel channel = channelSvc.findChannelByAccount(user);
             log.info("channel = {}", channel);
-            Long channelId = channel.getChannel_id();
+            Long channelId = channel.getChannelId();
+            
+            Long viewers = (long) 0;
             
             String nickName = user.getUserNickname();
-            ChatRoom room = chatSvc.createRoom(nickName, channelId);
+            ChatRoom room = chatSvc.createRoom(nickName, channelId, viewers);
             log.info("room = {}", room);
             model.addAttribute("room", room);
             
