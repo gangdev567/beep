@@ -60,7 +60,7 @@ public class BroadcastController {
             Long viewers = (long) 0;
             
             String nickName = user.getUserNickname();
-            ChatRoom room = chatSvc.createRoom(nickName, channelId, viewers);
+            ChatRoom room = chatSvc.createRoom(nickName, channelId);
             log.info("room = {}", room);
             model.addAttribute("room", room);
             
