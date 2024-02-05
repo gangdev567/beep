@@ -12,9 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 public class TestController {
 	
 	
+	
     @GetMapping("/followtestpage")
     public void test() {
 
+    }
+    @GetMapping("/test123")
+    public void test1() {
+    	
     }
 
 }

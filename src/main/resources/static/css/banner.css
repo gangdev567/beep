@@ -73,3 +73,31 @@
 .custom-top-banner-date {
     color: #1EC800; /* 네이버 색상으로 수정 */
 }
+
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px; /* 위아래 좌우 여백 조정 */
+}
+
+/* 타이틀 스타일 */
+.custom-title {
+ color: #fff;
+ font-size: 19px
+}
+
+/* 링크 스타일 */
+.custom-link {
+  color: #c9cedc; /* 링크 색상 지정 */
+  font-size: 15px;
+  text-decoration: none; /* 링크에 밑줄 제거 */
+  font-weight: bold;
+
+}
+/* 반응형 CSS 추가 */
+@media (max-width: 767px) {
+    .custom-top-banner-item {
+        flex: 0 0 calc(100% - 20px);
+    }
+}

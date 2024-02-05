@@ -29,25 +29,23 @@ public class HomeController {
     private final ChatService chatService;
     private final ChannelService channelSvc;
 
-	@GetMapping("/")
-	@PreAuthorize("permitAll")
-	public String home(Model model) {
+    @GetMapping("/")
+    @PreAuthorize("permitAll")
+    public String home(Model model) {
 
-		// 로그인한 유저 정보를 가지고 있는 클래스에서 username이 anonymousUser(익명)이 아닐경우에
-		if (SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
+        // 로그인한 유저 정보를 가지고 있는 클래스에서 username이 anonymousUser(익명)이 아닐경우에
+        if (SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
 
-			// 로그인한 유저 정보를 불러온다.
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            // 로그인한 유저 정보를 불러온다.
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-			// 유저 정보에서 유저의 아이디를 불러온다.
-			String username = authentication.getName();
-			log.info("username = {}", username);
+            // 유저 정보에서 유저의 아이디를 불러온다.
+            String username = authentication.getName();
+            log.info("username = {}", username);
 
-			// 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
-			Account user = userSvc.loginUser(username);
+            // 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
+            Account user = userSvc.loginUser(username);
 
-			// model에 user를 보낸다.
-			model.addAttribute("user", user);
             // model에 user를 보낸다.
             model.addAttribute("user", user);
             
@@ -61,12 +59,6 @@ public class HomeController {
             String status = channel.getStatus().toString();
             model.addAttribute("status", status);
             
-<<<<<<< HEAD
-
-		}
-		return "home";
-	}
-=======
         }
         //현재 진행중인 방송의 리스트를 홈으로 보낸다.
         List<ChatRoom> broadcastList = chatService.findAllRoom();
@@ -92,8 +84,5 @@ public class HomeController {
         log.info("channel = {}", channel);
         return channel;
     }
->>>>>>> e025b70abc8509938310cf5dc8449a91139df588
 
-
-  
 }
