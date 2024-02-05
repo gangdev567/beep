@@ -19,8 +19,6 @@ configurations {
 
 repositories {
 	mavenCentral()
-	// pay
-	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
