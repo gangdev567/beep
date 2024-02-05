@@ -76,11 +76,10 @@
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-            <!-- 로그인 정보 확인하기(테스트용) // 같은 userNo일 경우, 예외 발생,-->
-            <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />   
-            <!-- TODO: channel의 UserId 가져오기 -->         
-            <input class="form-control d-none" id="channelUserId" th:value=${null} />
-            <input class="form-control d-none" id="loginUserId" th:value="${user.id}"/>
+            <!-- 로그인 정보 확인하기(테스트용) // TODO: 나중에 감춰야합니다.-->
+            <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />            
+            <input class="" id="channelUserId" th:value="${streamer.id}" />
+            <input class="" id="loginUserId" th:value="${user.id}"/>
             
                 <div class="row">
                     <p>팔로워 : <span id="countByFollower"></span></p>

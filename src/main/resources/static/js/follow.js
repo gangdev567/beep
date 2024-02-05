@@ -20,9 +20,9 @@ async function updateButtonVisibility() {
 
     try {
         // 현재 사용자의 팔로우 상태를 확인하는 API 호출
-        const loginUserIdElement = document.getElementById('loginUserId');
-        const loginUserId = loginUserIdElement.value;
-        const response = await fetch(`/api/follow/status/${loginUserId}`);
+        const loginUserId = document.getElementById('loginUserId').value;
+        const channelUserId = document.getElementById('channelUserId').value;
+        const response = await fetch(`/api/follow/status/${channelUserId}`);
 
         if (response.ok) {
             const data = await response.json();
@@ -41,6 +41,14 @@ async function updateButtonVisibility() {
                 followBtn.classList.remove('d-none');
                 unfollowBtn.classList.add('d-none');
             }
+            
+            // channel id와 loginUserId 비교하여 팔로우 버튼 비활성화
+            if (loginUserId === channelUserId) {
+                followBtn.disabled = true;
+            } else {
+                followBtn.disabled = false;
+            }
+            
         } else {
             console.error(response);
             console.log("팔로우 상태를 확인하는 중 오류가 발생했습니다!");
@@ -59,7 +67,7 @@ async function followOrUnfollow(isFollow) {
     }
 
     try {
-        const channelUserIdElement = document.getElementById('loginUserId'); // TODO: channelUserId로 교체 해야함
+        const channelUserIdElement = document.getElementById('channelUserId');
         const channelUserId = channelUserIdElement.value;
 
         const method = isFollow ? 'POST' : 'DELETE';
@@ -137,7 +145,7 @@ async function fetchFollowList() {
 }
 
 async function fetchFollowerList() {
-    const toUserNo = 21;
+    const toUserNo = document.getElementById('channelUserId').value;
     try {
         const response = await fetch(`/api/follow/followerlist/${toUserNo}`);
         if (response.ok) {
