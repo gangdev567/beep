@@ -24,5 +24,9 @@ public class ChannelService {
     public Channel findChannelById(Long channelId) {
         Channel channel = channelDao.findByChannelId(channelId);
         return channel;
+    }
+
+    public void save(Channel channel) {
+        channelDao.save(channel);
     };
 }

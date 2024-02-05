@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.Broadcast;
 import com.itwill.beep.domain.Channel;
+import com.itwill.beep.domain.UserRole;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
@@ -48,6 +50,7 @@ public class ChannelController {
             
             // model에 user를 보낸다.
             model.addAttribute("user", user);
+            log.info("user = {}", user);
             
             // streamer정보로 channel정보를 불러온다.
             Channel channel = channelSvc.findChannelByAccount(streamer);
@@ -60,6 +63,37 @@ public class ChannelController {
             model.addAttribute("room", room);
             
             // TODO: 여기서 만들어져있는 방송으로 이동하는 메서드를 만들어야 함
+            
+            // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다. 
+            // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
+            // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다.
+            String status = channel.getStatus().toString();
+            model.addAttribute("status", status);
+            
+        } else if(SecurityContextHolder.getContext().getAuthentication().getName() == "anonymousUser")  {
+            // 비로그인 시청자가 방송을 시청하려고 하는 경우
+            Account user = Account.builder()
+                                .userNickname("anonymousUser")
+                                .build();
+            user.addRole(UserRole.USER);
+            
+            Account streamer = userSvc.loadUserByNickname(id);
+            log.info("streamer = {}", streamer);
+            
+            // model에 user를 보낸다.
+            model.addAttribute("user", user);
+            log.info("user = {}", user);
+            
+            // streamer정보로 channel정보를 불러온다.
+            Channel channel = channelSvc.findChannelByAccount(streamer);            
+            log.info("channel = {}", channel);
+            model.addAttribute("channel", channel);
+            Long channelId = channel.getChannelId();
+            
+            // channelId로 room 정보를 찾는다.
+            ChatRoom room = chatSvc.findRoomById(channelId);
+            log.info("room = {}", room);
+            model.addAttribute("room", room);
             
         }
         
