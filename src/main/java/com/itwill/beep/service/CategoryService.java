@@ -14,6 +14,7 @@ import com.api.igdb.request.TwitchAuthenticator;
 import com.api.igdb.utils.TwitchToken;
 import com.itwill.beep.domain.Category;
 import com.itwill.beep.domain.CategoryRepository;
+import com.itwill.beep.domain.ChannelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import proto.Cover;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ChannelRepository channelRepository;
     private final String defaultStaticUrl = "/images/no_cover_image.jpg";
 
     // Twitch API 클라이언트 정보
@@ -41,6 +43,7 @@ public class CategoryService {
     public List<Category> findByTotalViewers() {
         log.info("findByTotalViewers()");
         List<Category> list = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
+
 
         return list;
     }
@@ -120,24 +123,26 @@ public class CategoryService {
             }
 
             for (var game : games) {
-                // 커버가 null이 아닌 경우에만 처리
 
-                Cover cover = getCoverForGame(game.getId());
-                if (cover != null) {
-                    String originalUrl = cover.getUrl();
-                    String modifiedUrl = originalUrl.replace("/t_thumb/", "/t_cover_big/");
+                Optional<Category> existingCategory =
+                        categoryRepository.findByCategoryId(game.getId());
+
+                if (existingCategory.isEmpty()) {
+                    // 각 게임에 대한 커버 정보 가져오기
+                    Cover cover = getCoverForGame(game.getId());
+
+                    String imageUrl =
+                            (cover != null) ? cover.getUrl().replace("/t_thumb/", "/t_cover_big/")
+                                    : defaultStaticUrl;
 
                     // Category 엔터티 생성 및 저장
                     Category category = Category.builder().categoryId(game.getId())
-                            .categoryName(game.getName()).imageUrl(modifiedUrl).build();
+                            .categoryName(game.getName()).imageUrl(imageUrl).build();
 
                     foundGames.add(categoryRepository.save(category));
                 } else {
-                    // 커버가 없는 경우 기본 URL 사용
-                    Category category = Category.builder().categoryId(game.getId())
-                            .categoryName(game.getName()).imageUrl(defaultStaticUrl).build();
-
-                    foundGames.add(categoryRepository.save(category));
+                    // 이미 존재하면 넘어감
+                    foundGames.add(existingCategory.get());
                 }
             }
 

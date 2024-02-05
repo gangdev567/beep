@@ -10,7 +10,4 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByCategoryId(long id);
 
-    // @Query("SELECT v FROM Video v WHERE v.category = :category")
-    // List<Video> findVideosByCategory(@Param("category") Category category);
-
 }

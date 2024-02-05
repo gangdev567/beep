@@ -75,7 +75,8 @@ public class FollowRestController {
     }
 
     @GetMapping("/followlist/{fromUserNo}")
-    public ResponseEntity<Map<String, Object>> getFollowList(@PathVariable Long fromUserNo) {
+    public ResponseEntity<Map<String, Object>> getFollowList(
+            @PathVariable("fromUserNo") Long fromUserNo) {
         log.info("getFollowList(fromUserNo: {})", fromUserNo);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -85,7 +86,7 @@ public class FollowRestController {
         List<Follow> followList = followService.findByFromUser(fromUser);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("count", countByFromUser);
+        response.put("countByFollow", countByFromUser);
         response.put("followList", followList);
 
         log.info("response: {}", response);
@@ -94,7 +95,8 @@ public class FollowRestController {
     }
 
     @GetMapping("/followerlist/{toUserNo}")
-    public ResponseEntity<Map<String, Object>> getFollowerCount(@PathVariable Long toUserNo) {
+    public ResponseEntity<Map<String, Object>> getFollowerCount(
+            @PathVariable("toUserNo") Long toUserNo) {
         log.info("getFolloweCount(toUserNo: {})", toUserNo);
 
         Account toUser = userService.findByUserId(toUserNo);
@@ -102,7 +104,7 @@ public class FollowRestController {
         List<Follow> followerList = followService.findByToUser(toUser);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("count", countFollowerByToUser);
+        response.put("countByFollower", countFollowerByToUser);
         response.put("followerList", followerList);
 
         return ResponseEntity.ok(response);

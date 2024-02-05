@@ -28,19 +28,10 @@ public class Category {
 
     private String imageUrl;
 
-    private Long totalView;
-
     /**
-     * 토탈뷰 바꿔야할 값 예시
+     * 토탈뷰 고쳐야함
      */
-    // @OneToMany(mappedBy = "category")
-    // private Set<Channel> channels = new HashSet<>();
-    //
-    // public Long getTotalView() {
-    // return channels.stream()
-    // .mapToLong(Channel::getViewers)
-    // .sum();
-
+    private Long totalView;
 
 
     // @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)

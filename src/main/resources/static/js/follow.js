@@ -1,15 +1,28 @@
-document.addEventListener('DOMContentLoaded', async () => {
+/**
+ * follow.js
+ * 
+ * 
+ */
 
+document.addEventListener('DOMContentLoaded', async () => {
+    // 팔로우 목록 불러오기
+    fetchFollowList();
+
+    // 팔로워 목록 불러오기
+    fetchFollowerList();
+
+    // 팔로우/언팔로우 버튼 불러오기
     await updateButtonVisibility();
+
 });
 
 async function updateButtonVisibility() {
 
     try {
         // 현재 사용자의 팔로우 상태를 확인하는 API 호출
-        const followerIdElement = document.getElementById('followerId');
-        const followerId = followerIdElement.value;
-        const response = await fetch(`/api/follow/status/${followerId}`);
+        const loginUserIdElement = document.getElementById('loginUserId');
+        const loginUserId = loginUserIdElement.value;
+        const response = await fetch(`/api/follow/status/${loginUserId}`);
 
         if (response.ok) {
             const data = await response.json();
@@ -41,23 +54,23 @@ async function updateButtonVisibility() {
 async function followOrUnfollow(isFollow) {
     if (!isLoggedIn()) {
         alert("로그인이 필요합니다!");
-        
+
         return;
     }
 
     try {
-        const followerIdElement = document.getElementById('followerId');
-        const followerId = followerIdElement.value;
+        const channelUserIdElement = document.getElementById('loginUserId'); // TODO: channelUserId로 교체 해야함
+        const channelUserId = channelUserIdElement.value;
 
         const method = isFollow ? 'POST' : 'DELETE';
-        const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${followerId}`, {
+        const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${channelUserId}`, {
             method: method,
         });
 
         if (response.ok) {
             console.log(response);
             const action = isFollow ? '팔로우' : '언팔로우';
-            alert(`${followerId}님을 ${action} 하였습니다!`);
+            alert(`${channelUserId}님을 ${action} 하였습니다!`);
 
             // 성공 시 버튼 클래스 조작
             const followBtn = document.getElementById('followBtn');
@@ -93,4 +106,53 @@ function isLoggedIn() {
 
     return authentication !== 'anonymousUser';
 }
+
+async function fetchFollowList() {
+    const fromUserNo = document.getElementById('loginUserId').value;
+    try {
+        const response = await fetch(`/api/follow/followlist/${fromUserNo}`);
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+
+            // 데이터를 Thymeleaf 템플릿에 적용
+            document.getElementById('countByFollow').innerText = data.countByFollow;
+            const followListElement = document.getElementById('followList');
+            followListElement.innerHTML = ''; // 리스트 초기화
+            data.followList.forEach(follow => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `/channel/${follow.toUserNo.username}`; // 여기에 주소를 넣어줍니다.
+                a.innerText = follow.toUserNo.username;
+                li.appendChild(a);
+                followListElement.appendChild(li);
+            });
+
+        } else {
+            console.error('팔로우 목록을 불러오는 중 에러 발생:', response.status);
+        }
+    } catch (error) {
+        console.error('팔로우 목록을 불러오는 중 에러 발생:', error);
+    }
+}
+
+async function fetchFollowerList() {
+    const toUserNo = 21;
+    try {
+        const response = await fetch(`/api/follow/followerlist/${toUserNo}`);
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+
+            // 데이터를 Thymeleaf 템플릿에 적용
+            document.getElementById('countByFollower').innerText = data.countByFollower + ' 명';
+            // TODO: Follower Count만 나타내고 followUser들의 데이터들을 불러오는 것을 고려해보기(일단은 X)         
+        } else {
+            console.error('팔로워 목록을 불러오는 중 에러 발생:', response.status);
+        }
+    } catch (error) {
+        console.error('팔로워 목록을 불러오는 중 에러 발생:', error);
+    }
+}
+
 
