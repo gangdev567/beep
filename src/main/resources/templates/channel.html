@@ -79,6 +79,7 @@
             <!-- 로그인 정보 확인하기(테스트용) // TODO: 나중에 감춰야합니다.-->
             <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />            
             <input class="" id="channelUserId" th:value="${streamer.id}" />
+            <input class="" id="channelUserNickname" th:value="${streamer.userNickname}" />
             <input class="" id="loginUserId" th:value="${user.id}"/>
             
                 <div class="row">
