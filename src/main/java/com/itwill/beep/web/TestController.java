@@ -1,6 +1,7 @@
 package com.itwill.beep.web;
 
 import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,8 @@ public class TestController {
     public void test() {
 
     }
-    @GetMapping("/test123")
-    public void test1() {
-    	
-    }
 
-}
+
+
+
+
