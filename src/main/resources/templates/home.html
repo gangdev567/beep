@@ -1,17 +1,9 @@
 
-	<body>
-        <table>
-            <tr th:each="broadcast : ${broadcastList}" >
-                <td>
-                    <a th:href="@{/channel/{roomId}(roomId=${broadcast.name})}"
-                       th:text="${broadcast.name}"></a>
-                </td>
-            </tr>
-        </table>
+	
+      
         
-		<script th:replace="~{/layout/fragments :: bootstrap_js}"></script>	
-	</body>
-</html>
+	
+
 
 <!-- 교체중 -->
 
@@ -21,8 +13,9 @@
 
 <head th:replace="layout/fragments :: myhead"></head>
 
-<body style="background-color: #141517;">
+<body>
     <header th:replace="layout/fragments :: myheader"></header>
+    <nav th:replace="layout/fragments :: mysidebar"></nav>
     
 <!-- 배너 컨테이너 -->
     <div class="container-fluid mt-4 mb-4">
@@ -191,6 +184,14 @@
 
     <!-- 간격 추가 -->
     <div class="my-4"></div>
+      <table>
+            <tr th:each="broadcast : ${broadcastList}" >
+                <td>
+                    <a th:href="@{/channel/{roomId}(roomId=${broadcast.name})}"
+                       th:text="${broadcast.name}"></a>
+                </td>
+            </tr>
+        </table>
 
 <main class="container mt-5 streaming-content my-2">
     <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -241,6 +242,7 @@
     <footer th:replace="layout/fragments :: myfooter"></footer>
 
     <script th:replace="layout/fragments :: bootstrap_js"></script>
+    <script th:replace="layout/fragments :: sidebar_js"></script>
 </body>
 
 </html>
