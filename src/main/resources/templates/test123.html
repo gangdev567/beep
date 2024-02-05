@@ -429,6 +429,14 @@
     <div class="custom-header">
   <strong class="custom-title">추천</strong>
   <a class="custom-link" href="#">전체 보기</a>
+     <table>
+            <tr th:each="broadcast : ${broadcastList}" >
+                <td>
+                    <a th:href="@{/channel/{roomId}(roomId=${broadcast.name})}"
+                       th:text="${broadcast.name}"></a>
+                </td>
+            </tr>
+        </table>
 </div>
     
     <footer th:replace="layout/fragments :: myfooter"></footer>
