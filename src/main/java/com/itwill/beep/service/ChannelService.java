@@ -3,6 +3,7 @@ package com.itwill.beep.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.beep.domain.Account;
 import com.itwill.beep.domain.Channel;
@@ -37,5 +38,30 @@ public class ChannelService {
         List<Channel> channelList = channelDao.findAll();
         
         return channelList;
-    };
+    }
+
+    @Transactional
+    public void increaseViewers(Long channelId) {
+        
+        // 청자수 증가
+        channelDao.increaseViewer(channelId);
+        
+    }
+
+    @Transactional
+    public void decreaseViewers(Long channelId) {
+        
+        // 청자수 감소
+        channelDao.decreaseViewer(channelId);
+        
+        // 시청자 수 셀렉트
+        Long viewers = channelDao.findViewersByChannelId(channelId);
+        
+        // 시청자가 버그로 인해 0명 보다 적어질 경우 0명으로 리셋
+        if (viewers < 0) {
+            channelDao.viewersSetZero(channelId);
+        }
+        
+    }
+
 }

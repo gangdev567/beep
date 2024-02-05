@@ -2,6 +2,9 @@ package com.itwill.beep.domain;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
 
@@ -13,5 +16,20 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     // 이게 없으면 조인을 못할까... 이것도 해본적은 있지만 헷갈려서 한참 찾았네
     @EntityGraph(attributePaths = "account")
     Channel findByChannelId(Long channelId);
+
+    @Modifying
+    @Query("UPDATE Channel c SET c.viewers = c.viewers + 1 WHERE c.channelId = :channelId")
+    void increaseViewer(@Param("channelId") Long channelId);
+
+    @Modifying
+    @Query("UPDATE Channel c SET c.viewers = c.viewers - 1 WHERE c.channelId = :channelId")
+    void decreaseViewer(@Param("channelId") Long channelId);
+
+    @Query("SELECT c.viewers from Channel c WHERE c.channelId = :channelId")
+    Long findViewersByChannelId(@Param("channelId") Long channelId);
+
+    @Modifying
+    @Query("UPDATE Channel c SET c.viewers = 0 WHERE c.channelId = :channelId")
+    void viewersSetZero(@Param("channelId") Long channelId);
     
 }

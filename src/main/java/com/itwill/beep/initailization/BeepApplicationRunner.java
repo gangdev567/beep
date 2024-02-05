@@ -39,8 +39,8 @@ public class BeepApplicationRunner implements ApplicationRunner{
         
         // 모든 채널 정보를 불러옴
         List<Channel> channelList = channelSvc.findAllChannel();
-        channelList.forEach(channel -> log.info("{}'s channel = {}", channel.getAccount().getUsername(), channel));
         
+        // 채널 정보로 웹소켓 세션 생성
         channelList.forEach(channel -> createRoom(channel));
         
         
