@@ -46,10 +46,16 @@ public class BroadcastController {
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
             Long channelId = channel.getChannelId();
+<<<<<<< HEAD
 
             Long viewers = (long) 0;
             String nickName = user.getUserNickname();
             ChatRoom room = chatSvc.createRoom(nickName, channelId, viewers);
+=======
+
+            ChatRoom room = chatSvc.findRoomById(channelId);
+
+>>>>>>> b8252a11b72c68908ed2d74f3cdc6bb75d4f6530
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
