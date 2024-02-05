@@ -36,13 +36,13 @@ public class ChatService {
         return chatRooms.get(roomId);
     }
 
-    public ChatRoom createRoom(String name, Long channelId, Long viewers) {
+    public ChatRoom createRoom(String name, Long channelId) {
         
         ChatRoom chatRoom = ChatRoom.builder()
                 .name(name)
                 .roomId(channelId)
-                .viewers(viewers)
                 .build();
+        
         chatRooms.put(channelId, chatRoom);
         return chatRoom;
     }

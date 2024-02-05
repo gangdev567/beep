@@ -41,7 +41,7 @@ public class Channel {
     private Long channelId;
     
     @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_no")
     private Account account;
     
@@ -62,7 +62,7 @@ public class Channel {
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
     @Builder.Default 
 //    @ToString.Exclude 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "broadcast", joinColumns = @JoinColumn(name = "channel_id")) 
     // 애너테이션 안에서 애너테이션을 한 번 더 사용할 수 있다는 놀라운 사실!
