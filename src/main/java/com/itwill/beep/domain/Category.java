@@ -28,7 +28,11 @@ public class Category {
 
     private String imageUrl;
 
+    /**
+     * 토탈뷰 고쳐야함
+     */
     private Long totalView;
+
 
     // @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     // private List<Video> videos;
