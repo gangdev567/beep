@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
 
+    @EntityGraph(attributePaths = "status")
     Channel findByAccount(Account account);
     
     // 테이블을 조인하게 해주는 애너테이션 그런데 왜 
@@ -12,4 +13,5 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     // 이게 없으면 조인을 못할까... 이것도 해본적은 있지만 헷갈려서 한참 찾았네
     @EntityGraph(attributePaths = "account")
     Channel findByChannelId(Long channelId);
+    
 }
