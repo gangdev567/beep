@@ -13,4 +13,5 @@ public class VideoController {
 		model.addAttribute("videoSrc", "/videos/test.m3u8");
 		return "video";
 	}
+
 }
