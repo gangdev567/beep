@@ -47,20 +47,18 @@ public class BroadcastController {
             
             // model에 user를 보낸다.
             model.addAttribute("user", user);
-            
+            model.addAttribute("streamer", user);
             // 이 아래는 웹소켓 정보를 만드는 코드
             Channel channel = channelSvc.findChannelByAccount(user);
             // 방송 ON
             channel.setStatus(Broadcast.ON);
             channelSvc.save(channel);
+            
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
             Long channelId = channel.getChannelId();
             
-            Long viewers = (long) 0;
-            
-            String nickName = user.getUserNickname();
-            ChatRoom room = chatSvc.createRoom(nickName, channelId);
+            ChatRoom room = chatSvc.findRoomById(channelId);
             log.info("room = {}", room);
             model.addAttribute("room", room);
             

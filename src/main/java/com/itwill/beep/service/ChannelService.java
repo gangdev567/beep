@@ -1,5 +1,7 @@
 package com.itwill.beep.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.itwill.beep.domain.Account;
@@ -28,5 +30,12 @@ public class ChannelService {
 
     public void save(Channel channel) {
         channelDao.save(channel);
+    }
+
+    public List<Channel> findAllChannel() {
+        
+        List<Channel> channelList = channelDao.findAll();
+        
+        return channelList;
     };
 }
