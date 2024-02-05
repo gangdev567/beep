@@ -69,6 +69,7 @@ async function followOrUnfollow(isFollow) {
     try {
         const channelUserIdElement = document.getElementById('channelUserId');
         const channelUserId = channelUserIdElement.value;
+        const channelUserNickname = document.getElementById('channelUserNickname').value;
 
         const method = isFollow ? 'POST' : 'DELETE';
         const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${channelUserId}`, {
@@ -78,7 +79,7 @@ async function followOrUnfollow(isFollow) {
         if (response.ok) {
             console.log(response);
             const action = isFollow ? '팔로우' : '언팔로우';
-            alert(`${channelUserId}님을 ${action} 하였습니다!`);
+            alert(`${channelUserNickname}님을 ${action} 하였습니다!`);
 
             // 성공 시 버튼 클래스 조작
             const followBtn = document.getElementById('followBtn');
@@ -131,7 +132,7 @@ async function fetchFollowList() {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
                 a.href = `/channel/${follow.toUserNo.username}`; // 여기에 주소를 넣어줍니다.
-                a.innerText = follow.toUserNo.username;
+                a.innerText = follow.toUserNo.userNickname;
                 li.appendChild(a);
                 followListElement.appendChild(li);
             });
