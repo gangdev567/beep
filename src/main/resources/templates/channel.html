@@ -53,7 +53,14 @@
         <div th:replace="~{/layout/fragments :: myheader}"></div>
         <div class="void"></div>
 		<main class="cnter">
-            <div class="cnter-item">TODO: FOLLOWING</div>
+            <div class="cnter-item">
+                <div>
+                        <h2>팔로우 목록</h2>
+                        <p class="d-none">Total Follow Count: <span id="countByFollow"></span></p>
+                        <ul id="followList">                            
+                        </ul>
+                    </div>
+            </div>
             <div class="cnter-item">TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
@@ -69,8 +76,37 @@
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
                 TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
+            <!-- 로그인 정보 확인하기(테스트용) // TODO: 나중에 감춰야합니다.-->
+            <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />            
+            <input class="" id="channelUserId" th:value="${streamer.id}" />
+            <input class="" id="loginUserId" th:value="${user.id}"/>
+            
+                <div class="row">
+                    <p>팔로워 : <span id="countByFollower"></span></p>
+                    <ul id="followerList"></ul>
                 
-            </div>
+                    <div class="col-md-6 offset-md-5">
+                        <div class="d-flex justify-content-end">
+                            <button id="followBtn" type="button" class="btn btn-dark d-none" onclick="follow()">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+                                </svg>
+                                팔로우 등록
+                            </button>
+                
+                            <button id="unfollowBtn" type="button" class="btn btn-dark d-none" onclick="unfollow()">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+                                </svg>
+                                팔로우 취소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                    
+                </div>               
+            
+            
             <div class="cnter-item">
                 <div class="chat-container">
                     <div class="scrollbarContainer">
@@ -158,5 +194,10 @@
             
 
 </script>
+<script th:inline="javascript">
+    const authentication = /*[[${#authentication.name}]]*/ null;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/follow.js"></script>
 	</body>
 </html>
