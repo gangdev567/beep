@@ -39,10 +39,12 @@ public class ChatService {
     public ChatRoom createRoom(String name, Long channelId) {
         
         ChatRoom chatRoom = ChatRoom.builder()
-                .roomId(channelId)
                 .name(name)
+                .roomId(channelId)
                 .build();
+        
         chatRooms.put(channelId, chatRoom);
         return chatRoom;
     }
+
 }

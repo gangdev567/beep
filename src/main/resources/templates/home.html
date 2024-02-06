@@ -1,26 +1,10 @@
-
-	<body>
-        <table>
-            <tr th:each="broadcast : ${broadcastList}" >
-                <td>
-                    <a th:href="@{/channel/{roomId}(roomId=${broadcast.name})}"
-                       th:text="${broadcast.name}"></a>
-                </td>
-            </tr>
-        </table>
-        
-		<script th:replace="~{/layout/fragments :: bootstrap_js}"></script>	
-	</body>
-</html>
-
-<!-- 교체중 -->
-
 <!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head th:replace="~{layout/fragments :: myhead}"></head>
 
+<<<<<<< HEAD
 <body style="background-color: #141517;">
     <header th:replace="~{layout/fragments :: myheader}" style="position: relative; z-index: 2;"></header>
     
@@ -32,53 +16,13 @@
                     </div>
             </div>
 
-    <div class="container my-4 mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-4 mb-3">
-                <div class="card bg-dark text-white">
-                    <a href="https://game.naver.com/lounge/chzzk/board/detail/3421495" target="_blank">
-                        <img src="https://nng-phinf.pstatic.net/MjAyNDAxMTJfNDgg/MDAxNzA1MDM5ODAyMTUz.wk1IpPB8AUSiFPyRbXj50odFZdmfYV8v50_8da82DsQg.EuCG3FLDky3kLnMvu7hhnL4U3s3ZhH3sOGPG85Vt0Xcg.PNG/%EB%A3%A8%ED%82%A4_%EC%88%98%EC%9D%B5_%EC%B0%BD%EC%B6%9C_%EC%95%88%EB%82%B4_%EC%9D%B4%EB%AF%B8%EC%A7%80.png"
-                            class="card-img-top img-fluid" alt="배너 이미지">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">루키 회원 치즈 후원 가능!</h5>
-                        <p class="card-text">치즈 후원을 받아보세요</p>
-                        <p class="card-text"><small class="text-muted">안내 공지 확인하기</small></p>
-                    </div>
-                </div>
-            </div>
+<body>
 
-            <div class="col-md-4 mb-3">
-                <div class="card bg-dark text-white">
-                    <a href="https://game.naver.com/lounge/chzzk/board/detail/3404036" target="_blank">
-                        <img src="https://nng-phinf.pstatic.net/MjAyNDAxMThfMTA4/MDAxNzA1NTY2NDQ2NjYw.e5iP0LkHl17B6ytliH_vpkzFnGHpOumhhPvm-wb5QQUg.z4KHau_ltx5dHJhCvJYaNmFSlu0Ber1kD0uhVUO-P14g.PNG/%ED%8A%B8%EC%9C%84%EC%B9%98_%EA%B5%AC%EB%8F%85%EA%B8%B0%EA%B0%84_%EC%9D%B4%EC%96%B4%EA%B0%80%EA%B8%B0_%EC%9D%B4%EB%AF%B8%EC%A7%80.png"
-                            class="card-img-top img-fluid" alt="배너 이미지">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">트위치 구독기간 이어가기</h5>
-                        <p class="card-text">바로 신청하세요!</p>
-                        <p class="card-text"><small class="text-muted">안내 공지 확인하기</small></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="card bg-dark text-white">
-                    <a href="https://game.naver.com/lounge/chzzk/board/detail/3335193" target="_blank">
-                        <img src="https://nng-phinf.pstatic.net/MjAyMzEyMjVfMTk0/MDAxNzAzNTEwMTU0Mjc0.mXiYWLy3xzVeRi1TFTIAE5ju6HYoQr9YxIImLd78MUsg.jVnoFglJJ_2Am6XD9DoMEcIg7l0_INvEezgDTeBF7rEg.PNG/%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%A8%B8%EB%AA%A8%EC%A7%91_%ED%99%88%EC%83%81%EB%8B%A8%EC%9D%B4%EB%AF%B8%EC%A7%80.png"
-                            class="card-img-top img-fluid" alt="배너 이미지">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">프로 등급도 동시 송출 가능!</h5>
-                        <p class="card-text">베타 테스트 기간 동안 적용됩니다</p>
-                        <p class="card-text"><small class="text-muted">안내 공지 확인하기</small></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+	<header th:replace="layout/fragments :: myheader"></header>
+	
+	<nav th:replace="layout/fragments :: mysidebar"></nav>
+	
+	<section th:replace="layout/fragments :: myhome"></section>
 
 
 <!-- 임시 캐러셀 추가 -->
@@ -241,6 +185,8 @@
     <footer th:replace="~{layout/fragments :: myfooter}"></footer>
 
     <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+	 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
+
 </body>
 
 </html>

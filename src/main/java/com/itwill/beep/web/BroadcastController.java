@@ -4,18 +4,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.Broadcast;
 import com.itwill.beep.domain.Channel;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 import com.itwill.beep.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,47 +25,58 @@ public class BroadcastController {
     private final UserService userSvc;
     private final ChatService chatSvc;
     private final ChannelService channelSvc;
-    
+
     @PostMapping("/on")
-    public String createRoom(Model model) {
-        
-        Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
-        String username1 = authentication1.getName();
-        
-        if(SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
-            
-            // 로그인한 유저 정보를 불러온다.
+    public String broadcastOn(Model model) {
+
+        if (SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            
-            // 유저 정보에서 유저의 아이디를 불러온다.
             String username = authentication.getName();
             log.info("username = {}", username);
-            
-            // 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
+
             Account user = userSvc.loginUser(username);
-            
-            // model에 user를 보낸다.
             model.addAttribute("user", user);
-            
-            // 이 아래는 웹소켓 정보를 만드는 코드
+            model.addAttribute("streamer", user);
+
             Channel channel = channelSvc.findChannelByAccount(user);
-            log.info("channel = {}", channel);
-            Long channelId = channel.getChannel_id();
+            channel.setStatus(Broadcast.ON);
+            channelSvc.save(channel);
             
-            String nickName = user.getUserNickname();
-            ChatRoom room = chatSvc.createRoom(nickName, channelId);
+            log.info("channel = {}", channel);
+            model.addAttribute("channel", channel);
+            Long channelId = channel.getChannelId();
+
+
+            ChatRoom room = chatSvc.findRoomById(channelId);
+
             log.info("room = {}", room);
             model.addAttribute("room", room);
-
             // 여기에 스트리밍 URL 추가
             String streamingUrl = "http://192.168.20.25:8088/stream/hls/live.m3u8"; // WSL Nginx 서버의 HLS 스트리밍 URL
             model.addAttribute("streamingUrl", streamingUrl);
 
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
-            
+
+            String status = channel.getStatus().toString();
+            model.addAttribute("status", status);
+
+            return "/channel";
         }
-        
-        return "/channel";
+        return "/";
     }
-    
+
+    @PostMapping("/off")
+    public String broadcastOff() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Account user = userSvc.loginUser(username);
+
+        Channel channel = channelSvc.findChannelByAccount(user);
+        channel.setStatus(Broadcast.OFF);
+        channelSvc.save(channel);
+
+        return "redirect:/";
+    }
 }

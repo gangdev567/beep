@@ -30,12 +30,12 @@ public class Follow {
     private Long followId;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fromUserNo")
     private Account fromUserNo;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "toUserNo")
     private Account toUserNo;
 
