@@ -190,6 +190,11 @@
 								</div>
 							</li>
 							<li><hr class="dropdown-divider"></li>
+							<li sec:authorize="isAuthenticated()">
+								<a class="dropdown-item" th:href="@{/user/dashboard/{userId}/home(userId=${user.username})}">
+									<i class="fas fa-tachometer-alt me-2"></i> 대시보드
+								</a>
+							</li>
 							<li sec:authorize="isAuthenticated()"><a
 									class="dropdown-item" th:href="@{/logout}"> <i
 									class="fas fa-sign-out-alt me-2"></i> <span
