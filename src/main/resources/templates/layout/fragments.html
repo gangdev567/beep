@@ -101,8 +101,8 @@
                         src="https://getbootstrap.kr/docs/5.1/assets/brand/bootstrap-logo.svg"
                         alt="" width="30" height="24"
                         class="d-inline-block align-text-top">
-                </a> <a class="nav-link text-white me-3 " href="#">팔로잉</a> <a
-                    class="nav-link text-white " href="#">탐색</a>
+                </a> <a class="nav-link text-white me-3 " href="/follow/list">팔로잉</a> <a
+                    class="nav-link text-white " href="/categories">탐색</a>
             </div>
             <button class="navbar-toggler bg-secondary" type="button"
                             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -144,8 +144,8 @@
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <form th:action="@{/broadcast/on}" method="post"
                                     style="margin-bottom: 0px;">
-                            <input type="text" th:name="${user.username}" class="d-none"
-                                         th:value="${user.username}">
+                            <input type="text" th:name="${#authentication.name}" class="d-none"
+                                         th:value="${#authentication.name}">
                             <button type="submit" class="btn mx-2 custom-btn-purple">방송하기</button>
                         </form>
                     </li>
@@ -153,7 +153,7 @@
                     <!-- 로그아웃 버튼 -->
                     <li class="nav-item" sec:authorize="isAuthenticated()"><a
                             class="btn mx-2 custom-btn-gray" th:href="@{/logout}"> <span
-                            th:text="${user.userNickname}"></span> 로그아웃
+                            th:text="${#authentication.name}"></span> 로그아웃
                     </a></li>
 
                     <!-- 드롭다운 메뉴 -->
@@ -191,14 +191,14 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" th:href="@{/user/dashboard/{userId}/home(userId=${user.username})}">
+                                <a class="dropdown-item" th:href="@{/user/dashboard/{userId}/home(userId=${#authentication.name})}">
                                     <i class="fas fa-tachometer-alt me-2"></i> 대시보드
                                 </a>
                             </li>
                             <li sec:authorize="isAuthenticated()"><a
                                     class="dropdown-item" th:href="@{/logout}"> <i
                                     class="fas fa-sign-out-alt me-2"></i> <span
-                                    th:text="${user.userNickname}"></span> 로그아웃
+                                    th:text="${#authentication.name}"></span> 로그아웃
                             </a></li>
                             <li sec:authorize="!isAuthenticated()"><a
                                     class="dropdown-item" th:href="@{/user/login}"> <i
@@ -245,7 +245,7 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="#">
+                    <a href="/follow/list">
                         <i class='bx bx-user-plus icon'></i>
                         <span class="text nav-text">Follower</span>
                     </a>
@@ -257,7 +257,7 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="#">
+                    <a href="/categories">
                         <i class='bx bxs-group icon'></i>
                         <span class="text nav-text">Category</span>
                     </a>

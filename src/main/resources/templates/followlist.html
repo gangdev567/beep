@@ -6,41 +6,69 @@
 
 <style>
     .card:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
         transition: transform 0.3s ease;
     }
+    
 </style>
 
 <body>
 
+<div class="container mt-5 p-5" th:if="${#authentication.name == 'anonymousUser'}">
+    <h1 class="fw-bold text-white">로그인이 필요합니다</h1>
+    <p class="text-white">로그인을 하시면 생방송 중인 목록과 팔로우 중인 목록을 확인할 수 있습니다.</p>
+    <!-- 로그인 버튼 혹은 로그인 링크 추가 -->
+</div>
 
-
-<div class="container mt-5 p-5">
-    <h1 class="fw-bold text-white">팔로잉 중인 채널</h1>        
+<div class="container mt-5 p-5" th:unless="${#authentication.name == 'anonymousUser'}">
+    <h1 class="fw-bold text-white">생방송 중인 목록</h1>        
     <div class="row mt-4">
-        <div class="col-md-4" th:each="followList, iterStat : ${data.followList}">
-            <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].account.userNickname})}" style="text-decoration: none; color: inherit;">
-                <div class="card mb-3 text-center mt-4 mb-4 bg-black">
-                    <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
-                        <img th:src="${data.channelList[iterStat.index].profile_img}" alt="profile_img" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+        <!-- 생방송 중인 채널 -->
+        <th:block th:each="followList, iterStat : ${data.followList}">
+            <div class="col-md-4" th:if="${data.channelList[iterStat.index].status.toString().contains('ON')}">
+                <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].account.userNickname})}" class="text-decoration-none text-dark">
+                    <div class="card mb-3 text-center mt-4 mb-4 bg-dark text-white">
+                        <!-- 생방송 중인 경우 LIVE 표시 -->
+                        <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
+                            <span class="badge bg-danger">LIVE</span>
+                            <span class="badge bg-secondary ms-1" th:text="${data.channelList[iterStat.index].viewers + ' 명'}"></span>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
+                            <img th:src="${data.channelList[iterStat.index].profile_img}" alt="profile_img" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-body mb-5">
+                            <h5 class="card-title mb-0" th:text=${followList.toUserNo.userNickname}></h5>
+                        </div>
+                        <div class="video-card-information mt-2">
+                            <!-- 카테고리 연결해야함 -->
+                            <span class="badge bg-secondary" th:value="data.channelList[iterStat.index].category_id.categoryName"></span>
+                        </div>                      
                     </div>
-                    <div class="row g-0 mb-4">
-                        <div class="col-md-12 text-center mb-2">
-                            <h5 class="card-title text-white" th:text=${followList.toUserNo.userNickname}></h5>
+                </a>
+            </div>
+        </th:block>
+        
+        <!-- 생방송 중이 아닌 채널 -->
+        <h1 class="fw-bold text-white">팔로우 중인 목록</h1>
+        <th:block th:each="followList, iterStat : ${data.followList}">
+            <div class="col-md-4" th:if="${not data.channelList[iterStat.index].status.toString().contains('ON')}">
+                <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].account.userNickname})}" class="text-decoration-none text-dark">
+                    <div class="card mb-3 text-center mt-4 mb-4 bg-dark text-white">
+                        <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
+                            <img th:src="${data.channelList[iterStat.index].profile_img}" alt="profile_img" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-body mb-5">
+                            <h5 class="card-title mb-0" th:text=${followList.toUserNo.userNickname}></h5>
                         </div>
                     </div>
-                </div>
-            </a>
-        </div>        
+                </a>
+            </div>
+        </th:block>
     </div>
 </div>
-    
+
 <header th:replace="layout/fragments :: myheader"></header>
-
-
 <nav th:replace="layout/fragments :: mysidebar"></nav>
-
-
 
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
