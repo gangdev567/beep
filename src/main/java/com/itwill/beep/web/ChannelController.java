@@ -64,6 +64,11 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
+            // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
+            String streamingKey = streamer.getStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
+            String streamingUrl = String.format("http://192.168.20.25:8088/stream/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
+            model.addAttribute("streamingUrl", streamingUrl);
+
             // TODO: 여기서 만들어져있는 방송으로 이동하는 메서드를 만들어야 함
 
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.

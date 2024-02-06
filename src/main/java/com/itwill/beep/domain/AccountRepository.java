@@ -19,4 +19,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     /* follow 기능에 필요한 메서드 */
     Account findByIdIs(Long id);
 
+    Optional<Account> findByStreamingKey(String streamingKey);
+
 }

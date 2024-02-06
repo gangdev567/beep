@@ -1,204 +1,209 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Insert title here</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="canonical" href="https://getbootstrap.kr/docs/5.3/examples/footers/">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.15.0/font/bootstrap-icons.css" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Insert title here</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="canonical" href="https://getbootstrap.kr/docs/5.3/examples/footers/">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.15.0/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://kit.fontawesome.com/1306328925.js" crossorigin="anonymous"></script>
+  <style>
+    .cnter {
+      display: grid;
+      grid-template-columns: 1fr 5.5fr 1.5fr;
+      height: (100vh - 62px);
+    }
+    .void {
+      height: 62px;
+    }
+    nav.fixed-top {
+      max-height: 62px;
+      overflow: hidden;
+      flex-wrap: nowrap;
+    }
+    ul.nav {
+      overflow: hidden;
+      flex-wrap: nowrap;
+    }
+    .chat-container {
+      position: fixed;
+      height: auto;
+      width: 1.5fr;
+      overflow-y: auto; /* 채팅창이 내용을 넘어갈 경우 스크롤 표시 */
+      word-break: break-all;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .scrollbarContainer::-webkit-scrollbar {
+      display: none;
+    }
 
-        <script src="https://kit.fontawesome.com/1306328925.js" crossorigin="anonymous"></script>
-		<style>
-            .cnter {
-                display: grid;
-                grid-template-columns: 1fr 5.5fr 1.5fr;
-                height: (100vh - 62px);
-            }
-            .void {
-                height: 62px;
-            }
-            nav.fixed-top {
-                max-height: 62px;
-                overflow: hidden;
-                flex-wrap: nowrap;
-            }
-            ul.nav {
-                overflow: hidden;
-                flex-wrap: nowrap;
-            }
-            .chat-container {
-              position: fixed;
-              height: auto;
-              width: 1.5fr;
-              overflow-y: auto; /* 채팅창이 내용을 넘어갈 경우 스크롤 표시 */
-              word-break: break-all;
-              flex-direction: column;
-              justify-content: flex-end;
-            }
-            .scrollbarContainer::-webkit-scrollbar {
-                display: none;
-            }
-            
-            input.content {
-                margin-top: auto;
-            }
-            .scrollbarContainer {
-                height: calc(91vh);
-                overflow-y: scroll;
-            }
-        </style>
-	</head>
-	<body>
-        <div th:replace="~{/layout/fragments :: myheader}"></div>
-        <div class="void"></div>
-		<main class="cnter">
-            <div class="cnter-item">
-                <div>
-                        <h2>팔로우 목록</h2>
-                        <p class="d-none">Total Follow Count: <span id="countByFollow"></span></p>
-                        <ul id="followList">                            
-                        </ul>
-                    </div>
-            </div>
-            <div class="cnter-item">TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-                TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO TODO: VIDEO 
-            <!-- 로그인 정보 확인하기(테스트용) // TODO: 나중에 감춰야합니다.-->
-            <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />            
-            <input class="" id="channelUserId" th:value="${streamer.id}" />
-            <input class="" id="channelUserNickname" th:value="${streamer.userNickname}" />
-            <input class="" id="loginUserId" th:value="${user.id}"/>
-            
-                <div class="row">
-                    <p>팔로워 : <span id="countByFollower"></span></p>
-                    <ul id="followerList"></ul>
-                
-                    <div class="col-md-6 offset-md-5">
-                        <div class="d-flex justify-content-end">
-                            <button id="followBtn" type="button" class="btn btn-dark d-none" onclick="follow()">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
-                                </svg>
-                                팔로우 등록
-                            </button>
-                
-                            <button id="unfollowBtn" type="button" class="btn btn-dark d-none" onclick="unfollow()">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
-                                </svg>
-                                팔로우 취소
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                    
-                </div>               
-            
-            
-            <div class="cnter-item">
-                <div class="chat-container">
-                    <div class="scrollbarContainer">
-                        <span>메세지</span>
-                        <div class="msgArea"></div>
-                    </div>
-                    <input type="text" placeholder="보낼 메세지를 입력하세요." class="content">
-                    <button value="전송" class="sendBtn" onclick="sendMsg()">전송</button>
-                    <button value="나가기" class="sendBtn" onclick="quit()">나가기</button>
-                </div>
-            </div>
-        </main>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-		<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-		<script th:inline="javascript">
-            
-        function enterRoom(socket){
-            var enterMsg={"type" : "ENTER","roomId":[[${room.roomId}]],"sender":[[${user.userNickname}]],"msg":""}; 
-            console.log(enterMsg);
-            socket.send(JSON.stringify(enterMsg));
-            let user = [[${user.userNickname}]];
-            let entMsg = user + "님 환영합니다! BEEP!! BEEP!! BEEP!!"
-            let msgArea = document.querySelector('.msgArea');
-            let newMsg = document.createElement('div');
-            newMsg.innerText = entMsg;
-            msgArea.append(newMsg); 
-        }
-        let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
+    input.content {
+      margin-top: auto;
+    }
+    .scrollbarContainer {
+      height: calc(91vh);
+      overflow-y: scroll;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="~{/layout/fragments :: myheader}"></div>
+<div class="void"></div>
+<main class="cnter">
+  <div class="cnter-item">
+    <div>
+      <h2>팔로우 목록</h2>
+      <p class="d-none">Total Follow Count: <span id="countByFollow"></span></p>
+      <ul id="followList">
+      </ul>
+    </div>
+  </div>
+  <div class="cnter-item">
+    <!-- 스트리밍 플레이어 추가 -->
+    <div class="video-container">
+      <video id="video" controls autoplay></video>
+    </div>
 
-        socket.onopen = function (e) {
-            console.log('open server!')
-            enterRoom(socket);
-        };
-        socket.onclose = function(e){
-            console.log('disconnet');
-        }
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      const videoSrc = [[${streamingUrl}]]; // 서버로부터 받은 스트리밍 URL
+      const video = document.getElementById('video');
 
-        socket.onerror = function (e){
-            console.log(e);
-        }
+      if(Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = videoSrc;
+      }
+      /*]]>*/
+    </script>
+    <!-- 로그인 정보 확인하기(테스트용) // TODO: 나중에 감춰야합니다.-->
+    <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />
+    <input class="" id="channelUserId" th:value="${streamer.id}" />
+    <input class="" id="channelUserNickname" th:value="${streamer.userNickname}" />
+    <input class="" id="loginUserId" th:value="${user.id}"/>
 
-        function updateScroll() {
-            var scroll = document.querySelector('.scrollbarContainer');
-            scroll.scrollTop = scroll.scrollHeight;
-        }
-        
-        //메세지 수신했을 때 이벤트.
-        socket.onmessage = function (e) {
-            console.log(e.data);
-            let msgArea = document.querySelector('.msgArea');
-            let newMsg = document.createElement('div');
-            //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함 
-            let message = JSON.parse(e.data);
-            newMsg.innerText = message.sender +': ' + message.msg;
-            if(message.type === 'TALK') {
-                msgArea.append(newMsg);                       
-            }
-            
-            updateScroll();
+    <div class="row">
+      <p>팔로워 : <span id="countByFollower"></span></p>
+      <ul id="followerList"></ul>
 
-        }
+      <div class="col-md-6 offset-md-5">
+        <div class="d-flex justify-content-end">
+          <button id="followBtn" type="button" class="btn btn-dark d-none" onclick="follow()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+            </svg>
+            팔로우 등록
+          </button>
+
+          <button id="unfollowBtn" type="button" class="btn btn-dark d-none" onclick="unfollow()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+            </svg>
+            팔로우 취소
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 
-        //메세지 보내기 버튼 눌렀을 떄..
-        function sendMsg() {
-            let content=document.querySelector('.content').value;
-             var talkMsg={"type" : "TALK","roomId":[[${room.roomId}]] ,"sender":[[${user.userNickname}]],"msg":content};
-             //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
-           socket.send(JSON.stringify(talkMsg));
-        }
+  <div class="cnter-item">
+    <div class="chat-container">
+      <div class="scrollbarContainer">
+        <span>메세지</span>
+        <div class="msgArea"></div>
+      </div>
+      <input type="text" placeholder="보낼 메세지를 입력하세요." class="content">
+      <button value="전송" class="sendBtn" onclick="sendMsg()">전송</button>
+      <button value="나가기" class="sendBtn" onclick="quit()">나가기</button>
+    </div>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script th:inline="javascript">
 
-        window.addEventListener('beforeunload', handlePageUnload);
+  function enterRoom(socket){
+    var enterMsg={"type" : "ENTER","roomId":[[${room.roomId}]],"sender":[[${user.userNickname}]],"msg":""};
+    console.log(enterMsg);
+    socket.send(JSON.stringify(enterMsg));
+    let user = [[${user.userNickname}]];
+    let entMsg = user + "님 환영합니다! BEEP!! BEEP!! BEEP!!"
+    let msgArea = document.querySelector('.msgArea');
+    let newMsg = document.createElement('div');
+    newMsg.innerText = entMsg;
+    msgArea.append(newMsg);
+  }
+  let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
 
-        function quit(){
-             var quitMsg={"type" : "QUIT","roomId":[[${room.roomId}]] ,"sender":[[${user.userNickname}]],"msg":""};
-             //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
-           socket.send(JSON.stringify(quitMsg));
-            socket.close();
-            location.href="/";
-        }
-        
-        function handlePageUnload() {
-            quit();
-        }
-            
+  socket.onopen = function (e) {
+    console.log('open server!')
+    enterRoom(socket);
+  };
+  socket.onclose = function(e){
+    console.log('disconnet');
+  }
+
+  socket.onerror = function (e){
+    console.log(e);
+  }
+
+  function updateScroll() {
+    var scroll = document.querySelector('.scrollbarContainer');
+    scroll.scrollTop = scroll.scrollHeight;
+  }
+
+  //메세지 수신했을 때 이벤트.
+  socket.onmessage = function (e) {
+    console.log(e.data);
+    let msgArea = document.querySelector('.msgArea');
+    let newMsg = document.createElement('div');
+    //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함
+    let message = JSON.parse(e.data);
+    newMsg.innerText = message.sender +': ' + message.msg;
+    if(message.type === 'TALK') {
+      msgArea.append(newMsg);
+    }
+
+    updateScroll();
+
+  }
+
+
+  //메세지 보내기 버튼 눌렀을 떄..
+  function sendMsg() {
+    let content=document.querySelector('.content').value;
+    var talkMsg={"type" : "TALK","roomId":[[${room.roomId}]] ,"sender":[[${user.userNickname}]],"msg":content};
+    //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
+    socket.send(JSON.stringify(talkMsg));
+  }
+
+  window.addEventListener('beforeunload', handlePageUnload);
+
+  function quit(){
+    var quitMsg={"type" : "QUIT","roomId":[[${room.roomId}]] ,"sender":[[${user.userNickname}]],"msg":""};
+    //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
+    socket.send(JSON.stringify(quitMsg));
+    socket.close();
+    location.href="/";
+  }
+
+  function handlePageUnload() {
+    quit();
+  }
+
 
 </script>
 <script th:inline="javascript">
-    const authentication = /*[[${#authentication.name}]]*/ null;
+  const authentication = /*[[${#authentication.name}]]*/ null;
 </script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/follow.js"></script>
-	</body>
+</body>
 </html>
