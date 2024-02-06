@@ -113,8 +113,8 @@
 
 
 <body>
-    
-<div th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog">
+
+<div th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog" sec:authorize="isAuthenticated()">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
             <div class="modal-header">
@@ -135,16 +135,17 @@
                         <option value="게임">게임</option>
                         <!-- TODO: 스크립트와 레스트 컨트롤러를 이용해서 카테고리 자동완성 기능 만들기 -->
                     </select><br>
-                    <input type="text" th:name="channelId" class="d-none" th:value="${channel.channelId}">`
+                    <input type="text" th:name="channelId" class="d-none" th:value="${channel.channelId}">
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">방송시작</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button id="cancelBtn"type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <header th:fragment="myheader">
     <nav class="navbar navbar-expand-lg bg-dark fixed-top">

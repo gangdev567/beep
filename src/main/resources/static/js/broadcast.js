@@ -5,11 +5,21 @@
 document.addEventListener('DOMContentLoaded', function() {
    
     const button = document.querySelector('#broadcastOn');
-    console.log(button);
+    var modal = document.getElementById('myModal');
+
     button.addEventListener('click', function() {
-        const modal = document.getElementById('myModal');
-        console.log(modal);;
         modal.style.display = 'block'; 
-   });
+    });
+    
+    const cancelBtn = document.querySelector('#cancelBtn')
+    cancelBtn.addEventListener('click', function() {
+        modal.style.display = 'none';              
+    });
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.keyCode === 27) {
+            modal.style.display = 'none';
+        }
+    });
     
 });
