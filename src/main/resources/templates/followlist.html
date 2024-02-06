@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{layout/fragments :: myhead}"></head>
+
+<style>
+    .card:hover {
+        transform: scale(1.1);
+        transition: transform 0.3s ease;
+    }
+</style>
+
+<body>
+
+
+
+<div class="container mt-5 p-5">
+    <h1 class="fw-bold text-white">팔로잉 중인 채널</h1>        
+    <div class="row mt-4">
+        <div class="col-md-4" th:each="followList, iterStat : ${data.followList}">
+            <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].account.userNickname})}" style="text-decoration: none; color: inherit;">
+                <div class="card mb-3 text-center mt-4 mb-4 bg-black">
+                    <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
+                        <img th:src="${data.channelList[iterStat.index].profile_img}" alt="profile_img" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                    </div>
+                    <div class="row g-0 mb-4">
+                        <div class="col-md-12 text-center mb-2">
+                            <h5 class="card-title text-white" th:text=${followList.toUserNo.userNickname}></h5>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>        
+    </div>
+</div>
+    
+<header th:replace="layout/fragments :: myheader"></header>
+
+
+<nav th:replace="layout/fragments :: mysidebar"></nav>
+
+
+
+<script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+<script th:replace="~{layout/fragments :: sidebar_js}"></script>
+
+</body>
+
+</html>
