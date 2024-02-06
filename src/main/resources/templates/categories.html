@@ -54,8 +54,7 @@
     }
 </style>
 <body>
-<header th:replace="layout/fragments :: myheader" style="position: relative; z-index: 2;"></header>
-
+<header th:replace="layout/fragments :: myheader"></header>
 <div class="container mt-5">
     <h1 class="my-5 pt-5 text-left section-title">탐색</h1>
 
@@ -116,11 +115,15 @@
 
     </div>
 </div>
-
+<nav th:replace="layout/fragments :: mysidebar"></nav>
 <footer th:replace="layout/fragments :: myfooter"></footer>
 
+
+<script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+<script th:replace="~{layout/fragments :: sidebar_js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/categories-search.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/broadcast.js"></script>
 </body>
 </html>
