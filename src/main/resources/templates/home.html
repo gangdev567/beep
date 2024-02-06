@@ -19,10 +19,10 @@
 <html xmlns="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
-<head th:replace="layout/fragments :: myhead"></head>
+<head th:replace="~{layout/fragments :: myhead}"></head>
 
 <body style="background-color: #141517;">
-    <header th:replace="layout/fragments :: myheader" style="position: relative; z-index: 2;"></header>
+    <header th:replace="~{layout/fragments :: myheader}" style="position: relative; z-index: 2;"></header>
     
 <!-- 배너 컨테이너 -->
     <div class="container-fluid mt-4 mb-4">
@@ -238,9 +238,9 @@
 
     
     
-    <footer th:replace="layout/fragments :: myfooter"></footer>
+    <footer th:replace="~{layout/fragments :: myfooter}"></footer>
 
-    <script th:replace="layout/fragments :: bootstrap_js"></script>
+    <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 </body>
 
 </html>

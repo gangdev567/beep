@@ -54,7 +54,11 @@ public class Account {
     
     @Basic(optional = false)
     private String email;
-    
+
+    private String streamingKey;
+
+
+
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을 
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
     @Builder.Default 
@@ -75,6 +79,10 @@ public class Account {
     public Account clearRoles() {
         roles.clear();
         return this;
+    }
+
+    public void updateStreamingKey(String newStreamingKey) {
+        this.streamingKey = newStreamingKey;
     }
 
 }
