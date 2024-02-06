@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itwill.beep.domain.Account;
 import com.itwill.beep.domain.Channel;
 import com.itwill.beep.domain.ChannelRepository;
+import com.itwill.beep.dto.BroadcastOnDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +62,17 @@ public class ChannelService {
         if (viewers < 0) {
             channelDao.viewersSetZero(channelId);
         }
+        
+    }
+
+    @Transactional
+    public void update(BroadcastOnDto dto) {
+        // 뭐가 오류가 생겼는데 하드코딩하면 해결 될 것 같아서 하드 코딩함
+        Long channelId = dto.getChannelId();
+        String title = dto.getTitle();
+        String content = dto.getContent();
+        
+        channelDao.update(channelId, title, content);
         
     }
 

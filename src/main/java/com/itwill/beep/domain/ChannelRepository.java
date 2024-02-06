@@ -17,7 +17,7 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     @EntityGraph(attributePaths = "account")
     Channel findByChannelId(Long channelId);
 
-    @Modifying
+    @Modifying // 업데이트 쿼리를 받게끔 만듬
     @Query("UPDATE Channel c SET c.viewers = c.viewers + 1 WHERE c.channelId = :channelId")
     void increaseViewer(@Param("channelId") Long channelId);
 
@@ -31,5 +31,9 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     @Modifying
     @Query("UPDATE Channel c SET c.viewers = 0 WHERE c.channelId = :channelId")
     void viewersSetZero(@Param("channelId") Long channelId);
+    
+    @Modifying
+    @Query("UPDATE Channel c SET c.title = :title, c.content = :content WHERE c.channelId = :channelId")
+    void update(@Param("channelId") Long channelId,@Param("title") String title,@Param("content") String content);
     
 }
