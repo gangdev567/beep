@@ -77,7 +77,6 @@
             font-weight: bold;
         }
 
-<<<<<<< HEAD
 		.custom .video-card-item {
 			text-decoration: none;
 		}
@@ -194,17 +193,11 @@
                             class="btn mx-2 custom-btn-purple" th:href="@{/user/signup}"
                             role="button">회원가입</a></li>
 
-<<<<<<< HEAD
 						<!-- 방송하기 버튼 -->
 						
 						<li class="nav-item" sec:authorize="isAuthenticated()">
                             <th:block th:if="${status == '[OFF]'}">
-    							<!-- <form th:action="@{/broadcast/on}" method="post"
-    								style="margin-bottom: 0px;">
-    								<input type="text" th:name="${user.username}" class="d-none"
-    									th:value="${user.username}"> -->
     								<button id = "broadcastOn" type="submit" class="btn mx-2 custom-btn-purple">방송하기</button>
-    							<!-- </form> -->
     						</th:block>
     						
     						<th:block th:if="${status == '[ON]'}">
@@ -216,17 +209,6 @@
                                 </form>
                             </th:block>
 						</li>
-=======
-                    <!-- 방송하기 버튼 -->
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/broadcast/on}" method="post"
-                                    style="margin-bottom: 0px;">
-                            <input type="text" th:name="${#authentication.name}" class="d-none"
-                                         th:value="${#authentication.name}">
-                            <button type="submit" class="btn mx-2 custom-btn-purple">방송하기</button>
-                        </form>
-                    </li>
->>>>>>> 0a9b3284cfbd44ef6504309c3a6abf02a48bb04f
 
                     <!-- 로그아웃 버튼 -->
                     <li class="nav-item" sec:authorize="isAuthenticated()"><a
