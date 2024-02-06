@@ -141,13 +141,25 @@
 							role="button">회원가입</a></li>
 
 						<!-- 방송하기 버튼 -->
+						
 						<li class="nav-item" sec:authorize="isAuthenticated()">
-							<form th:action="@{/broadcast/on}" method="post"
-								style="margin-bottom: 0px;">
-								<input type="text" th:name="${user.username}" class="d-none"
-									th:value="${user.username}">
-								<button type="submit" class="btn mx-2 custom-btn-purple">방송하기</button>
-							</form>
+                            <th:block th:if="${status == '[OFF]'}">
+    							<form th:action="@{/broadcast/on}" method="post"
+    								style="margin-bottom: 0px;">
+    								<input type="text" th:name="${user.username}" class="d-none"
+    									th:value="${user.username}">
+    								<button type="submit" class="btn mx-2 custom-btn-purple">방송하기</button>
+    							</form>
+    						</th:block>
+    						
+    						<th:block th:if="${status == '[ON]'}">
+    							<form th:action="@{/broadcast/off}" method="post"
+                                    style="margin-bottom: 0px;">
+                                    <input type="text" th:name="${user.username}" class="d-none"
+                                        th:value="${user.username}">
+                                    <button type="submit" class="btn mx-2 custom-btn-purple">방송종료</button>
+                                </form>
+                            </th:block>
 						</li>
 
 						<!-- 로그아웃 버튼 -->
