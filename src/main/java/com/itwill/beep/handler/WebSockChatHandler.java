@@ -12,6 +12,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itwill.beep.dto.ChatMessage;
 import com.itwill.beep.dto.ChatRoom;
+import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class WebSockChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
+    private final ChannelService channelService;
     
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -42,7 +44,10 @@ public class WebSockChatHandler extends TextWebSocketHandler {
             sessions.add(session);
             
         }else if (chatMessage.getType().equals(ChatMessage.MessageType.QUIT)) {
+            Long channelId = room.getRoomId();
+            channelService.decreaseViewers(channelId);
             sessions.remove(session);
+            
             
         }else {
             sendToEachSocket(sessions,message ); //입장,퇴장 아닐 때는 클라이언트로부터 온 메세지 그대로 전달.

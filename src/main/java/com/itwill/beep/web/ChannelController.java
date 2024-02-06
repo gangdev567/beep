@@ -54,6 +54,10 @@ public class ChannelController {
             Channel channel = channelSvc.findChannelByAccount(streamer);
             log.info("channel = {}", channel);
             Long channelId = channel.getChannelId();
+            
+            //시청자 수 증가
+            channelSvc.increaseViewers(channelId);
+            model.addAttribute("channel", channel);
 
             // channelId로 room 정보를 찾는다.
             ChatRoom room = chatSvc.findRoomById(channelId);
@@ -92,6 +96,10 @@ public class ChannelController {
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
             Long channelId = channel.getChannelId();
+            
+            //시청자 수 증가
+            channelSvc.increaseViewers(channelId);
+            model.addAttribute("channel", channel);
 
             // channelId로 room 정보를 찾는다.
             ChatRoom room = chatSvc.findRoomById(channelId);
