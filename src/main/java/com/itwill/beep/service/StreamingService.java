@@ -27,7 +27,7 @@ public class StreamingService {
             log.info("Streaming key generated for user: {}", username);
             return streamingKey;
         } catch (Exception e) {
-            log.error("Error generating streaming key for user: {}", username, e);
+            log.error("Error generat1ing streaming key for user: {}", username, e);
             throw e; // 예외 다시 던지기
         }
     }
