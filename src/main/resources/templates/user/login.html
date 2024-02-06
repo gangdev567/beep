@@ -5,42 +5,42 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
- 	<link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/login.css">
 
 </head>
 
 <body>
-    <div class="stars"></div>
+<div class="stars"></div>
 
-	<!-- 로고 이미지 자리 미정 -->
-	<div class="logo">Your Logo</div>
+<!-- 로고 이미지 자리 미정 -->
+<div class="logo">Your Logo</div>
 
-    <div class="container">
-        
-        <div class="form">
-            <h2>Login Form</h2>
-            <form method="post">
-                <div class="inputBox">
-                    <input type="text" name="username" placeholder="Username" autofocus required />
-                </div>
-                <div class="inputBox">
-                    <input type="password" name="password" placeholder="Password" required />
-                </div>
-                <div class="inputBox">
-                    <input type="submit" value="Login" />
-                    <a th:href="@{/user/signup}">Sign Up</a>
-                </div>
-                <p>
-                	<!-- TODO: 아이디 비밀번호 찾기  -->
-                    Forget Password? <a href="#">Click Here</a>
-                </p>
-                <div class="inputBox">
-                    <div class="error-message" th:if="${param.error}">아이디와 비밀번호를 확인하세요.</div>
-                </div>
-            </form>
-        </div>
+<div class="container">
+
+    <div class="form">
+        <h2>Login Form</h2>
+        <form method="post">
+            <div class="inputBox">
+                <input type="text" name="username" placeholder="Username" autofocus required />
+            </div>
+            <div class="inputBox">
+                <input type="password" name="password" placeholder="Password" required />
+            </div>
+            <div class="inputBox">
+                <input type="submit" value="Login" />
+                <a th:href="@{/user/signup}">Sign Up</a>
+            </div>
+            <p>
+                <!-- TODO: 아이디 비밀번호 찾기  -->
+                Forget Password? <a href="#">Click Here</a>
+            </p>
+            <div class="inputBox">
+                <div class="error-message" th:if="${param.error}">아이디와 비밀번호를 확인하세요.</div>
+            </div>
+        </form>
     </div>
-    <script th:replace="~{./layout/fragments :: bootstrap_js}"></script>
+</div>
+<script th:replace="~{./layout/fragments :: bootstrap_js}"></script>
 </body>
 
 </html>

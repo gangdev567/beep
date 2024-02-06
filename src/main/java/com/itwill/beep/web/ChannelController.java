@@ -60,6 +60,10 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
+            // 여기에 스트리밍 URL 추가
+            String streamingUrl = "http://192.168.20.25:8088/stream/hls/live.m3u8"; // WSL Nginx 서버의 HLS 스트리밍 URL
+            model.addAttribute("streamingUrl", streamingUrl);
+
             // TODO: 여기서 만들어져있는 방송으로 이동하는 메서드를 만들어야 함
 
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
