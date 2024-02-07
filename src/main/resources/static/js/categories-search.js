@@ -42,20 +42,18 @@ function displaySearchResults(results) {
         const card = document.createElement("div");
         card.className = "col-lg-2 col-md-4 mb-4";
         card.innerHTML = `
-            <div class="card category-card">                
+            <div class="card category-card">
+                <a href="/categories/${category.categoryId}" class="card-link text-decoration-none text-white">
                     <img src="${category.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
                     <div class="card-body">
                         <h5 class="card-title category-title text-left text-truncate fs-5">${category.categoryName}</h5>
                         <h5 class="card-title category-title text-left text-truncate fs-6">
-                            <span class="totalViewSpan"></span>
+                            <span class="totalViewSpan">${category.totalView != null ? '시청자 ' + category.totalView + ' 명' : '시청자 0명'}</span>
                         </h5>
-                    </div>                
+                    </div>
+                </a>
             </div>
         `;
-
-        // 시청자 수를 동적으로 설정
-        const totalViewSpan = card.querySelector(".totalViewSpan");
-        totalViewSpan.innerText = category.totalView != null ? '시청자 ' + category.totalView + ' 명' : '시청자 0명';
 
         // 결과를 화면에 추가
         resultContainer.appendChild(card);

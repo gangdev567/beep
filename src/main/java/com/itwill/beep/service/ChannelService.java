@@ -71,9 +71,18 @@ public class ChannelService {
         Long channelId = dto.getChannelId();
         String title = dto.getTitle();
         String content = dto.getContent();
+        /* 카테고리아이디 추가 */
+        Long categoryId = dto.getCategoryId();
         
-        channelDao.update(channelId, title, content);
+        channelDao.update(channelId, title, content, categoryId);
         
     }
-
+    
+    /* 카테고리 아이디로 채널 검색하기 */
+    public List<Channel> findByCategoryCategoryId(Long categoryId) {
+        log.info("findByCategoryCategoryId(categoryId={})", categoryId);
+        List<Channel> list = channelDao.findByCategoryCategoryId(categoryId);
+        
+        return list;
+    }
 }
