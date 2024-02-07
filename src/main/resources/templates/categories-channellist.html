@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{layout/fragments :: myhead}"></head>
+
+<body>
+
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center">
+            <img th:src="${categoryDetails.imageUrl}" class="card-img-top img-fluid float-md-start me-md-3" alt="Category Image" style="width: 200px; height: 250px;">
+            <div class="text-center">
+                <h1 class="card-title category-title text-left text-truncate text-white" th:text="${categoryDetails.categoryName}">Category Name</h1>
+                <h5 class="card-title category-title text-left text-truncate text-white" th:text="${categoryDetails.totalView != null ? categoryDetails.totalView + ' 명' : '0 명'}"></h5>
+            </div>
+        </div>
+    </div>
+    
+    
+    <h1 class="my-3 text-white">생방송 중인 채널</h1>
+    
+    <div class="row mt-3 custom">
+        <div class="col-md-4 mb-4" th:each="categoryChannelList, iterStat : ${categoryChannelList}">
+            <div class="card border-dark">
+                <a class="video-card-thumbnail position-relative" th:href="@{/channel/{nickname}(nickname=${categoryChannelList.account.userNickname})}">
+                    <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
+                    <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
+                        <span class="badge bg-danger">LIVE</span>
+                        <span class="badge bg-secondary ms-1" th:text="${categoryChannelList.viewers}"></span>
+                    </div>
+                </a>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div class="video-card-profile mb-2">
+                        <a class="video-card-image" th:href="@{/}">
+                            <img th:src="${categoryChannelList.profile_img}" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                        </a>
+                    </div>
+                    <div class="video-card-area mb-2">
+                        <a class="video-card-title text-decoration-none" th:href="@{/channel/{nickname}(nickname=${categoryChannelList.account.userNickname})}">
+                            <span class="video-title" style="text-decoration: none; color: black; font-weight: bold;" th:text="${categoryChannelList.title}"></span>
+                        </a>
+                        <div class="video-card-name">
+                            <a class="video-card-channel text-decoration-none" th:href="@{/channel/{nickname}(nickname=${categoryChannelList.account.userNickname})}">
+                                <span class="name-ellipsis">
+                                    <span class="name-text" style="text-decoration: none; color: black; font-weight: bold;" th:text="${categoryChannelList.account.userNickname}"></span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="video-card-information mt-2">
+                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${categoryDetails.categoryId})}">
+                            <span class="badge bg-secondary" th:text="${categoryDetails.categoryName}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>      
+    </div>
+    
+</div>
+
+<header th:replace="layout/fragments :: myheader"></header>
+
+<nav th:replace="layout/fragments :: mysidebar"></nav>
+
+<!-- 모달 확인 
+<div th:replace="layout/fragments :: myModal"></div>
+ -->
+
+<script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+<script th:replace="~{layout/fragments :: sidebar_js}"></script>
+<script src="/js/broadcast.js"></script>
+
+</body>
+
+</html>

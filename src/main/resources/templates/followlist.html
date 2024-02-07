@@ -17,41 +17,56 @@
 <div class="container mt-5 p-5" th:if="${#authentication.name == 'anonymousUser'}">
     <h1 class="fw-bold text-white">로그인이 필요합니다</h1>
     <p class="text-white">로그인을 하시면 생방송 중인 목록과 팔로우 중인 목록을 확인할 수 있습니다.</p>
-    <!-- 로그인 버튼 혹은 로그인 링크 추가 -->
 </div>
 
 <div class="container mt-5 p-5" th:unless="${#authentication.name == 'anonymousUser'}">
-    <h1 class="fw-bold text-white">생방송 중인 목록</h1>        
-    <div class="row mt-4">
-        <!-- 생방송 중인 채널 -->
+    <h1 class="fw-bold text-white">생방송 중인 목록</h1>
+    <!-- 생방송 중인 채널 -->
+    <div class="row mt-3 custom">
         <th:block th:each="followList, iterStat : ${data.followList}">
-            <div class="col-md-4" th:if="${data.channelList[iterStat.index].status.toString().contains('ON')}">
-                <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].account.userNickname})}" class="text-decoration-none text-dark">
-                    <div class="card mb-3 text-center mt-4 mb-4 bg-dark text-white">
-                        <!-- 생방송 중인 경우 LIVE 표시 -->
+            <div class="col-md-4 mb-4" th:if="${data.channelList[iterStat.index].status.toString().contains('ON')}">
+                <div class="card border-dark">
+                    <a class="video-card-thumbnail position-relative" th:href="@{/}">
+                        <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
                         <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
                             <span class="badge bg-danger">LIVE</span>
                             <span class="badge bg-secondary ms-1" th:text="${data.channelList[iterStat.index].viewers + ' 명'}"></span>
                         </div>
-                        <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
-                            <img th:src="${data.channelList[iterStat.index].profile_img}" alt="profile_img" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                    </a>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div class="video-card-profile mb-2">
+                            <a class="video-card-image" th:href="@{/}">
+                                <img th:src="${data.channelList[iterStat.index].profile_img}" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                            </a>
                         </div>
-                        <div class="card-body mb-5">
-                            <h5 class="card-title mb-0" th:text=${followList.toUserNo.userNickname}></h5>
+                        <div class="video-card-area mb-2">
+                            <a class="video-card-title text-decoration-none" th:href="@{/}">
+                                <span class="video-title" style="text-decoration: none; color: black; font-weight: bold;" th:text="${data.channelList[iterStat.index].title}"></span>
+                            </a>
+                            <div class="video-card-name">
+                                <a class="video-card-channel text-decoration-none" th:href="@{/}">
+                                    <span class="name-ellipsis">
+                                        <span class="name-text" style="text-decoration: none; color: black; font-weight: bold;" th:text="${data.channelList[iterStat.index].account.userNickname}"></span>
+                                    </span>
+                                </a>
+                            </div>
                         </div>
                         <div class="video-card-information mt-2">
-                            <!-- 카테고리 연결해야함 -->
-                            <span class="badge bg-secondary" th:value="data.channelList[iterStat.index].category_id.categoryName"></span>
-                        </div>                      
+                            <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${data.channelList[iterStat.index].category.categoryId})}">
+                                <span class="badge bg-secondary" th:text="${data.channelList[iterStat.index].category.categoryName}"></span>
+                            </a>
+                        </div>
                     </div>
-                </a>
+                </div>
             </div>
         </th:block>
-        
-        <!-- 생방송 중이 아닌 채널 -->
-        <h1 class="fw-bold text-white">팔로우 중인 목록</h1>
+    </div>
+
+    <h1 class="fw-bold text-white">팔로우 중인 목록</h1>
+    <!-- 생방송 중이 아닌 채널 -->
+    <div class="row mt-3 custom">
         <th:block th:each="followList, iterStat : ${data.followList}">
-            <div class="col-md-4" th:if="${not data.channelList[iterStat.index].status.toString().contains('ON')}">
+            <div class="col-md-4 mb-4" th:if="${not data.channelList[iterStat.index].status.toString().contains('ON')}">
                 <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].account.userNickname})}" class="text-decoration-none text-dark">
                     <div class="card mb-3 text-center mt-4 mb-4 bg-dark text-white">
                         <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
@@ -68,7 +83,12 @@
 </div>
 
 <header th:replace="layout/fragments :: myheader"></header>
+
 <nav th:replace="layout/fragments :: mysidebar"></nav>
+
+<!-- 모달 확인 
+<div th:replace="layout/fragments :: myModal"></div>
+ -->
 
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>

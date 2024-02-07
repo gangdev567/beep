@@ -84,7 +84,7 @@
             <div class="row">
                 <div th:each="mostViewers, iterStat : ${mostViewers}" class="col-lg-2 col-md-4 mb-4">
                     <div class="card category-card">
-                        <a th:href="@{http://www.naver.com}" class="card-link text-decoration-none text-white">
+                        <a th:href="@{/categories/{categoryId}(categoryId=${mostViewers.categoryId})}" class="card-link text-decoration-none text-white">
                             <img th:src="${mostViewers.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
                             <div class="card-body">
                                 <h5 class="card-title category-title text-left text-truncate fs-5" th:text="${mostViewers.categoryName}">Category Name</h5>
@@ -101,7 +101,7 @@
             <div class="row">
                 <div th:each="category, iterStat : ${categories}" class="col-lg-2 col-md-4 mb-4">
                     <div class="card category-card">
-                        <a th:href="@{http://www.naver.com}" class="card-link text-decoration-none text-white">
+                        <a th:href="@{/categories/{categoryId}(categoryId=${category.categoryId})}" class="card-link text-decoration-none text-white">
                             <img th:src="${category.imageUrl}" class="card-img-top img-fluid" alt="Category Image">
                             <div class="card-body">
                                 <h5 class="card-title category-title text-center text-truncate fs-5" th:text="${category.categoryName}">Category Name</h5>
