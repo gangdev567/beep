@@ -8,6 +8,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByTotalViewNotNullOrderByTotalViewDesc();
 
-    Optional<Category> findByCategoryId(long id);
+    Optional<Category> findByCategoryId(long categoryId);
+
+    Category findByCategoryIdIs(long categoryId);
 
 }

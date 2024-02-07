@@ -44,8 +44,14 @@ public class CategoryService {
         log.info("findByTotalViewers()");
         List<Category> list = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
 
-
         return list;
+    }
+
+    public Category findByCategoryIdIs(Long categoryId) {
+        log.info("findByCategoryIdIs(categoryId={})", categoryId);
+        Category category = categoryRepository.findByCategoryIdIs(categoryId);
+
+        return category;
     }
 
     /**
