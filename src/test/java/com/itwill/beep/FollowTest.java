@@ -1,6 +1,8 @@
 package com.itwill.beep;
 
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.itwill.beep.domain.Account;
 import com.itwill.beep.domain.Follow;
 import com.itwill.beep.service.FollowService;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
