@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.UserAccount;
 import com.itwill.beep.domain.Channel;
 import com.itwill.beep.domain.Follow;
 import com.itwill.beep.service.ChannelService;
@@ -33,7 +33,7 @@ public class FollowController {
         log.info("getFollowingList()");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account followwingByfromUser = userService.loginUser(authentication.getName());
+        UserAccount followwingByfromUser = userService.loginUser(authentication.getName());
 
         List<Follow> list = followService.findByFromUser(followwingByfromUser);
         List<Channel> channelList = new ArrayList<>();

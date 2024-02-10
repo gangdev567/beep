@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.UserAccount;
 import com.itwill.beep.domain.Follow;
 import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
@@ -33,8 +33,8 @@ public class FollowRestController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Account fromUser = userService.loginUser(authentication.getName());
-        Account toUser = userService.findByUserId(toUserNo);
+        UserAccount fromUser = userService.loginUser(authentication.getName());
+        UserAccount toUser = userService.findByUserId(toUserNo);
 
         followService.follow(fromUser, toUser);
         log.info("{} 님이 {} 님을 팔로우합니다.", fromUser.getUsername(), toUser.getUsername());
@@ -48,8 +48,8 @@ public class FollowRestController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Account loggedInUser = userService.loginUser(authentication.getName());
-        Account unfollowUser = userService.findByUserId(toUserNo);
+        UserAccount loggedInUser = userService.loginUser(authentication.getName());
+        UserAccount unfollowUser = userService.findByUserId(toUserNo);
 
         followService.unfollow(loggedInUser, unfollowUser);
         log.info("{} 님이 언팔로우합니다.", loggedInUser.getUsername());
@@ -63,8 +63,8 @@ public class FollowRestController {
         log.info("getFollowStatus(toUserNo: {})", toUserNo);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account fromUser = userService.loginUser(authentication.getName());
-        Account toUser = userService.findByUserId(toUserNo);
+        UserAccount fromUser = userService.loginUser(authentication.getName());
+        UserAccount toUser = userService.findByUserId(toUserNo);
 
         boolean isFollowing = followService.isFollowing(fromUser, toUser);
 

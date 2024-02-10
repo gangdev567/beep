@@ -3,7 +3,7 @@ package com.itwill.beep.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.UserAccount;
 import com.itwill.beep.domain.Follow;
 import com.itwill.beep.domain.FollowRepository;
 import jakarta.transaction.Transactional;
@@ -19,14 +19,14 @@ public class FollowService {
     /**
      * 한 사용자가 다른 사용자를 팔로우합니다.
      *
-     * @param fromUserNo 팔로우를 시작하는 사용자
+     * @param fromUserNo 팔로우를 신청하는 사용자
      * @param toUserNo 팔로우를 받는 사용자
      */
-    public void follow(Account fromUserNo, Account toUserNo) {
-        validateSameUser(fromUserNo, toUserNo);
-        validateAlreadyFollowed(fromUserNo, toUserNo);
+    public void follow(UserAccount followerAccount, UserAccount followeeAccount) {
+        validateSameUser(followerAccount, followeeAccount);
+        validateAlreadyFollowed(followerAccount, followeeAccount);
 
-        Follow follow = Follow.builder().fromUserNo(fromUserNo).toUserNo(toUserNo)
+        Follow follow = Follow.builder().fromUserNo(followerAccount).toUserNo(followeeAccount)
                 .createTime(LocalDateTime.now()).build();
         followRepository.save(follow);
     }
@@ -37,18 +37,18 @@ public class FollowService {
      * @param user 팔로우를 해제하는 사용자
      */
     @Transactional
-    public void unfollow(Account fromUserNo, Account toUserNo) {
-        followRepository.deleteByFromUserNoAndToUserNo(fromUserNo, toUserNo);
+    public void unfollow(UserAccount follower, UserAccount toUserNo) {
+        followRepository.deleteByFromUserNoAndToUserNo(follower, toUserNo);
     }
 
     /**
      * 주어진 사용자가 팔로우하는 사용자 수를 반환합니다.
      *
-     * @param fromUser 팔로우를 시작하는 사용자
+     * @param follower 팔로우를 신청하는 사용자
      * @return 팔로잉 수
      */
-    public Long countByFromUser(Account fromUserNo) {
-        return followRepository.countByFromUserNo(fromUserNo);
+    public Long countByFromUser(UserAccount follower) {
+        return followRepository.countByFromUserNo(follower);
     }
 
     /**
@@ -57,7 +57,7 @@ public class FollowService {
      * @param toUser 팔로우를 받는 사용자
      * @return 팔로워 수
      */
-    public Long countFollowersByToUser(Account toUserNo) {
+    public Long countFollowersByToUser(UserAccount toUserNo) {
         return followRepository.countByToUserNo(toUserNo);
     }
 

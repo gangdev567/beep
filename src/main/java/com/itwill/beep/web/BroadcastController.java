@@ -1,14 +1,13 @@
 package com.itwill.beep.web;
 
+import com.itwill.beep.domain.StreamingStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.itwill.beep.domain.Account;
-import com.itwill.beep.domain.Broadcast;
+import com.itwill.beep.domain.UserAccount;
 import com.itwill.beep.domain.Channel;
 import com.itwill.beep.dto.BroadcastOnDto;
 import com.itwill.beep.dto.ChatRoom;
@@ -37,16 +36,16 @@ public class BroadcastController {
             String username = authentication.getName();
             log.info("username = {}", username);
 
-            Account user = userSvc.loginUser(username);
+            UserAccount user = userSvc.loginUser(username);
             model.addAttribute("user", user);
             model.addAttribute("streamer", user);
 
-            Channel channel = channelSvc.findChannelByAccount(user);
-            channel.setStatus(Broadcast.ON);
+            Channel channel = channelSvc.findChannelByUserAccount(user);
+            channel.setStatus(StreamingStatus.RUNNING);
             channelSvc.update(dto);
             
             // 업데이트 후 다시 불러오기
-            channel = channelSvc.findChannelByAccount(user);
+            channel = channelSvc.findChannelByUserAccount(user);
             
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
@@ -59,7 +58,7 @@ public class BroadcastController {
             model.addAttribute("room", room);
 
             // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
-            String streamingKey = user.getStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
+            String streamingKey = user.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
             String streamingUrl = String.format("http://192.168.20.25:8088/stream/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
             model.addAttribute("streamingUrl", streamingUrl);
 
@@ -78,10 +77,10 @@ public class BroadcastController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        Account user = userSvc.loginUser(username);
+        UserAccount user = userSvc.loginUser(username);
 
-        Channel channel = channelSvc.findChannelByAccount(user);
-        channel.setStatus(Broadcast.OFF);
+        Channel channel = channelSvc.findChannelByUserAccount(user);
+        channel.setStatus(StreamingStatus.STOPPED);
         channelSvc.save(channel);
 
         return "redirect:/";

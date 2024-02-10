@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.itwill.beep.domain.Account;
-import com.itwill.beep.domain.AccountRepository;
+import com.itwill.beep.domain.UserAccount;
+import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.domain.UserRole;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
@@ -20,53 +20,52 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
-    private final AccountRepository AccDao;
+    private final UserAccountRepository userAccountRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("username = {}", username);
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        log.info("username = {}", userName);
 
-        Optional<Account> opt = AccDao.findByUsername(username);
-        if (opt.isPresent()) {
-            return UserSecurityDto.fromEntity(opt.get());
+        UserAccount userAccount = userAccountRepository.findByUserName(userName);
+        if (userAccount != null) {
+            return UserSecurityDto.fromEntityToDto(userAccount);
         } else {
-            throw new UsernameNotFoundException(username + "찾을 수 없음!");
+            throw new UsernameNotFoundException(userName + "찾을 수 없음!");
         }
-
     }
 
-    public void createAccount(SignupRequestDto dto) {
+    public void createUserAccount(SignupRequestDto signupRequestDto) {
 
         // dto를 Account객체로
-        Account entity = dto.toEntity(passwordEncoder);
+        UserAccount userEntity = signupRequestDto.toEntity(passwordEncoder);
 
         // 역할설정
-        entity.addRole(UserRole.USER);
+        userEntity.addUserRole(UserRole.USER);
 
         // insert users, user_roles
-        AccDao.save(entity);
+        userAccountRepository.save(userEntity);
     }
 
-    public Account loginUser(String username) {
+    public UserAccount findUserByUserName(String userName) {
 
         // repository에서 쿼리를 실행
-        Account user = AccDao.findByUsernameIs(username);
+        UserAccount userAccount = userAccountRepository.findByUserName(userName);
 
-        return user;
+        return userAccount;
     }
   
-    public Account loadUserByNickname(String nickname) {
+    public UserAccount findUserByUserNickname(String userNickname) {
+
+        UserAccount userAccount = userAccountRepository.findByUserNickname(userNickname);
         
-        Account user = AccDao.findByUserNickname(nickname);
-        
-        return user;
+        return userAccount;
     }
     
 
     /* follow 기능에 필요한 메서드 */
-    public Account findByUserId(Long id) {
-        Account user = AccDao.findByIdIs(id);
+    public UserAccount findByUserId(Long userId) {
+        UserAccount userAccount = userAccountRepository.findByUserId(userId);
 
-        return user;
+        return userAccount;
     }
 }

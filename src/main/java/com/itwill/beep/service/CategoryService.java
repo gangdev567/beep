@@ -42,14 +42,14 @@ public class CategoryService {
      */
     public List<Category> findByTotalViewers() {
         log.info("findByTotalViewers()");
-        List<Category> list = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
+        List<Category> categories = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
 
-        return list;
+        return categories;
     }
 
     public Category findByCategoryIdIs(Long categoryId) {
-        log.info("findByCategoryIdIs(categoryId={})", categoryId);
-        Category category = categoryRepository.findByCategoryIdIs(categoryId);
+        log.info("findByCategoryId(categoryId={})", categoryId);
+        Category category = categoryRepository.findByCategoryId(categoryId);
 
         return category;
     }
@@ -75,10 +75,10 @@ public class CategoryService {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gamesQuery);
             for (var game : games) {
                 // 이미 저장된 Category 확인
-                Optional<Category> existingCategory =
+                Category existingCategory =
                         categoryRepository.findByCategoryId(game.getId());
 
-                if (existingCategory.isEmpty()) {
+                if (existingCategory == null) {
                     // 각 게임에 대한 커버 정보 가져오기
                     Cover cover = getCoverForGame(game.getId());
 
@@ -88,12 +88,12 @@ public class CategoryService {
 
                     // Category 엔터티 생성 및 저장
                     Category category = Category.builder().categoryId(game.getId())
-                            .categoryName(game.getName()).imageUrl(imageUrl).build();
+                            .categoryName(game.getName()).categoryImageUrl(imageUrl).build();
 
                     savedCategories.add(categoryRepository.save(category));
                 } else {
                     // 이미 존재하면 넘어감
-                    savedCategories.add(existingCategory.get());
+                    savedCategories.add(existingCategory);
                 }
             }
         } catch (RequestException e) {
@@ -130,10 +130,10 @@ public class CategoryService {
 
             for (var game : games) {
 
-                Optional<Category> existingCategory =
+                Category existingCategory =
                         categoryRepository.findByCategoryId(game.getId());
 
-                if (existingCategory.isEmpty()) {
+                if (existingCategory == null) {
                     // 각 게임에 대한 커버 정보 가져오기
                     Cover cover = getCoverForGame(game.getId());
 
@@ -143,12 +143,12 @@ public class CategoryService {
 
                     // Category 엔터티 생성 및 저장
                     Category category = Category.builder().categoryId(game.getId())
-                            .categoryName(game.getName()).imageUrl(imageUrl).build();
+                            .categoryName(game.getName()).categoryImageUrl(imageUrl).build();
 
                     foundGames.add(categoryRepository.save(category));
                 } else {
                     // 이미 존재하면 넘어감
-                    foundGames.add(existingCategory.get());
+                    foundGames.add(existingCategory);
                 }
             }
 

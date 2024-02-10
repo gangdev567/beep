@@ -32,12 +32,12 @@ public class Follow {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fromUserNo")
-    private Account fromUserNo;
+    private UserAccount fromUserNo;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "toUserNo")
-    private Account toUserNo;
+    private UserAccount toUserNo;
 
     private LocalDateTime createTime;
 }

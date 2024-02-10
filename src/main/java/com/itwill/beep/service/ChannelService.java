@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.UserAccount;
 import com.itwill.beep.domain.Channel;
 import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.dto.BroadcastOnDto;
@@ -20,8 +20,8 @@ public class ChannelService {
     
     private final ChannelRepository channelDao;
     
-    public Channel findChannelByAccount(Account acconut) {
-        Channel channel = channelDao.findByAccount(acconut);
+    public Channel findChannelByUserAccount(UserAccount userAcconut) {
+        Channel channel = channelDao.findByUserAccount(userAcconut);
         return channel;
     }
 

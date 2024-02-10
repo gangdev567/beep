@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.itwill.beep.domain.Account;
+import com.itwill.beep.domain.UserAccount;
 import com.itwill.beep.domain.Follow;
 import com.itwill.beep.service.FollowService;
 
@@ -26,8 +26,8 @@ public class FollowTest {
         log.info("testFollowService()");
 
         // 테스트에 사용할 사용자 객체 생성 (임의의 값 사용)
-        Account fromUser = Account.builder().id(22L).build();
-        Account toUser = Account.builder().id(21L).build();
+        UserAccount fromUser = UserAccount.builder().id(22L).build();
+        UserAccount toUser = UserAccount.builder().id(21L).build();
 
         // 팔로잉 수 확인
         Long countByFromUser = followService.countByFromUser(fromUser);

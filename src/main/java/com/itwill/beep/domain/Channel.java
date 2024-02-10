@@ -43,24 +43,29 @@ public class Channel {
 
     @ToString.Exclude
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_no")
-    private Account account;
+    @JoinColumn(name = "channel_user_account")
+    private UserAccount channelUserAccount;
 
-    private String title;
+    @Column(name = "channel_title")
+    private String channelTitle;
 
-    private String content;
+    @Column(name = "channel_content")
+    private String channelContent;
 
     @CreatedDate
-    private LocalDateTime created_time;
+    @Column(name = "channel_created_time")
+    private LocalDateTime channelCreatedTime;
 
-    private String profile_img;
+    @Column(name = "channel_profile_img")
+    private String channelProfileImg;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "category_of_channel")
+    private Category categoryOfChannel;
 
-    private Long viewers;
+    @Column(name = "channel_viewer_count")
+    private Long channelViewerCount;
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
@@ -68,15 +73,15 @@ public class Channel {
     // @ToString.Exclude
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "broadcast", joinColumns = @JoinColumn(name = "channel_id"))
+    @CollectionTable(name = "streaming_status", joinColumns = @JoinColumn(name = "channel_id"))
     // 애너테이션 안에서 애너테이션을 한 번 더 사용할 수 있다는 놀라운 사실!
     // 쉽게 설명해서 @CollectionTable 가 조인할 테이블의 이름을 설정하고
     // 애너테이션 안에 @JoinColumn을 사용하여 설정한 테이블의 설정한 컬럼과 조인하도록 만든 것이다.
-    private Set<Broadcast> status = new HashSet<>();
+    private Set<StreamingStatus> streamStatusSet = new HashSet<>();
 
-    public Channel setStatus(Broadcast stat) {
-        status.clear();
-        status.add(stat);
+    public Channel setStreamingStatus(StreamingStatus streamingStatus) {
+        streamStatusSet.clear();
+        streamStatusSet.add(streamingStatus);
         return this;
     }
 
