@@ -1,5 +1,7 @@
 package com.itwill.beep.domain;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,7 +64,13 @@ public class UserAccountEntity { //-> 원래 Account -> UserAccountEntity 로 �
     @Column(name = "user_streaming_key")
     private String userStreamingKey;
 
+    // 팔로우하는 사람들과의 관계
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<FollowEntity> followings = new HashSet<>();
 
+    // 팔로워들과의 관계
+    @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<FollowEntity> followers = new HashSet<>();
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을 
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션

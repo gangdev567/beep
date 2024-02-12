@@ -39,10 +39,10 @@ public class ChannelController {
             log.info("username = {}", username);
 
             // 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
-            UserAccountEntity user = userSvc.loginUser(username);
+            UserAccountEntity user = userSvc.findUserByUserName(username);
 
             // pathvariable로 스트리머 정보를 가져온다
-            UserAccountEntity streamer = userSvc.loadUserByNickname(id);
+            UserAccountEntity streamer = userSvc.findUserByUserName(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
 
@@ -65,8 +65,8 @@ public class ChannelController {
             model.addAttribute("room", room);
 
             // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
-            String streamingKey = streamer.getStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
-            String streamingUrl = String.format("http://192.168.20.25:8088/stream/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
+            String streamingKey = streamer.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
+            String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
             model.addAttribute("streamingUrl", streamingUrl);
 
             // TODO: 여기서 만들어져있는 방송으로 이동하는 메서드를 만들어야 함
@@ -74,16 +74,16 @@ public class ChannelController {
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
             // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
             // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다.
-            String status = channel.getStatus().toString();
+            String status = channel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
 
         } else if (SecurityContextHolder.getContext().getAuthentication()
                 .getName() == "anonymousUser") {
             // 비로그인 시청자가 방송을 시청하려고 하는 경우
             UserAccountEntity user = UserAccountEntity.builder().userNickname("anonymousUser").build();
-            user.addRole(UserRoleType.USER);
+            user.addUserRole(UserRoleType.USER);
 
-            UserAccountEntity streamer = userSvc.loadUserByNickname(id);
+            UserAccountEntity streamer = userSvc.findUserByUserName(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
 

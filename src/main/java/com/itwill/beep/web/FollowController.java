@@ -26,34 +26,18 @@ import lombok.extern.slf4j.Slf4j;
 public class FollowController {
     private final FollowService followService;
     private final UserService userService;
-    private final ChannelService channelService;
 
     @GetMapping("/list")
     public String getFollowingList(Model model) {
         log.info("getFollowingList()");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity followwingByfromUser = userService.loginUser(authentication.getName());
+        UserAccountEntity userAccount = userService.findUserByUserName(authentication.getName());
 
-        List<FollowEntity> list = followService.findByFromUser(followwingByfromUser);
-        List<ChannelEntity> channelList = new ArrayList<>();
+        // 사용자가 팔로우하는 사람들의 목록 조회
+        model.addAttribute("followingList", followService.getFollowings(userAccount));
 
-        list.forEach((follow) -> {
-            ChannelEntity channel = channelService.findChannelByAccount(follow.getFollowingUser());
-            if (channel != null) {
-                channelList.add(channel);
-            }
-        });
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("followList", list);
-        data.put("channelList", channelList);
-
-        log.info(data.toString());
-
-        model.addAttribute("data", data);
-
-        return "followlist";
+        return "followingList"; // 팔로잉 목록을 보여주는 뷰의 이름
     }
 
 }

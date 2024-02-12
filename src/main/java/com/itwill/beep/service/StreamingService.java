@@ -32,7 +32,7 @@ public class StreamingService {
 
     public boolean validateStreamingKey(String streamingKey) {
         try {
-            boolean streamingKeyValid = userAccountRepository.findByUserStreamingKey(streamingKey).isPresent();
+            boolean streamingKeyValid = (userAccountRepository.findByUserStreamingKey(streamingKey) !=null);
             log.info("Validating streaming key: {} - Result: {}", streamingKey, streamingKeyValid);
             return streamingKeyValid;
         } catch (Exception e) {

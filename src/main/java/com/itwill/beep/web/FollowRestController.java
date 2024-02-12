@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,43 +28,43 @@ public class FollowRestController {
     private final FollowService followService;
     private final UserService userService;
 
-    @PostMapping("/add/{toUserNo}")
-    public ResponseEntity<Boolean> follow(@PathVariable("toUserNo") Long toUserNo) {
+    @PostMapping("/add/{following}")
+    public ResponseEntity<Boolean> follow(@PathVariable("following") Long toUserNo) {
         log.info("follow(toUserNo: {})", toUserNo);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        UserAccountEntity fromUser = userService.loginUser(authentication.getName());
-        UserAccountEntity toUser = userService.findByUserId(toUserNo);
+        UserAccountEntity follower = userService.findUserByUserName(authentication.getName());
+        UserAccountEntity following = userService.findByUserId(toUserNo);
 
-        followService.follow(fromUser, toUser);
-        log.info("{} 님이 {} 님을 팔로우합니다.", fromUser.getUsername(), toUser.getUsername());
+        followService.follow(follower, following);
+        log.info("{} 님이 {} 님을 팔로우합니다.", follower.getUserName(), following.getUserName());
 
         return ResponseEntity.ok(true);
     }
 
-    @DeleteMapping("/delete/{toUserNo}")
+    @DeleteMapping("/delete/{following}")
     public ResponseEntity<Boolean> unfollow(@PathVariable("toUserNo") Long toUserNo) {
         log.info("unfollow(toUserNo: {})", toUserNo);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        UserAccountEntity loggedInUser = userService.loginUser(authentication.getName());
+        UserAccountEntity loggedInUser = userService.findUserByUserName(authentication.getName());
         UserAccountEntity unfollowUser = userService.findByUserId(toUserNo);
 
         followService.unfollow(loggedInUser, unfollowUser);
-        log.info("{} 님이 언팔로우합니다.", loggedInUser.getUsername());
+        log.info("{} 님이 언팔로우합니다.", loggedInUser.getUserName());
 
         return ResponseEntity.ok(true);
     }
 
-    @GetMapping("/status/{toUserNo}")
+    @GetMapping("/status/{following}")
     public ResponseEntity<Map<String, Boolean>> getFollowStatus(
             @PathVariable("toUserNo") Long toUserNo) {
         log.info("getFollowStatus(toUserNo: {})", toUserNo);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity fromUser = userService.loginUser(authentication.getName());
+        UserAccountEntity fromUser = userService.findUserByUserName(authentication.getName());
         UserAccountEntity toUser = userService.findByUserId(toUserNo);
 
         boolean isFollowing = followService.isFollowing(fromUser, toUser);
@@ -74,40 +75,32 @@ public class FollowRestController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/followlist/{fromUserNo}")
-    public ResponseEntity<Map<String, Object>> getFollowList(
-            @PathVariable("fromUserNo") Long fromUserNo) {
-        log.info("getFollowList(fromUserNo: {})", fromUserNo);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @GetMapping("/followers")
+    public String getFollowerList(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName(); // 현재 인증된 사용자의 이름(또는 아이디) 가져오기
 
-        Account fromUser = userService.loginUser(authentication.getName());
+        // 사용자 이름(또는 아이디)를 기반으로 UserAccountEntity 찾기
+        UserAccountEntity userAccount = userService.findUserByUserName(username);
 
-        Long countByFromUser = followService.countByFromUser(fromUser);
-        List<FollowEntity> followList = followService.findByFromUser(fromUser);
+        // 사용자의 팔로워 목록 조회
+        model.addAttribute("followers", followService.getFollowers(userAccount));
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("countByFollow", countByFromUser);
-        response.put("followList", followList);
-
-        log.info("response: {}", response);
-
-        return ResponseEntity.ok(response);
+        return "followers"; // 팔로워 목록을 보여주는 뷰의 이름
     }
 
-    @GetMapping("/followerlist/{toUserNo}")
-    public ResponseEntity<Map<String, Object>> getFollowerCount(
-            @PathVariable("toUserNo") Long toUserNo) {
-        log.info("getFolloweCount(toUserNo: {})", toUserNo);
+    @GetMapping("/followings")
+    public String getFollowingList(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName(); // 현재 인증된 사용자의 이름(또는 아이디) 가져오기
 
-        Account toUser = userService.findByUserId(toUserNo);
-        Long countFollowerByToUser = followService.countFollowersByToUser(toUser);
-        List<FollowEntity> followerList = followService.findByToUser(toUser);
+        // 사용자 이름(또는 아이디)를 기반으로 UserAccountEntity 찾기
+        UserAccountEntity userAccount = userService.findUserByUserName(username);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("countByFollower", countFollowerByToUser);
-        response.put("followerList", followerList);
+        // 사용자가 팔로우하는 사람들의 목록 조회
+        model.addAttribute("followings", followService.getFollowings(userAccount));
 
-        return ResponseEntity.ok(response);
+        return "followings"; // 팔로잉 목록을 보여주는 뷰의 이름
     }
 
 }

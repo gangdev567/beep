@@ -1,8 +1,8 @@
 package com.itwill.beep.domain;
 
 public enum StreamingState {
-    STREAMING("STREAMING"),
-    STOPPED("STOPPED");
+    ON("ON"),
+    OFF("OFF");
     
     private String streamingState;
 

@@ -54,7 +54,7 @@ public class HomeController {
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
             // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
             // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다.
-            String status = channel.getStatus().toString();
+            String status = channel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
 
         }
@@ -65,7 +65,7 @@ public class HomeController {
         // 잘 정리하면 콘트롤러에서 쓰이는 코드가 좀 줄어들 것 같기는 하지만
         // 여러군데에서 쓸 코드도 아니고 그냥 여기서 한 번 고생했다.
         List<ChannelEntity> channelList = broadcastList.stream().map(room -> convertToChannel(room))
-                .filter(channel -> channel.getStatus().contains(StreamingState.STREAMING))
+                .filter(channel -> channel.getStreamingStateSet().contains(StreamingState.ON))
                 .collect(Collectors.toList());
 
 
@@ -77,7 +77,7 @@ public class HomeController {
     private ChannelEntity convertToChannel(ChatRoom room) {
         Long channelId = room.getRoomId();
         log.info("channelId = {}", channelId);
-        ChannelEntity channel = channelSvc.findChannelById(channelId);
+        ChannelEntity channel = channelService.findChannelById(channelId);
         log.info("channel = {}", channel);
         return channel;
     }
