@@ -52,8 +52,8 @@
                             </div>
                         </div>
                         <div class="video-card-information mt-2">
-                            <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${data.channelList[iterStat.index].category.categoryId})}">
-                                <span class="badge bg-secondary" th:text="${data.channelList[iterStat.index].category.categoryName}"></span>
+                            <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${data.channelList[iterStat.index].categoryEntity.categoryId})}">
+                                <span class="badge bg-secondary" th:text="${data.channelList[iterStat.index].categoryEntity.categoryName}"></span>
                             </a>
                         </div>
                     </div>

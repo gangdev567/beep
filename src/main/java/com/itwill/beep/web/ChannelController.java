@@ -1,14 +1,14 @@
 package com.itwill.beep.web;
 
+import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.UserAccountEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.itwill.beep.domain.UserAccount;
-import com.itwill.beep.domain.Channel;
-import com.itwill.beep.domain.UserRole;
+import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
@@ -39,10 +39,10 @@ public class ChannelController {
             log.info("username = {}", username);
 
             // 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
-            UserAccount user = userSvc.loginUser(username);
+            UserAccountEntity user = userSvc.loginUser(username);
 
             // pathvariable로 스트리머 정보를 가져온다
-            UserAccount streamer = userSvc.loadUserByNickname(id);
+            UserAccountEntity streamer = userSvc.loadUserByNickname(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
 
@@ -51,7 +51,7 @@ public class ChannelController {
             log.info("user = {}", user);
 
             // streamer정보로 channel정보를 불러온다.
-            Channel channel = channelSvc.findChannelByUserAccount(streamer);
+            ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
             log.info("channel = {}", channel);
             Long channelId = channel.getChannelId();
             
@@ -80,10 +80,10 @@ public class ChannelController {
         } else if (SecurityContextHolder.getContext().getAuthentication()
                 .getName() == "anonymousUser") {
             // 비로그인 시청자가 방송을 시청하려고 하는 경우
-            UserAccount user = UserAccount.builder().userNickname("anonymousUser").build();
-            user.addRole(UserRole.USER);
+            UserAccountEntity user = UserAccountEntity.builder().userNickname("anonymousUser").build();
+            user.addRole(UserRoleType.USER);
 
-            UserAccount streamer = userSvc.loadUserByNickname(id);
+            UserAccountEntity streamer = userSvc.loadUserByNickname(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
 
@@ -92,7 +92,7 @@ public class ChannelController {
             log.info("user = {}", user);
 
             // streamer정보로 channel정보를 불러온다.
-            Channel channel = channelSvc.findChannelByUserAccount(streamer);
+            ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
             Long channelId = channel.getChannelId();

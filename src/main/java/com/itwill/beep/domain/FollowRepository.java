@@ -3,19 +3,20 @@ package com.itwill.beep.domain;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FollowRepository extends JpaRepository<Follow, Long> {
-    void deleteByFromUserNoAndToUserNo(Account fromUserNo, Account toUserNo);
+public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
+    void deleteByFollowerUserAccountAndFollowingUserAccount
+        (UserAccountEntity followerUserAccount, UserAccountEntity followingUserAccount);
 
-    Long countByFromUserNo(Account fromUserNo);
+    Long countByFollowerUserAccount(UserAccountEntity followerUserAccount);
 
-    Long countByToUserNo(Account toUserNo);
+    Long countByFollowingUserAccount(UserAccountEntity followingUserAccount);
 
-    List<Follow> findByFromUserNo(Account fromUserNo);
+    List<FollowEntity> findByFollowerUserAccount(UserAccountEntity followerUserAccount);
 
-    Optional<Follow> findByFromUserNoAndToUserNo(Account fromUserNo, Account toUserNo);
+    FollowEntity findByFollowerUserAccountAndFollowingUserAccount(UserAccountEntity followerUserAccount, UserAccountEntity followingUserAccount);
 
-    boolean existsByFromUserNoAndToUserNo(Account fromUser, Account toUser);
+    boolean existsByFollowerUserAccountAndFollowingUserAccount(UserAccountEntity followerUserAccount, UserAccountEntity followingUserAccount);
 
-    List<Follow> findByToUserNo(Account toUserNo);
+    List<FollowEntity> findByFollowingUserAccount(UserAccountEntity followingUserAccount);
 
 }

@@ -1,5 +1,6 @@
 package com.itwill.beep.web;
 
+import com.itwill.beep.domain.ChannelEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,9 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.itwill.beep.domain.UserAccount;
-import com.itwill.beep.domain.StreamingStatus;
-import com.itwill.beep.domain.Channel;
+import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
@@ -42,12 +42,12 @@ public class HomeController {
             log.info("userName = {}", userName);
 
             // 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
-            UserAccount userAccount = userService.findUserByUserName(userName);
+            UserAccountEntity userAccountEntity = userService.findUserByUserName(userName);
 
             // model에 user를 보낸다.
-            model.addAttribute("userAccount", userAccount);
+            model.addAttribute("userAccount", userAccountEntity);
 
-            Channel channel = channelService.findChannelByUserAccount(userAccount);
+            ChannelEntity channel = channelService.findChannelByUserAccount(userAccountEntity);
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
 
@@ -64,8 +64,8 @@ public class HomeController {
         // 처음에 구조 설계를 잘못잡고 들어가서 chatroom을 따로 만들고 그 정보로 다시 채널 정보를 가져온다.
         // 잘 정리하면 콘트롤러에서 쓰이는 코드가 좀 줄어들 것 같기는 하지만
         // 여러군데에서 쓸 코드도 아니고 그냥 여기서 한 번 고생했다.
-        List<Channel> channelList = broadcastList.stream().map(room -> convertToChannel(room))
-                .filter(channel -> channel.getStatus().contains(StreamingStatus.RUNNING))
+        List<ChannelEntity> channelList = broadcastList.stream().map(room -> convertToChannel(room))
+                .filter(channel -> channel.getStatus().contains(StreamingState.STREAMING))
                 .collect(Collectors.toList());
 
 
@@ -74,10 +74,10 @@ public class HomeController {
         return "home";
     }
 
-    private Channel convertToChannel(ChatRoom room) {
+    private ChannelEntity convertToChannel(ChatRoom room) {
         Long channelId = room.getRoomId();
         log.info("channelId = {}", channelId);
-        Channel channel = channelSvc.findChannelById(channelId);
+        ChannelEntity channel = channelSvc.findChannelById(channelId);
         log.info("channel = {}", channel);
         return channel;
     }

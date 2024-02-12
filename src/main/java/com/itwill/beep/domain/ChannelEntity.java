@@ -34,7 +34,7 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "channels")
-public class Channel {
+public class ChannelEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 열시퀸스
@@ -44,7 +44,7 @@ public class Channel {
     @ToString.Exclude
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "channel_user_account")
-    private UserAccount channelUserAccount;
+    private UserAccountEntity channelUserAccountEntity;
 
     @Column(name = "channel_title")
     private String channelTitle;
@@ -62,7 +62,7 @@ public class Channel {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_of_channel")
-    private Category categoryOfChannel;
+    private CategoryEntity categoryEntityOfChannel;
 
     @Column(name = "channel_viewer_count")
     private Long channelViewerCount;
@@ -77,11 +77,11 @@ public class Channel {
     // 애너테이션 안에서 애너테이션을 한 번 더 사용할 수 있다는 놀라운 사실!
     // 쉽게 설명해서 @CollectionTable 가 조인할 테이블의 이름을 설정하고
     // 애너테이션 안에 @JoinColumn을 사용하여 설정한 테이블의 설정한 컬럼과 조인하도록 만든 것이다.
-    private Set<StreamingStatus> streamStatusSet = new HashSet<>();
+    private Set<StreamingState> streamStatusSet = new HashSet<>();
 
-    public Channel setStreamingStatus(StreamingStatus streamingStatus) {
+    public ChannelEntity setStreamingStatus(StreamingState streamingState) {
         streamStatusSet.clear();
-        streamStatusSet.add(streamingStatus);
+        streamStatusSet.add(streamingState);
         return this;
     }
 

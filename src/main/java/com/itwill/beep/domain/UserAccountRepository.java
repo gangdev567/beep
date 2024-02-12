@@ -1,19 +1,18 @@
 package com.itwill.beep.domain;
 
-import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
+public interface UserAccountRepository extends JpaRepository<UserAccountEntity, Long> {
 
     @EntityGraph(attributePaths = "roles")
-    UserAccount findByUserName(String userName);
+    UserAccountEntity findByUserName(String userName);
 
-    UserAccount findByUserNickname(String userNickname);
+    UserAccountEntity findByUserNickname(String userNickname);
 
     /* follow 기능에 필요한 메서드 */
-    UserAccount findByUserId(Long userId);
+    UserAccountEntity findByUserId(Long userId);
 
-    UserAccount findByUserStreamingKey(String userStreamingKey);
+    UserAccountEntity findByUserStreamingKey(String userStreamingKey);
 
 }

@@ -1,14 +1,13 @@
 package com.itwill.beep.service;
 
-import java.util.Optional;
+import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.UserRoleType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.itwill.beep.domain.UserAccount;
 import com.itwill.beep.domain.UserAccountRepository;
-import com.itwill.beep.domain.UserRole;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         log.info("username = {}", userName);
 
-        UserAccount userAccount = userAccountRepository.findByUserName(userName);
-        if (userAccount != null) {
-            return UserSecurityDto.fromEntityToDto(userAccount);
+        UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(userName);
+        if (userAccountEntity != null) {
+            return UserSecurityDto.fromEntityToDto(userAccountEntity);
         } else {
             throw new UsernameNotFoundException(userName + "찾을 수 없음!");
         }
@@ -37,35 +36,35 @@ public class UserService implements UserDetailsService {
     public void createUserAccount(SignupRequestDto signupRequestDto) {
 
         // dto를 Account객체로
-        UserAccount userEntity = signupRequestDto.toEntity(passwordEncoder);
+        UserAccountEntity userEntity = signupRequestDto.toEntity(passwordEncoder);
 
         // 역할설정
-        userEntity.addUserRole(UserRole.USER);
+        userEntity.addUserRole(UserRoleType.USER);
 
         // insert users, user_roles
         userAccountRepository.save(userEntity);
     }
 
-    public UserAccount findUserByUserName(String userName) {
+    public UserAccountEntity findUserByUserName(String userName) {
 
         // repository에서 쿼리를 실행
-        UserAccount userAccount = userAccountRepository.findByUserName(userName);
+        UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(userName);
 
-        return userAccount;
+        return userAccountEntity;
     }
   
-    public UserAccount findUserByUserNickname(String userNickname) {
+    public UserAccountEntity findUserByUserNickname(String userNickname) {
 
-        UserAccount userAccount = userAccountRepository.findByUserNickname(userNickname);
+        UserAccountEntity userAccountEntity = userAccountRepository.findByUserNickname(userNickname);
         
-        return userAccount;
+        return userAccountEntity;
     }
     
 
     /* follow 기능에 필요한 메서드 */
-    public UserAccount findByUserId(Long userId) {
-        UserAccount userAccount = userAccountRepository.findByUserId(userId);
+    public UserAccountEntity findByUserId(Long userId) {
+        UserAccountEntity userAccountEntity = userAccountRepository.findByUserId(userId);
 
-        return userAccount;
+        return userAccountEntity;
     }
 }

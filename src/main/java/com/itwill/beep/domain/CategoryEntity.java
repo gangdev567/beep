@@ -20,7 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Entity
 @Table(name = "category")
-public class Category {
+public class CategoryEntity {
     @Id
     @Column(name = "category_id")
     private Long categoryId;

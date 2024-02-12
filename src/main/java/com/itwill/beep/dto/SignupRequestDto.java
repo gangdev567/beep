@@ -1,8 +1,7 @@
 package com.itwill.beep.dto;
 
+import com.itwill.beep.domain.UserAccountEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.itwill.beep.domain.UserAccount;
 
 import lombok.Data;
 
@@ -14,8 +13,8 @@ public class SignupRequestDto {
     private String userNickname;
     private String userEmail;
     
-    public UserAccount toEntity(PasswordEncoder passwordEncoder) {
-        return UserAccount.builder()
+    public UserAccountEntity toEntity(PasswordEncoder passwordEncoder) {
+        return UserAccountEntity.builder()
                 .userName(userName)
                 .userPassword(passwordEncoder.encode(userPassword))
                 .userNickname(userNickname)

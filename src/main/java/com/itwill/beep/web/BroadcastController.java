@@ -1,15 +1,15 @@
 package com.itwill.beep.web;
 
-import com.itwill.beep.domain.StreamingStatus;
+import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.StreamingState;
+import com.itwill.beep.domain.UserAccountEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.itwill.beep.domain.UserAccount;
-import com.itwill.beep.domain.Channel;
-import com.itwill.beep.dto.BroadcastOnDto;
+import com.itwill.beep.dto.StreamingOnDto;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
@@ -28,7 +28,7 @@ public class BroadcastController {
     private final ChannelService channelSvc;
 
     @PostMapping("/on")
-    public String broadcastOn(Model model, BroadcastOnDto dto) {
+    public String broadcastOn(Model model, StreamingOnDto dto) {
 
         if (SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
 
@@ -36,12 +36,12 @@ public class BroadcastController {
             String username = authentication.getName();
             log.info("username = {}", username);
 
-            UserAccount user = userSvc.loginUser(username);
+            UserAccountEntity user = userSvc.loginUser(username);
             model.addAttribute("user", user);
             model.addAttribute("streamer", user);
 
-            Channel channel = channelSvc.findChannelByUserAccount(user);
-            channel.setStatus(StreamingStatus.RUNNING);
+            ChannelEntity channel = channelSvc.findChannelByUserAccount(user);
+            channel.setStatus(StreamingState.STREAMING);
             channelSvc.update(dto);
             
             // 업데이트 후 다시 불러오기
@@ -77,10 +77,10 @@ public class BroadcastController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        UserAccount user = userSvc.loginUser(username);
+        UserAccountEntity user = userSvc.loginUser(username);
 
-        Channel channel = channelSvc.findChannelByUserAccount(user);
-        channel.setStatus(StreamingStatus.STOPPED);
+        ChannelEntity channel = channelSvc.findChannelByUserAccount(user);
+        channel.setStatus(StreamingState.STOPPED);
         channelSvc.save(channel);
 
         return "redirect:/";

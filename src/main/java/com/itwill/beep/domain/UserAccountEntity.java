@@ -32,7 +32,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity @Table(name = "user_accounts") // 원래 users -> user_accounts로 변경
-public class UserAccount { //-> 원래 Account -> UserAccount 로 변경
+public class UserAccountEntity { //-> 원래 Account -> UserAccountEntity 로 변경
     
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 열시퀸스
@@ -74,15 +74,15 @@ public class UserAccount { //-> 원래 Account -> UserAccount 로 변경
     // 애너테이션 안에서 애너테이션을 한 번 더 사용할 수 있다는 놀라운 사실!
     // 쉽게 설명해서 @CollectionTable 가 조인할 테이블의 이름을 설정하고
     // 애너테이션 안에 @JoinColumn(name = "user_no")을 사용하여 설정한 테이블의 설정한 컬럼과 조인하도록 만든 것이다.
-    private Set<UserRole> roles = new HashSet<>();
+    private Set<UserRoleType> userRoles = new HashSet<>();
     
-    public UserAccount addUserRole(UserRole role) {
-        roles.add(role);
+    public UserAccountEntity addUserRole(UserRoleType role) {
+        userRoles.add(role);
         return this;
     }
     
-    public UserAccount clearUserRoles() {
-        roles.clear();
+    public UserAccountEntity clearUserRoles() {
+        userRoles.clear();
         return this;
     }
 

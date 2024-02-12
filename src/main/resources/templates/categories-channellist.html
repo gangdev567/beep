@@ -9,10 +9,10 @@
 <div class="container mt-5 pt-5">
     <div class="row">
         <div class="col-md-12 d-flex align-items-center">
-            <img th:src="${categoryDetails.imageUrl}" class="card-img-top img-fluid float-md-start me-md-3" alt="Category Image" style="width: 200px; height: 250px;">
+            <img th:src="${categoryEntityDetails.imageUrl}" class="card-img-top img-fluid float-md-start me-md-3" alt="Category Image" style="width: 200px; height: 250px;">
             <div class="text-center">
-                <h1 class="card-title category-title text-left text-truncate text-white" th:text="${categoryDetails.categoryName}">Category Name</h1>
-                <h5 class="card-title category-title text-left text-truncate text-white" th:text="${categoryDetails.totalView != null ? categoryDetails.totalView + ' 명' : '0 명'}"></h5>
+                <h1 class="card-title categoryEntity-title text-left text-truncate text-white" th:text="${categoryEntityDetails.categoryName}">Category Name</h1>
+                <h5 class="card-title categoryEntity-title text-left text-truncate text-white" th:text="${categoryEntityDetails.totalView != null ? categoryEntityDetails.totalView + ' 명' : '0 명'}"></h5>
             </div>
         </div>
     </div>
@@ -49,8 +49,8 @@
                         </div>
                     </div>
                     <div class="video-card-information mt-2">
-                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${categoryDetails.categoryId})}">
-                            <span class="badge bg-secondary" th:text="${categoryDetails.categoryName}"></span>
+                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${categoryEntityDetails.categoryId})}">
+                            <span class="badge bg-secondary" th:text="${categoryEntityDetails.categoryName}"></span>
                         </a>
                     </div>
                 </div>

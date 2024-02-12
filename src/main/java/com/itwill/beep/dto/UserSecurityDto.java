@@ -9,8 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import com.itwill.beep.domain.UserAccount;
-import com.itwill.beep.domain.UserRole;
+import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.UserRoleType;
 
 @Getter
 public class UserSecurityDto extends User {
@@ -29,10 +29,10 @@ public class UserSecurityDto extends User {
     }
 
     // fromEntity 메소드에 streamingKey 추가
-    public static UserSecurityDto fromEntityToDto(UserAccount userEntity) {
+    public static UserSecurityDto fromEntityToDto(UserAccountEntity userEntity) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (UserRole role : userEntity.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+        for (UserRoleType userRole : userEntity.getUserRoles()) {
+            authorities.add(new SimpleGrantedAuthority(userRole.getAuthority()));
         }
 
         return new UserSecurityDto(userEntity.getUserName(), userEntity.getUserPassword(),

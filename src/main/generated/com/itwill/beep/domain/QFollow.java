@@ -11,7 +11,7 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QFollow is a Querydsl query type for Follow
+ * QFollow is a Querydsl query type for FollowEntity
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QFollow extends EntityPathBase<Follow> {

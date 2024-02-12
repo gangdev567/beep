@@ -1,8 +1,8 @@
 package com.itwill.beep.service;
 
+import com.itwill.beep.domain.CategoryEntity;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.api.igdb.apicalypse.APICalypse;
@@ -12,7 +12,6 @@ import com.api.igdb.request.IGDBWrapper;
 import com.api.igdb.request.ProtoRequestKt;
 import com.api.igdb.request.TwitchAuthenticator;
 import com.api.igdb.utils.TwitchToken;
-import com.itwill.beep.domain.Category;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelRepository;
 import jakarta.transaction.Transactional;
@@ -40,16 +39,16 @@ public class CategoryService {
      * 
      * @return 시청자 로그인 수로 정렬한 카테고리 목록
      */
-    public List<Category> findByTotalViewers() {
+    public List<CategoryEntity> findByTotalViewers() {
         log.info("findByTotalViewers()");
-        List<Category> categories = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
+        List<CategoryEntity> categories = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
 
         return categories;
     }
 
-    public Category findByCategoryIdIs(Long categoryId) {
+    public CategoryEntity findByCategoryIdIs(Long categoryId) {
         log.info("findByCategoryId(categoryId={})", categoryId);
-        Category category = categoryRepository.findByCategoryId(categoryId);
+        CategoryEntity category = categoryRepository.findByCategoryId(categoryId);
 
         return category;
     }
@@ -60,9 +59,9 @@ public class CategoryService {
      * @return 저장된 카테고리 목록
      */
     @Transactional
-    public List<Category> findAllAndSaveCategories() {
+    public List<CategoryEntity> findAllAndSaveCategories() {
         log.info("findAllAndSaveCategories()");
-        List<Category> savedCategories = new ArrayList<>();
+        List<CategoryEntity> savedCategories = new ArrayList<>();
 
         // Twitch API 토큰 요청
         setTwitchAuthCredentials();
@@ -74,8 +73,8 @@ public class CategoryService {
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gamesQuery);
             for (var game : games) {
-                // 이미 저장된 Category 확인
-                Category existingCategory =
+                // 이미 저장된 CategoryEntity 확인
+                CategoryEntity existingCategory =
                         categoryRepository.findByCategoryId(game.getId());
 
                 if (existingCategory == null) {
@@ -86,8 +85,8 @@ public class CategoryService {
                             (cover != null) ? cover.getUrl().replace("/t_thumb/", "/t_cover_big/")
                                     : defaultStaticUrl;
 
-                    // Category 엔터티 생성 및 저장
-                    Category category = Category.builder().categoryId(game.getId())
+                    // CategoryEntity 엔터티 생성 및 저장
+                    CategoryEntity category = CategoryEntity.builder().categoryId(game.getId())
                             .categoryName(game.getName()).categoryImageUrl(imageUrl).build();
 
                     savedCategories.add(categoryRepository.save(category));
@@ -111,9 +110,9 @@ public class CategoryService {
      * @return 검색된 카테고리 목록
      */
     @Transactional
-    public List<Category> searchGames(String keyword) {
+    public List<CategoryEntity> searchGames(String keyword) {
         log.info("searchGames(keyword={})", keyword);
-        List<Category> foundGames = new ArrayList<>();
+        List<CategoryEntity> foundGames = new ArrayList<>();
 
         // Twitch API 토큰 요청
         setTwitchAuthCredentials();
@@ -130,7 +129,7 @@ public class CategoryService {
 
             for (var game : games) {
 
-                Category existingCategory =
+                CategoryEntity existingCategory =
                         categoryRepository.findByCategoryId(game.getId());
 
                 if (existingCategory == null) {
@@ -141,8 +140,8 @@ public class CategoryService {
                             (cover != null) ? cover.getUrl().replace("/t_thumb/", "/t_cover_big/")
                                     : defaultStaticUrl;
 
-                    // Category 엔터티 생성 및 저장
-                    Category category = Category.builder().categoryId(game.getId())
+                    // CategoryEntity 엔터티 생성 및 저장
+                    CategoryEntity category = CategoryEntity.builder().categoryId(game.getId())
                             .categoryName(game.getName()).categoryImageUrl(imageUrl).build();
 
                     foundGames.add(categoryRepository.save(category));
@@ -178,9 +177,12 @@ public class CategoryService {
      * Twitch API로부터 인증 토큰을 가져와 IGDB API에 인증 정보를 설정합니다.
      */
     private void setTwitchAuthCredentials() {
-        TwitchAuthenticator tAuth = TwitchAuthenticator.INSTANCE;
-        TwitchToken token = tAuth.requestTwitchToken(clientId, clientSecret);
-        IGDBWrapper.INSTANCE.setCredentials(clientId, token.getAccess_token());
+        TwitchAuthenticator twitchAuthenticator = TwitchAuthenticator.INSTANCE;
+        // requestTwitchToken 메서드를 호출 -> Twitch API 접근 가능한 토큰 요청.
+        TwitchToken twitchToken = twitchAuthenticator.requestTwitchToken(clientId, clientSecret);
+        // clientId와 twitchToken.getAccess_token()을 인자로 전달하여 IGDB API에 접근할 수 있는 인증 정보 설정.
+        IGDBWrapper.INSTANCE.setCredentials(clientId, twitchToken.getAccess_token());
+
     }
 
 }

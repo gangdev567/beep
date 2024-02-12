@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.itwill.beep.domain.Category;
-import com.itwill.beep.domain.Channel;
+import com.itwill.beep.domain.CategoryEntity;
+import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.service.CategoryService;
 import com.itwill.beep.service.ChannelService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class CategoryController {
     public String showCategories(Model model) {
         log.info("showCategories()");
         
-        List<Category> categories = categoryService.findAllAndSaveCategories();
-        List<Category> mostViewers = categoryService.findByTotalViewers();
+        List<CategoryEntity> categories = categoryService.findAllAndSaveCategories();
+        List<CategoryEntity> mostViewers = categoryService.findByTotalViewers();
         
         model.addAttribute("categories", categories);
         model.addAttribute("mostViewers", mostViewers);
@@ -41,10 +41,10 @@ public class CategoryController {
     public String categoriesChannelList(@PathVariable("categoryId") Long categoryId, Model model) {
         log.info("categoriesChannelList");
         
-        Category categoryDetails = categoryService.findByCategoryIdIs(categoryId);
-        List<Channel> categoryChannelList = channelService.findByCategoryCategoryId(categoryId);
+        CategoryEntity categoryEntityDetails = categoryService.findByCategoryIdIs(categoryId);
+        List<ChannelEntity> categoryChannelList = channelService.findByCategoryCategoryId(categoryId);
         
-        model.addAttribute("categoryDetails", categoryDetails);
+        model.addAttribute("categoryDetails", categoryEntityDetails);
         model.addAttribute("categoryChannelList", categoryChannelList);        
 
         return "categories-channellist";
@@ -53,11 +53,11 @@ public class CategoryController {
 
     @ResponseBody
     @GetMapping("/api/search")
-    public ResponseEntity<List<Category>> searchGamesApi(
+    public ResponseEntity<List<CategoryEntity>> searchGamesApi(
             @RequestParam(value = "keyword") String keyword) {
         log.info("searchGamesApi(keyword={})", keyword);
         
-        List<Category> foundGames = categoryService.searchGames(keyword);
+        List<CategoryEntity> foundGames = categoryService.searchGames(keyword);
 
         // ResponseEntity를 사용하여 HTTP 응답을 반환
         return ResponseEntity.ok(foundGames);
