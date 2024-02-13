@@ -26,8 +26,8 @@ ul {
 /* 전역 변수 설정 */
 :root {
 	/* 색상 변수 설정 */
-	--body-color: #E4E9F7; /* 전체 배경 색상 */
-	--sidebar-color: #FFF; /* 사이드바 배경 색상 */
+	--body-color: #fff; /* 전체 배경 색상 */
+	--sidebar-color: #f7f7f8; /* 사이드바 배경 색상 */
 	--primary-color: #695CFE; /* 주요 색상 (예: 링크, 버튼 등) */
 	--primary-color-light: #F6F5FF; /* 주요 색상 (예: 링크, 버튼 등) */
 	--toggle-color: #DDD; /* 토글 버튼 등의 색상 */

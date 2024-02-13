@@ -56,8 +56,9 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+
+	
 	// runtimeOnly 'com.mysql:mysql-connector-j'
 
 	annotationProcessor 'org.projectlombok:lombok'
@@ -70,3 +71,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
