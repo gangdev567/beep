@@ -65,11 +65,11 @@ public class UserAccountEntity { //-> 원래 Account -> UserAccountEntity 로 �
     private String userStreamingKey;
 
     // 팔로우하는 사람들과의 관계
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "followerUserAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<FollowEntity> followings = new HashSet<>();
 
     // 팔로워들과의 관계
-    @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "followingUserAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<FollowEntity> followers = new HashSet<>();
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을 

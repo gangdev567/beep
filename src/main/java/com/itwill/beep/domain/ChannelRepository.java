@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 
     @EntityGraph(attributePaths = "status")
-    ChannelEntity findByUserAccount(UserAccountEntity userAccountEntity);
+    ChannelEntity findBychannelUserAccountEntity(UserAccountEntity userAccountEntity);
 
     // 테이블을 조인하게 해주는 애너테이션 그런데 왜
     // 예전에 만든 emp dept 같은 것들은 이거 없이도 잘만 작동했었는데
@@ -34,10 +34,10 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
     void viewersSetZero(@Param("channelId") Long channelId);
     
     @Modifying
-    @Query("UPDATE ChannelEntity c SET c.channelTitle = :title, c.channelContent = :content, c.categoryOfChannel.categoryId = :categoryId WHERE c.channelId = :channelId")
+    @Query("UPDATE ChannelEntity c SET c.channelTitle = :title, c.channelContent = :content, c.categoryEntityOfChannel.categoryId = :categoryId WHERE c.channelId = :channelId")
     void update(@Param("channelId") Long channelId,@Param("title") String title,@Param("content") String content, @Param("categoryId")Long categoryId);
     
     /* 카테고리 아이디로 채널 검색하기 */
-    List<ChannelEntity> findByCategoryCategoryId(Long categoryId);
+    List<ChannelEntity> findBycategoryEntityOfChannelCategoryId(Long categoryId);
     
 }

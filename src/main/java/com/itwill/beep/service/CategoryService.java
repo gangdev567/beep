@@ -41,7 +41,7 @@ public class CategoryService {
      */
     public List<CategoryEntity> findByTotalViewers() {
         log.info("findByTotalViewers()");
-        List<CategoryEntity> categories = categoryRepository.findByTotalViewNotNullOrderByTotalViewDesc();
+        List<CategoryEntity> categories = categoryRepository.findByCategoryTotalViewNotNullOrderByCategoryTotalViewDesc();
 
         return categories;
     }
