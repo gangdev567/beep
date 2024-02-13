@@ -116,7 +116,7 @@
 <body>
 
 
-<div sec:authorize= "isAuthenticated()" th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog">
+
 <div th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog" sec:authorize="isAuthenticated()">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
@@ -199,11 +199,11 @@
                         <!-- 방송하기 버튼 -->
                         
                         <li class="nav-item" sec:authorize="isAuthenticated()">
-                            <th:block th:if="${status == '[OFF]'}">
+                            <th:block th:if="${#conversions.convert(channel.streamingStateSet, 'String') == 'OFF'}">
                                     <button id = "broadcastOn" type="submit" class="btn mx-2 custom-btn-purple">방송하기</button>
                             </th:block>
                             
-                            <th:block th:if="${status == '[ON]'}">
+                            <th:block th:if="${#conversions.convert(channel.streamingStateSet, 'String') == 'ON'}">
                                 <form th:action="@{/streaming/off}" method="post"
                                     style="margin-bottom: 0px;">
                                     <input type="text" th:name="${userAccount.userName}" class="d-none"
