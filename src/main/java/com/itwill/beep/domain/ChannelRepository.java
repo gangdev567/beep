@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 
-    @EntityGraph(attributePaths = "status")
+    @EntityGraph(attributePaths = "streamingStateSet")
     ChannelEntity findBychannelUserAccountEntity(UserAccountEntity userAccountEntity);
 
     // 테이블을 조인하게 해주는 애너테이션 그런데 왜

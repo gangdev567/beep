@@ -44,11 +44,11 @@ function displaySearchResults(results) {
         card.innerHTML = `
             <div class="card category-card">
                 <a href="/categories/${category.categoryId}" class="card-link text-decoration-none text-white">
-                    <img src="${category.imageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
+                    <img src="${category.categoryImageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
                     <div class="card-body">
                         <h5 class="card-title category-title text-left text-truncate fs-5">${category.categoryName}</h5>
                         <h5 class="card-title category-title text-left text-truncate fs-6">
-                            <span class="totalViewSpan">${category.totalView != null ? '시청자 ' + category.totalView + ' 명' : '시청자 0명'}</span>
+                            <span class="totalViewSpan">${category.categoryTotalView != null ? '시청자 ' + category.categoryTotalView + ' 명' : '시청자 0명'}</span>
                         </h5>
                     </div>
                 </a>

@@ -76,7 +76,7 @@ public class UserAccountEntity { //-> 원래 Account -> UserAccountEntity 로 �
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
     @Builder.Default 
     @ToString.Exclude 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     // 애너테이션 안에서 애너테이션을 한 번 더 사용할 수 있다는 놀라운 사실!

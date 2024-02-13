@@ -30,12 +30,12 @@ public class FollowEntity {
     private Long followId;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "follower_user_id")
     private UserAccountEntity followerUserAccount;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "following_user_id")
     private UserAccountEntity followingUserAccount;
 

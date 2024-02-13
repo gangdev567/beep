@@ -21,8 +21,7 @@
 
 
 
-<div class="container mt-5 p-5" th:unless="${#authentication.name == 'anonymousUser'}">
-    
+<div class="container mt-5 p-5" th:unless="${#authentication.name == 'anonymousUser'}">    
     
 
     <h1 class="fw-bold text-white">생방송 중인 목록</h1>
@@ -32,36 +31,36 @@
     <!-- 생방송 중인 채널 -->
     <div class="row mt-3 custom">
         <th:block th:each="followList, iterStat : ${data.followList}">
-            <div class="col-md-4 mb-4" th:if="${data.channelList[iterStat.index].status.toString().contains('ON')}">
+            <div class="col-md-4 mb-4" th:if="${data.channelList[iterStat.index].streamingStateSet.toString().contains('ON')}">
                 <div class="card border-dark">
-                    <a class="video-card-thumbnail position-relative" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].account.userNickname})}">
+                    <a class="video-card-thumbnail position-relative" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].channelUserAccountEntity.userNickname})}">
                         <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
                         <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
                             <span class="badge bg-danger">LIVE</span>
-                            <span class="badge bg-secondary ms-1" th:text="${data.channelList[iterStat.index].viewers + ' 명'}"></span>
+                            <span class="badge bg-secondary ms-1" th:text="${data.channelList[iterStat.index].channelViewerCount + ' 명'}"></span>
                         </div>
                     </a>
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div class="video-card-profile mb-2">
-                            <a class="video-card-image" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].account.userNickname})}">
-                                <img th:src="${data.channelList[iterStat.index].profile_img}" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                            <a class="video-card-image" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].channelUserAccountEntity.userNickname})}">
+                                <img th:src="${data.channelList[iterStat.index].channelProfileImg}" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
                             </a>
                         </div>
                         <div class="video-card-area mb-2">
-                            <a class="video-card-title text-decoration-none" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].account.userNickname})}">
-                                <span class="video-title" style="text-decoration: none; color: black; font-weight: bold;" th:text="${data.channelList[iterStat.index].title}"></span>
+                            <a class="video-card-title text-decoration-none" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].channelUserAccountEntity.userNickname})}">
+                                <span class="video-title" style="text-decoration: none; color: black; font-weight: bold;" th:text="${data.channelList[iterStat.index].channelTitle}"></span>
                             </a>
                             <div class="video-card-name">
-                                <a class="video-card-channel text-decoration-none" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].account.userNickname})}">
+                                <a class="video-card-channel text-decoration-none" th:href="@{/channel/{nickname}(nickname=${data.channelList[iterStat.index].channelUserAccountEntity.userNickname})}">
                                     <span class="name-ellipsis">
-                                        <span class="name-text" style="text-decoration: none; color: black; font-weight: bold;" th:text="${data.channelList[iterStat.index].account.userNickname}"></span>
+                                        <span class="name-text" style="text-decoration: none; color: black; font-weight: bold;" th:text="${data.channelList[iterStat.index].channelUserAccountEntity.userNickname}"></span>
                                     </span>
                                 </a>
                             </div>
                         </div>
                         <div class="video-card-information mt-2">
-                            <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${data.channelList[iterStat.index].categoryEntity.categoryId})}">
-                                <span class="badge bg-secondary" th:text="${data.channelList[iterStat.index].categoryEntity.categoryName}"></span>
+                            <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${data.channelList[iterStat.index].categoryEntityOfChannel.categoryId})}">
+                                <span class="badge bg-secondary" th:text="${data.channelList[iterStat.index].categoryEntityOfChannel.categoryName}"></span>
                             </a>
                         </div>
                     </div>
@@ -76,14 +75,14 @@
     </th:block>
     <div class="row mt-3 custom">
         <th:block th:each="followList, iterStat : ${data.followList}">
-            <div class="col-md-4 mb-4" th:if="${not data.channelList[iterStat.index].status.toString().contains('ON')}">
-                <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].account.userNickname})}" class="text-decoration-none text-dark">
+            <div class="col-md-4 mb-4" th:if="${not data.channelList[iterStat.index].streamingStateSet.toString().contains('ON')}">
+                <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].channelUserAccountEntity.userNickname})}" class="text-decoration-none text-dark">
                     <div class="card mb-3 text-center mt-4 mb-4 bg-dark text-white">
                         <div class="d-flex justify-content-center align-items-center mt-4" style="height: 100px;">
-                            <img th:src="${data.channelList[iterStat.index].profile_img}" alt="profile_img" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                            <img th:src="${data.channelList[iterStat.index].channelProfileImg}" alt="profile_img" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
                         </div>
                         <div class="card-body mb-5">
-                            <h5 class="card-title mb-0" th:text=${followList.toUserNo.userNickname}></h5>
+                            <h5 class="card-title mb-0" th:text=${followList.followingUserAccount.userNickname}></h5>
                         </div>
                     </div>
                 </a>
