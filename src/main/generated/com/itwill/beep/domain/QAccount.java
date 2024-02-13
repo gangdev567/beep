@@ -24,7 +24,7 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final SetPath<UserRole, EnumPath<UserRole>> roles = this.<UserRole, EnumPath<UserRole>>createSet("roles", UserRole.class, EnumPath.class, PathInits.DIRECT2);
+    public final SetPath<UserRole, EnumPath<UserRole>> roles = this.<UserRole, EnumPath<UserRole>>createSet("roles.html", UserRole.class, EnumPath.class, PathInits.DIRECT2);
 
     public final StringPath streamingKey = createString("streamingKey");
 
