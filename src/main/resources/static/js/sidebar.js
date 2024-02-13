@@ -11,6 +11,17 @@ const body = document.querySelector("body"),
       modeSwitch = body.querySelector(".toggle-switch"),
       modeText = body.querySelector(".mode-text");
 
+// 로컬 스토리지에서 저장된 테마 모드를 가져옴
+const savedTheme = localStorage.getItem("theme");
+
+// 페이지 로드 시 초기 테마 모드 설정
+if (savedTheme) {
+    body.classList.add(savedTheme);
+} else {
+    // 만약 로컬 스토리지에 저장된 테마가 없다면 기본값은 'light'
+    body.classList.add("light");
+}
+
 // 사이드바를 열고 닫기 위한 토글 버튼에 대한 이벤트 리스너
 toggle.addEventListener("click", () => {
     sidebar.classList.toggle("close");
@@ -27,4 +38,8 @@ modeSwitch.addEventListener("click", () => {
     } else {
         modeText.innerText = "Dark Mode";
     }
+
+    // 테마 모드를 로컬 스토리지에 저장
+    const currentTheme = body.classList.contains("dark") ? "dark" : "light";
+    localStorage.setItem("theme", currentTheme);
 });

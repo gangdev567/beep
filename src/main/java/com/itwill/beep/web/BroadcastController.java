@@ -5,12 +5,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.itwill.beep.domain.Account;
 import com.itwill.beep.domain.Broadcast;
 import com.itwill.beep.domain.Channel;
-import com.itwill.beep.dto.BroadcastOnDto;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
@@ -29,7 +27,7 @@ public class BroadcastController {
     private final ChannelService channelSvc;
 
     @PostMapping("/on")
-    public String broadcastOn(Model model, BroadcastOnDto dto) {
+    public String broadcastOn(Model model) {
 
         if (SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
 
@@ -43,10 +41,7 @@ public class BroadcastController {
 
             Channel channel = channelSvc.findChannelByAccount(user);
             channel.setStatus(Broadcast.ON);
-            channelSvc.update(dto);
-            
-            // 업데이트 후 다시 불러오기
-            channel = channelSvc.findChannelByAccount(user);
+            channelSvc.save(channel);
             
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
@@ -86,4 +81,5 @@ public class BroadcastController {
 
         return "redirect:/";
     }
+    
 }

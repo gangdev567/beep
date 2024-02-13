@@ -32,7 +32,6 @@ public class SecurityConfig {
     	// CSRF 기능을 활성화한 경우,
         // Ajax POST/PUT/DELETE 요청에서 csrf 토큰을 서버로 전송하지 않으면 HTTP 403 에러가 발생.
         // -> CSRF(Cross Site Request Forgery) 비활성화
-        // -> CSRF(Cross Site Request Forgery) 비활성화
         http.csrf((csrf) -> csrf.disable());
         
         // 로그인 페이지 설정

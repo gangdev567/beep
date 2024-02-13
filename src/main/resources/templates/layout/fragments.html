@@ -113,8 +113,9 @@
 
 
 <body>
-    
-<div th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog">
+
+
+<div sec:authorize= "isAuthenticated()" th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
             <div class="modal-header">
@@ -537,18 +538,11 @@
         </div>
     </div>
 
-<<<<<<< HEAD
 	<div class="custom-header">
 		<strong class="custom-title" style="color: #c9cedc;">추천</strong>
 		<a class="custom-link" th:href="@{/lives}">전체 보기</a>
 	</div>
-=======
-    <div class="custom-header">
-        <strong class="custom-title">추천</strong>
-        <a class="custom-link" th:href="@{/lives}">전체 보기</a>
-    </div>
->>>>>>> 2c431e45f52cf1ff1ba3f941900b3436c7483b13
-
+  
     <div class="row row-cols-1 row-cols-md-4 g-4 mt-3 custom">
         <!-- Thymeleaf의 반복문을 사용하여 동적으로 동영상 카드를 생성 -->
         <div th:each="broadcast : ${channelList}" th:object="${broadcast}" class="col">
