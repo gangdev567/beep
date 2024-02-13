@@ -101,7 +101,7 @@ public class StreamingController {
     @GetMapping("/generate-streaming-key")
     public ResponseEntity<?> generateStreamingKey(Authentication authentication) {
         String userName = authentication.getName();
-        String streamingKey = streamingService.generateStreamingKey(userName);
+        String streamingKey = streamingService.generateStreamingKey();
 
         // 로그 추가: 스트리밍 키 발급 로그
         log.info("스트리밍 키를 발급받았습니다. userName: {}, streamingKey: {}", userName, streamingKey);
