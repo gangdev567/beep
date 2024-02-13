@@ -9,19 +9,13 @@ import org.springframework.data.repository.query.Param;
 
 public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 
-<<<<<<< HEAD
     @EntityGraph(attributePaths = "streamingStateSet")
-    ChannelEntity findBychannelUserAccountEntity(UserAccountEntity userAccountEntity);
-=======
-    @EntityGraph(attributePaths = "status")
     ChannelEntity findByChannelUserAccountEntity(UserAccountEntity userAccountEntity);
-
->>>>>>> a78c677c2385d9bec0fa731a06da4d3ec9324a84
 
     // 테이블을 조인하게 해주는 애너테이션 그런데 왜
     // 예전에 만든 emp dept 같은 것들은 이거 없이도 잘만 작동했었는데
     // 이게 없으면 조인을 못할까... 이것도 해본적은 있지만 헷갈려서 한참 찾았네
-    // @EntityGraph(attributePaths = "UserAcoountEntity")
+    // @EntityGraph(attributePaths = "UserAcoountEngtity")
     ChannelEntity findByChannelId(Long channelId);
 
     @Modifying // 업데이트 쿼리를 받게끔 만듬
