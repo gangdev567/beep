@@ -127,12 +127,12 @@
                 <h3 class="modal-title">방송설정</h3>
             </div>
             <div class="modal-body" style="padding: 0px 16px;">
-                <form th:action="@{/broadcast/on}" method="post">
+                <form th:action="@{/streaming/on}" method="post">
                     <label for="title">방송 제목:</label>
-                    <textarea class="form-control" id="title" name="title" th:text="${channel.title}" required></textarea><br>
+                    <textarea class="form-control" id="title" name="title" th:text="${channel.channelTitle}" required></textarea><br>
                     
                     <label for="description">설명:</label>
-                    <textarea class="form-control" id="description" name="content" th:text="${channel.content}" required></textarea><br>
+                    <textarea class="form-control" id="description" name="content" th:text="${channel.channelContent}" required></textarea><br>
                     
                     <label for="categoryEntity">카테고리:</label>
                     <!-- 카테고리 검색 입력란 -->
@@ -209,8 +209,8 @@
                             <th:block th:if="${status == '[ON]'}">
                                 <form th:action="@{/broadcast/off}" method="post"
                                     style="margin-bottom: 0px;">
-                                    <input type="text" th:name="${user.username}" class="d-none"
-                                        th:value="${user.username}">
+                                    <input type="text" th:name="${userAccount.userName}" class="d-none"
+                                        th:value="${userAccount.userName}">
                                     <button type="submit" class="btn mx-2 custom-btn-purple">방송종료</button>
                                 </form>
                             </th:block>
@@ -553,34 +553,34 @@
         <div th:each="broadcast : ${channelList}" th:object="${broadcast}" class="col">
             <!-- 더미 데이터를 사용하여 동영상 정보 표시 -->
             <div class="card border-dark">
-                <a class="video-card-thumbnail position-relative" th:href="@{/channel/{roomId}(roomId=*{account.userNickname})}">
+                <a class="video-card-thumbnail position-relative" th:href="@{/channel/{roomId}(roomId=*{channelUserAccountEntity.userNickname})}">
                     <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
                     <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
                         <span class="badge bg-danger">LIVE</span>
-                        <span class="badge bg-secondary ms-1" th:text="${broadcast.viewers + ' 명'}"></span>
+                        <span class="badge bg-secondary ms-1" th:text="*{channelViewerCount + ' 명'}"></span>
                     </div>
                 </a>
                 <div class="card-body d-flex flex-column justify-content-between">
                     <div class="video-card-profile mb-2">
-                        <a class="video-card-image" th:href="@{/channel/{roomId}(roomId=*{account.userNickname})}">
+                        <a class="video-card-image" th:href="@{/channel/{roomId}(roomId=*{channelUserAccountEntity.userNickname})}">
                             <img src="https://nng-phinf.pstatic.net/MjAyNDAxMDFfMTQx/MDAxNzA0MDk3MDE3MTE5.ti8d5qLvJeZs0cfg6LZO5V5-rv4ZkWzFE_61jIY2hlwg.L0kBkJh_hcxxZm8Nu-XPIEs0zxxVuJewWpff0vL3Ps8g.PNG/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_2024-01-01_122144.png?type=f120_120_na" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
                         </a>
                     </div>
                     <div class="video-card-area mb-2">
-                        <a class="video-card-title text-decoration-none" th:href="@{/channel/{roomId}(roomId=*{account.userNickname})}">
-                            <span class="video-title" style="text-decoration: none; color: black; font-weight: bold;" th:text="${broadcast.title}"></span>
+                        <a class="video-card-title text-decoration-none" th:href="@{/channel/{roomId}(roomId=*{channelUserAccountEntity.userNickname})}">
+                            <span class="video-title" style="text-decoration: none; color: black; font-weight: bold;" th:text="*{channelTitle}"></span>
                         </a>
                         <div class="video-card-name">
-                            <a class="video-card-channel text-decoration-none" th:href="@{/channel/{roomId}(roomId=*{account.userNickname})}">
+                            <a class="video-card-channel text-decoration-none" th:href="@{/channel/{roomId}(roomId=*{channelUserAccountEntity.userNickname})}">
                             <span class="name-ellipsis">
-                                <span class="name-text" style="text-decoration: none; color: black; font-weight: bold;" th:text="${broadcast.account.userNickname}"></span>
+                                <span class="name-text" style="text-decoration: none; color: black; font-weight: bold;" th:text="*{channelUserAccountEntity.userNickname}"></span>
                             </span>
                             </a>
                         </div>
                     </div>
                     <div class="video-card-information mt-2">
-                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${broadcast.categoryEntity.categoryId})}">
-                            <span class="badge bg-secondary" th:text="${broadcast.categoryEntity.categoryName}"></span>
+                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${broadcast.categoryEntityOfChannel.categoryId})}">
+                            <span class="badge bg-secondary" th:text="*{categoryEntityOfChannel.categoryName}"></span>
                         </a>
                     </div>
                 </div>

@@ -58,7 +58,12 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
+<<<<<<< HEAD
 	
+=======
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+	// runtimeOnly 'com.mysql:mysql-connector-j'
+>>>>>>> a78c677c2385d9bec0fa731a06da4d3ec9324a84
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

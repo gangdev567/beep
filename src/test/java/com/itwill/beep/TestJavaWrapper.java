@@ -52,7 +52,7 @@ class TestJavaWrapper {
      * Real-world test cases
      */
 
-    // Get all Coming Soon PS4 games
+    // Get all Coming Soon PS4 games.html
     @Test
     void testComingSoonPS4Games() {
         String date = String.valueOf((System.currentTimeMillis() / 1000));
@@ -68,7 +68,7 @@ class TestJavaWrapper {
         }
     }
 
-    // Get all Recently released PS4 games
+    // Get all Recently released PS4 games.html
     @Test
     void testRecentlyReleasedPS4Games() {
         String date = String.valueOf((System.currentTimeMillis() / 1000));
@@ -84,7 +84,7 @@ class TestJavaWrapper {
         }
     }
 
-    // Get all Recently released PS4 games
+    // Get all Recently released PS4 games.html
     @Test
     void testSearch() {
         APICalypse query = new APICalypse().search("Assassins Creed")
@@ -99,7 +99,7 @@ class TestJavaWrapper {
         }
     }
 
-    // Get all Recently released PS4 games
+    // Get all Recently released PS4 games.html
     @Test
     void testPS4Exclusives() {
         APICalypse query = new APICalypse().fields("name,category,platforms")

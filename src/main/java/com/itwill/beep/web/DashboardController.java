@@ -14,7 +14,7 @@ public class DashboardController {
 
 
     // 사용자 대시보드 홈으로 이동하는 메소드, URL 경로에 userId 포함
-    @GetMapping("/user/dashboard/{userId}/home")
+    @GetMapping("/dashboard/u/{userId}/home")
     public String userDashboardHome(@PathVariable("userId") String userId, Authentication authentication, Model model) {
         log.info("대시보드 접속: 사용자 ID = {}", userId);
 
