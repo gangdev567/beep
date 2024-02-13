@@ -5,6 +5,8 @@ import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.service.StreamingService;
 import java.util.Map;
+import java.util.Set;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -39,14 +41,17 @@ public class StreamingController {
 
         if (SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
 
+            // 로그인한 사용자
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             log.info("username = {}", username);
 
+            // 로그인한 사용자의 정보
             UserAccountEntity user = userService.findUserByUserName(username);
             model.addAttribute("userAccount", user);
             model.addAttribute("streamer", user);
 
+            // 로그인한 사용자의 채널 정보
             ChannelEntity channel = channelService.findChannelByUserAccount(user);
             channel.setStreamingState(StreamingState.ON);
             channelService.update(streamingOnDto);
@@ -70,9 +75,9 @@ public class StreamingController {
             model.addAttribute("streamingUrl", streamingUrl);
 
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
-
-            String streamingState = channel.getStreamingStateSet().toString();
-            model.addAttribute("state", streamingState);
+            
+            String status = channel.getStreamingStateSet().toString();
+            model.addAttribute("status", status);
 
             return "/channel";
         }
