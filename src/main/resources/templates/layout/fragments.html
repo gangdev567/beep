@@ -216,7 +216,7 @@
                     <!-- 로그아웃 버튼 -->
                     <li class="nav-item" sec:authorize="isAuthenticated()"><a
                             class="btn mx-2 custom-btn-gray" th:href="@{/logout}"> <span
-                            th:text="${userAccount.userNickname}"></span> 로그아웃
+                            th:text="${#authentication.name}"></span> 로그아웃
                     </a></li>
 
                     <!-- 드롭다운 메뉴 -->
@@ -576,7 +576,7 @@
                         </div>
                     </div>
                     <div class="video-card-information mt-2">
-                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${broadcast.categoryEntityOfChannel.categoryId})}">
+                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${categoryEntityOfChannel.categoryId})}">
                             <span class="badge bg-secondary" th:text="*{categoryEntityOfChannel.categoryName}"></span>
                         </a>
                     </div>
