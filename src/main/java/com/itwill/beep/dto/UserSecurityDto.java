@@ -4,48 +4,40 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import com.itwill.beep.domain.Account;
-import com.itwill.beep.domain.UserRole;
+import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.UserRoleType;
 
+@Getter
 public class UserSecurityDto extends User {
 
+    // Getter 메소드 추가
     private String userNickname;
-    private String email;
-    private String streamingKey; // streamingKey 필드 추가
+    private String userEmail;
+    private String userStreamingKey; // streamingKey 필드 추가
 
-    public UserSecurityDto(String username, String password, String userNickname, String email, String streamingKey,
-        Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
+    public UserSecurityDto(String userName, String userPassword, String userNickname, String userEmail, String userStreamingKey,
+        Collection<? extends GrantedAuthority> userAuthorities) {
+        super(userName, userPassword, userAuthorities);
         this.userNickname = userNickname;
-        this.email = email;
-        this.streamingKey = streamingKey; // 생성자에 streamingKey 초기화 추가
+        this.userEmail = userEmail;
+        this.userStreamingKey = userStreamingKey; // 생성자에 streamingKey 초기화 추가
     }
 
     // fromEntity 메소드에 streamingKey 추가
-    public static UserSecurityDto fromEntity(Account entity) {
+    public static UserSecurityDto fromEntityToDto(UserAccountEntity userEntity) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (UserRole role : entity.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+        for (UserRoleType userRole : userEntity.getUserRoles()) {
+            authorities.add(new SimpleGrantedAuthority(userRole.getAuthority()));
         }
 
-        return new UserSecurityDto(entity.getUsername(), entity.getUser_password(),
-            entity.getUserNickname(), entity.getEmail(), entity.getStreamingKey(), authorities);
+        return new UserSecurityDto(userEntity.getUserName(), userEntity.getUserPassword(),
+            userEntity.getUserNickname(), userEntity.getUserEmail(), userEntity.getUserStreamingKey(),
+            authorities);
     }
 
-    // Getter 메소드 추가
-    public String getUserNickname() {
-        return userNickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getStreamingKey() {
-        return streamingKey;
-    }
 }

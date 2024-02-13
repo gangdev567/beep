@@ -1,13 +1,13 @@
 package com.itwill.beep.domain;
 
-public enum UserRole {
+public enum UserRoleType {
     USER("ROLE_USER"),
     STREAMER("ROLE_STREAMER"),
     ADMIN("ROLE_ADMIN");
     
     private String authority;
     
-    UserRole(String authority) {
+    UserRoleType(String authority) {
         this.authority = authority;
     }
     

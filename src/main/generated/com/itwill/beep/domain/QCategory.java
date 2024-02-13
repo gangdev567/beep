@@ -10,7 +10,7 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QCategory is a Querydsl query type for Category
+ * QCategory is a Querydsl query type for CategoryEntity
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QCategory extends EntityPathBase<Category> {

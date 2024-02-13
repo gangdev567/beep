@@ -1,16 +1,13 @@
 package com.itwill.beep.initailization;
 
 
-import java.util.HashMap;
+import com.itwill.beep.domain.ChannelEntity;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import com.itwill.beep.domain.Channel;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 
@@ -38,7 +35,7 @@ public class BeepApplicationRunner implements ApplicationRunner{
     public void run(ApplicationArguments args) throws Exception {
         
         // 모든 채널 정보를 불러옴
-        List<Channel> channelList = channelSvc.findAllChannel();
+        List<ChannelEntity> channelList = channelSvc.findAllChannel();
         
         // 채널 정보로 웹소켓 세션 생성
         channelList.forEach(channel -> createRoom(channel));
@@ -47,8 +44,8 @@ public class BeepApplicationRunner implements ApplicationRunner{
         log.info("애플리케이션 초기화 작업을 수행합니다.");
     }
     
-    private void createRoom(Channel channel) {
-        String userNickname = channel.getAccount().getUserNickname();
+    private void createRoom(ChannelEntity channel) {
+        String userNickname = channel.getUserAccount().getUserNickname();
         Long id = channel.getChannelId();
         chatSvc.createRoom(userNickname, id);
         

@@ -1,11 +1,6 @@
 package com.itwill.beep.web;
 
-import com.itwill.beep.domain.Account;
-import com.itwill.beep.dto.UserSecurityDto;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,30 +14,29 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-@RequestMapping("/user")
 @RequiredArgsConstructor
-public class UserController {
+public class UserAccountController {
     
-    private final UserService userSvc;
+    private final UserService userService;
     
     @GetMapping("/login")
-    public void login() {
-        log.info("login()");
+    public void userLogin() {
+        log.info("userLogin()");
     }
     
     @GetMapping("/signup")
-    public void signin () {
-        log.info("signup()");
+    public void userSignin () {
+        log.info("userSignup()");
     }
     
     @PostMapping("/signup")
-    public String createAccount(@ModelAttribute SignupRequestDto dto) {
-        log.info("dto = {}", dto);
+    public String createUserAccount(@ModelAttribute SignupRequestDto signupRequestDto) {
+        log.info("signupRequestDto = {}", signupRequestDto);
         
-        userSvc.createAccount(dto);
+        userService.createUserAccount(signupRequestDto);
         
         // 회원가입 이후 로그인 페이지로
-        return "redirect:/user/login";
+        return "redirect:/login";
     }
 
 }   

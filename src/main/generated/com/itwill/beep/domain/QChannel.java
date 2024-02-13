@@ -11,7 +11,7 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QChannel is a Querydsl query type for Channel
+ * QChannel is a Querydsl query type for ChannelEntity
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QChannel extends EntityPathBase<Channel> {

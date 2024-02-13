@@ -1,14 +1,14 @@
 package com.itwill.beep.service;
 
+import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.UserAccountEntity;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.itwill.beep.domain.Account;
-import com.itwill.beep.domain.Channel;
 import com.itwill.beep.domain.ChannelRepository;
-import com.itwill.beep.dto.BroadcastOnDto;
+import com.itwill.beep.dto.StreamingOnDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,23 +20,23 @@ public class ChannelService {
     
     private final ChannelRepository channelDao;
     
-    public Channel findChannelByAccount(Account acconut) {
-        Channel channel = channelDao.findByAccount(acconut);
+    public ChannelEntity findChannelByUserAccount(UserAccountEntity userAcconut) {
+        ChannelEntity channel = channelDao.findByUserAccount(userAcconut);
         return channel;
     }
 
-    public Channel findChannelById(Long channelId) {
-        Channel channel = channelDao.findByChannelId(channelId);
+    public ChannelEntity findChannelById(Long channelId) {
+        ChannelEntity channel = channelDao.findByChannelId(channelId);
         return channel;
     }
 
-    public void save(Channel channel) {
+    public void save(ChannelEntity channel) {
         channelDao.save(channel);
     }
 
-    public List<Channel> findAllChannel() {
+    public List<ChannelEntity> findAllChannel() {
         
-        List<Channel> channelList = channelDao.findAll();
+        List<ChannelEntity> channelList = channelDao.findAll();
         
         return channelList;
     }
@@ -66,7 +66,7 @@ public class ChannelService {
     }
 
     @Transactional
-    public void update(BroadcastOnDto dto) {
+    public void update(StreamingOnDto dto) {
         // 뭐가 오류가 생겼는데 하드코딩하면 해결 될 것 같아서 하드 코딩함
         Long channelId = dto.getChannelId();
         String title = dto.getTitle();
@@ -79,9 +79,9 @@ public class ChannelService {
     }
     
     /* 카테고리 아이디로 채널 검색하기 */
-    public List<Channel> findByCategoryCategoryId(Long categoryId) {
+    public List<ChannelEntity> findByCategoryCategoryId(Long categoryId) {
         log.info("findByCategoryCategoryId(categoryId={})", categoryId);
-        List<Channel> list = channelDao.findByCategoryCategoryId(categoryId);
+        List<ChannelEntity> list = channelDao.findByCategoryCategoryId(categoryId);
         
         return list;
     }

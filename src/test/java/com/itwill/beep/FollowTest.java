@@ -1,5 +1,6 @@
 package com.itwill.beep;
 
+import com.itwill.beep.domain.UserAccountEntity;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.itwill.beep.domain.Account;
-import com.itwill.beep.domain.Follow;
+import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.service.FollowService;
 
 @Slf4j
@@ -26,8 +26,8 @@ public class FollowTest {
         log.info("testFollowService()");
 
         // 테스트에 사용할 사용자 객체 생성 (임의의 값 사용)
-        Account fromUser = Account.builder().id(22L).build();
-        Account toUser = Account.builder().id(21L).build();
+        UserAccountEntity fromUser = UserAccountEntity.builder().id(22L).build();
+        UserAccountEntity toUser = UserAccountEntity.builder().id(21L).build();
 
         // 팔로잉 수 확인
         Long countByFromUser = followService.countByFromUser(fromUser);
@@ -40,7 +40,7 @@ public class FollowTest {
         log.info("countFollowersByToUser: {}", countFollowersByToUser);
 
         // 팔로잉 목록 확인
-        List<Follow> followList = followService.findByFromUser(fromUser);
+        List<FollowEntity> followList = followService.findByFromUser(fromUser);
         Assertions.assertNotNull(followList);
         if (!followList.isEmpty()) {
             log.info("findByFromUser: {}", followList.get(0).toString());

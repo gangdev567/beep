@@ -1,11 +1,10 @@
 package com.itwill.beep.service;
 
-import com.itwill.beep.domain.Account;
-import com.itwill.beep.domain.AccountRepository;
+import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.UserAccountRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -13,30 +12,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class StreamingService {
 
-    private final AccountRepository accountRepository;
+    private final UserAccountRepository userAccountRepository;
 
-    public String generateStreamingKey(String username) {
+    public String generateStreamingKey(String userName) {
         try {
-            Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(userName);
 
-            String streamingKey = UUID.randomUUID().toString();
-            account.updateStreamingKey(streamingKey); // updateStreamingKey 메서드를 사용하여 streamingKey 설정
-            accountRepository.save(account);
+            String generatedStreamingKey = UUID.randomUUID().toString();
+            userAccountEntity.updateUserStreamingKey(generatedStreamingKey); // updateStreamingKey 메서드를 사용하여 streamingKey 설정
+            userAccountRepository.save(userAccountEntity);
 
-            log.info("Streaming key generated for user: {}", username);
-            return streamingKey;
+            log.info("Streaming key generated for user: {}", userName);
+            return generatedStreamingKey;
         } catch (Exception e) {
-            log.error("Error generat1ing streaming key for user: {}", username, e);
+            log.error("Error generat1ing streaming key for user: {}", userName, e);
             throw e; // 예외 다시 던지기
         }
     }
 
     public boolean validateStreamingKey(String streamingKey) {
         try {
-            boolean valid = accountRepository.findByStreamingKey(streamingKey).isPresent();
-            log.info("Validating streaming key: {} - Result: {}", streamingKey, valid);
-            return valid;
+            boolean streamingKeyValid = (userAccountRepository.findByUserStreamingKey(streamingKey) !=null);
+            log.info("Validating streaming key: {} - Result: {}", streamingKey, streamingKeyValid);
+            return streamingKeyValid;
         } catch (Exception e) {
             log.error("Error validating streaming key: {}", streamingKey, e);
             throw e; // 예외 다시 던지기
