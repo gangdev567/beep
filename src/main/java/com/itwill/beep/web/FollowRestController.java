@@ -75,32 +75,40 @@ public class FollowRestController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/followers")
-    public String getFollowerList(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName(); // 현재 인증된 사용자의 이름(또는 아이디) 가져오기
+    @GetMapping("/followlist/{fromUserNo}")
+    public ResponseEntity<Map<String, Object>> getFollowList(
+            @PathVariable("fromUserNo") Long fromUserNo) {
+        log.info("getFollowList(fromUserNo: {})", fromUserNo);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // 사용자 이름(또는 아이디)를 기반으로 UserAccountEntity 찾기
-        UserAccountEntity userAccount = userService.findUserByUserName(username);
+        UserAccountEntity fromUser = userService.findUserByUserName(authentication.getName());
 
-        // 사용자의 팔로워 목록 조회
-        model.addAttribute("followers", followService.getFollowers(userAccount));
+        Long countByFromUser = followService.countFollowings(fromUser);
+        List<FollowEntity> followList = followService.getFollowings(fromUser);
 
-        return "followers"; // 팔로워 목록을 보여주는 뷰의 이름
+        Map<String, Object> response = new HashMap<>();
+        response.put("countByFollow", countByFromUser);
+        response.put("followList", followList);
+
+        log.info("response: {}", response);
+
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/followings")
-    public String getFollowingList(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName(); // 현재 인증된 사용자의 이름(또는 아이디) 가져오기
+    @GetMapping("/followerlist/{toUserNo}")
+    public ResponseEntity<Map<String, Object>> getFollowerCount(
+            @PathVariable("toUserNo") Long toUserNo) {
+        log.info("getFolloweCount(toUserNo: {})", toUserNo);
 
-        // 사용자 이름(또는 아이디)를 기반으로 UserAccountEntity 찾기
-        UserAccountEntity userAccount = userService.findUserByUserName(username);
+        UserAccountEntity toUser = userService.findByUserId(toUserNo);
+        Long countFollowerByToUser = followService.countFollowers(toUser);
+        List<FollowEntity> followerList = followService.getFollowers(toUser);
 
-        // 사용자가 팔로우하는 사람들의 목록 조회
-        model.addAttribute("followings", followService.getFollowings(userAccount));
+        Map<String, Object> response = new HashMap<>();
+        response.put("countByFollower", countFollowerByToUser);
+        response.put("followerList", followerList);
 
-        return "followings"; // 팔로잉 목록을 보여주는 뷰의 이름
+        return ResponseEntity.ok(response);
     }
 
 }

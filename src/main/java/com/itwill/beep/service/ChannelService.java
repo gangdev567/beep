@@ -21,7 +21,9 @@ public class ChannelService {
     private final ChannelRepository channelDao;
     
     public ChannelEntity findChannelByUserAccount(UserAccountEntity userAcconut) {
+
         ChannelEntity channel = channelDao.findByChannelUserAccountEntity(userAcconut);
+
         return channel;
     }
 
@@ -82,6 +84,7 @@ public class ChannelService {
     public List<ChannelEntity> findByCategoryCategoryId(Long categoryId) {
         log.info("findByCategoryCategoryId(categoryId={})", categoryId);
         List<ChannelEntity> list = channelDao.findByCategoryEntityOfChannelCategoryId(categoryId);
+
         
         return list;
     }
