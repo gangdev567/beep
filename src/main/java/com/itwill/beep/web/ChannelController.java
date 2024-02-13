@@ -1,7 +1,11 @@
 package com.itwill.beep.web;
 
 import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
+
+import java.util.Set;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -75,7 +79,8 @@ public class ChannelController {
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
             // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
             // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다.
-            String status = channel.getStreamingStateSet().toString();
+            ChannelEntity myChannel = channelSvc.findChannelByUserAccount(user);
+            String status = myChannel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
 
         } else if (SecurityContextHolder.getContext().getAuthentication()
