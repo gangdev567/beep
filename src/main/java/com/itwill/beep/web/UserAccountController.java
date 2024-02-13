@@ -38,5 +38,5 @@ public class UserAccountController {
         // 회원가입 이후 로그인 페이지로
         return "redirect:/login";
     }
-
+    
 }   
