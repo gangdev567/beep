@@ -135,8 +135,8 @@ async function fetchFollowList() {
             data.followList.forEach(follow => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
-                a.href = `/channel/${follow.toUserNo.username}`; // 여기에 주소를 넣어줍니다.
-                a.innerText = follow.toUserNo.userNickname;
+                a.href = `/channel/${follow.followingUserAccount.userName}`; // 여기에 주소를 넣어줍니다.
+                a.innerText = follow.followingUserAccount.userNickname;
                 li.appendChild(a);
                 followListElement.appendChild(li);
             });
