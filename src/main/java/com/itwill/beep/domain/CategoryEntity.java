@@ -1,6 +1,7 @@
 package com.itwill.beep.domain;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -19,21 +20,21 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Entity
 @Table(name = "category")
-public class Category {
+public class CategoryEntity {
     @Id
+    @Column(name = "category_id")
     private Long categoryId;
 
     @Basic(optional = false)
+    @Column(name = "category_name")
     private String categoryName;
 
-    private String imageUrl;
+    @Column(name = "category_image_url")
+    private String categoryImageUrl;
 
     /**
      * 토탈뷰 고쳐야함
      */
-    private Long totalView;
-
-
-    // @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    // private List<Video> videos;
+    @Column(name = "category_total_view")
+    private Long categoryTotalView;
 }

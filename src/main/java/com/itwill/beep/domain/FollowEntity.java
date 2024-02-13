@@ -23,21 +23,21 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "follow")
-public class Follow {
+@Table(name = "follows")
+public class FollowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long followId;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fromUserNo")
-    private Account fromUserNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "follower_user_id")
+    private UserAccountEntity followerUserAccount;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "toUserNo")
-    private Account toUserNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "following_user_id")
+    private UserAccountEntity followingUserAccount;
 
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 }
