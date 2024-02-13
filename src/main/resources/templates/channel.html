@@ -87,9 +87,9 @@
     </script>
     <!-- 로그인 정보 확인하기(테스트용) // TODO: 나중에 감춰야합니다.-->
     <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />
-    <input class="" id="channelUserId" th:value="${streamer.id}" />
+    <input class="" id="channelUserId" th:value="${streamer.userName}" />
     <input class="" id="channelUserNickname" th:value="${streamer.userNickname}" />
-    <input class="" id="loginUserId" th:value="${user.id}"/>
+    <input class="" id="loginUserId" th:value="${userAccount.userName}"/>
 
     <div class="row">
       <p>팔로워 : <span id="countByFollower"></span></p>
@@ -136,10 +136,10 @@
 <script th:inline="javascript">
 
   function enterRoom(socket){
-    var enterMsg={"type" : "ENTER","roomId":[[${room.roomId}]],"sender":[[${user.userNickname}]],"msg":""};
+    var enterMsg={"type" : "ENTER","roomId":[[${room.roomId}]],"sender":[[${userAccount.userNickname}]],"msg":""};
     console.log(enterMsg);
     socket.send(JSON.stringify(enterMsg));
-    let user = [[${user.userNickname}]];
+    let user = [[${userAccount.userNickname}]];
     let entMsg = user + "님 환영합니다! BEEP!! BEEP!! BEEP!!"
     let msgArea = document.querySelector('.msgArea');
     let newMsg = document.createElement('div');
@@ -196,7 +196,7 @@
     var talkMsg = {
             "type" : "TALK",
             "roomId":[[${room.roomId}]] ,
-            "sender":[[${user.userNickname}]],
+            "sender":[[${userAccount.userNickname}]],
             "msg":content};
     //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
     socket.send(JSON.stringify(talkMsg));
@@ -208,7 +208,7 @@
   window.addEventListener('beforeunload', handlePageUnload);
 
   function quit(){
-    var quitMsg={"type" : "QUIT","roomId":[[${room.roomId}]] ,"sender":[[${user.userNickname}]],"msg":""};
+    var quitMsg={"type" : "QUIT","roomId":[[${room.roomId}]] ,"sender":[[${userAccount.userNickname}]],"msg":""};
     //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
     socket.send(JSON.stringify(quitMsg));
     socket.close();

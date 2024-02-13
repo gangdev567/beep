@@ -202,7 +202,7 @@
                             </th:block>
                             
                             <th:block th:if="${status == '[ON]'}">
-                                <form th:action="@{/broadcast/off}" method="post"
+                                <form th:action="@{/streaming/off}" method="post"
                                     style="margin-bottom: 0px;">
                                     <input type="text" th:name="${userAccount.userName}" class="d-none"
                                         th:value="${userAccount.userName}">
@@ -214,7 +214,7 @@
                     <!-- 로그아웃 버튼 -->
                     <li class="nav-item" sec:authorize="isAuthenticated()"><a
                             class="btn mx-2 custom-btn-gray" th:href="@{/logout}"> <span
-                            th:text="${#authentication.name}"></span> 로그아웃
+                            th:text="${userAccount.userNickname}"></span> 로그아웃
                     </a></li>
 
                     <!-- 드롭다운 메뉴 -->

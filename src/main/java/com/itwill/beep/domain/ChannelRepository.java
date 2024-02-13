@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 
-    @EntityGraph(attributePaths = "status")
+    @EntityGraph(attributePaths = "streamingStateSet")
     ChannelEntity findByChannelUserAccountEntity(UserAccountEntity userAccountEntity);
 
 

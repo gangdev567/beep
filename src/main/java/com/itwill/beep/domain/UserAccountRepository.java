@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserAccountRepository extends JpaRepository<UserAccountEntity, Long> {
 
-    @EntityGraph(attributePaths = "roles")
+    @EntityGraph(attributePaths = "userRoles")
     UserAccountEntity findByUserName(String userName);
 
     UserAccountEntity findByUserNickname(String userNickname);
