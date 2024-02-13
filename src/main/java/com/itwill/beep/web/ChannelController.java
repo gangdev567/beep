@@ -41,14 +41,15 @@ public class ChannelController {
             // 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
             UserAccountEntity user = userSvc.findUserByUserName(username);
 
+            // model에 user를 보낸다.
+            model.addAttribute("userAccount", user);
+            log.info("user = {}", user);
+            
             // pathvariable로 스트리머 정보를 가져온다
-            UserAccountEntity streamer = userSvc.findUserByUserName(id);
+            UserAccountEntity streamer = userSvc.findUserByUserNickname(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
 
-            // model에 user를 보낸다.
-            model.addAttribute("user", user);
-            log.info("user = {}", user);
 
             // streamer정보로 channel정보를 불러온다.
             ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
@@ -83,12 +84,12 @@ public class ChannelController {
             UserAccountEntity user = UserAccountEntity.builder().userNickname("anonymousUser").build();
             user.addUserRole(UserRoleType.USER);
 
-            UserAccountEntity streamer = userSvc.findUserByUserName(id);
+            UserAccountEntity streamer = userSvc.findUserByUserNickname(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
 
             // model에 user를 보낸다.
-            model.addAttribute("user", user);
+            model.addAttribute("userAccount", user);
             log.info("user = {}", user);
 
             // streamer정보로 channel정보를 불러온다.

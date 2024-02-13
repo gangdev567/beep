@@ -20,12 +20,12 @@ public class UserAccountController {
     
     private final UserService userService;
     
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     public void userLogin() {
         log.info("userLogin()");
     }
     
-    @GetMapping("/signup")
+    @GetMapping("/user/signup")
     public void userSignin () {
         log.info("userSignup()");
     }
