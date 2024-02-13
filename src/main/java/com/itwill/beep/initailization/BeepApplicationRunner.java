@@ -45,7 +45,7 @@ public class BeepApplicationRunner implements ApplicationRunner{
     }
     
     private void createRoom(ChannelEntity channel) {
-        String userNickname = channel.getUserAccount().getUserNickname();
+        String userNickname = channel.getChannelUserAccountEntity().getUserNickname();
         Long id = channel.getChannelId();
         chatSvc.createRoom(userNickname, id);
         
