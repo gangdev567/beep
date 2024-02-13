@@ -21,7 +21,7 @@
     <h1 class="my-3 text-white">생방송 중인 채널</h1>
     
     <div class="row mt-3 custom">
-        <div class="col-md-4 mb-4" th:each="categoryChannelList, iterStat : ${categoryChannelList}">
+        <div class="col-md-4 mb-4" th:each="categoryChannelList, iterStat : ${categoryChannelList}" th:if="${categoryChannelList.status.toString().contains('ON')}">
             <div class="card border-dark">
                 <a class="video-card-thumbnail position-relative" th:href="@{/channel/{nickname}(nickname=${categoryChannelList.account.userNickname})}">
                     <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
