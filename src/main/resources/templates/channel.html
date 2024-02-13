@@ -146,7 +146,7 @@
     newMsg.innerText = entMsg;
     msgArea.append(newMsg);
   }
-  let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
+  let socket = new WebSocket("ws://localhost:8081/ws/chat");
 
   socket.onopen = function (e) {
     console.log('open server!')
