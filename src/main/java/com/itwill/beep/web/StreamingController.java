@@ -44,7 +44,7 @@ public class StreamingController {
             log.info("username = {}", username);
 
             UserAccountEntity user = userService.findUserByUserName(username);
-            model.addAttribute("user", user);
+            model.addAttribute("userAccount", user);
             model.addAttribute("streamer", user);
 
             ChannelEntity channel = channelService.findChannelByUserAccount(user);

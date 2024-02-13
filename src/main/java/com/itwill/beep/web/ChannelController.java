@@ -42,8 +42,8 @@ public class ChannelController {
             UserAccountEntity user = userSvc.findUserByUserName(username);
 
             // model에 user를 보낸다.
-            model.addAttribute("userAccount", user);
             log.info("user = {}", user);
+            model.addAttribute("userAccount", user);
             
             // pathvariable로 스트리머 정보를 가져온다
             UserAccountEntity streamer = userSvc.findUserByUserNickname(id);
