@@ -14,5 +14,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccountEntity, 
     UserAccountEntity findByUserId(Long userId);
 
     UserAccountEntity findByUserStreamingKey(String userStreamingKey);
+    
+    boolean existsByUserName(String userName);
+    
 
 }

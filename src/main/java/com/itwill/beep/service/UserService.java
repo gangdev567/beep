@@ -96,4 +96,8 @@ public class UserService implements UserDetailsService {
 
         return userAccountEntity;
     }
+    
+    public boolean isUserNameExists(String userName) {
+        return userAccountRepository.existsByUserName(userName);
+    }
 }
