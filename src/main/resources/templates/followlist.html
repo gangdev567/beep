@@ -58,7 +58,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="video-card-information mt-2">
+                        <div class="video-card-information mt-2" th:if="${data.channelList[iterStat.index].categoryEntityOfChannel != null}">
                             <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${data.channelList[iterStat.index].categoryEntityOfChannel.categoryId})}">
                                 <span class="badge bg-secondary" th:text="${data.channelList[iterStat.index].categoryEntityOfChannel.categoryName}"></span>
                             </a>
