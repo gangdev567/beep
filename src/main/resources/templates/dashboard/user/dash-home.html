@@ -8,12 +8,12 @@
 <h1>대시보드</h1>
 <div>
   <p>환영합니다, <span th:text="${user.userNickname}">사용자 닉네임</span>!</p>
-  <p>이메일: <span th:text="${user.email}">사용자 이메일</span></p>
-  <p>스트리밍 키: <span th:text="${user.streamingKey}">스트리밍 키</span></p>
+  <p>이메일: <span th:text="${user.userEmail}">사용자 이메일</span></p>
+  <p>스트리밍 키: <span th:text="${user.userStreamingKey}">스트리밍 키</span></p>
   <!-- 기타 대시보드 정보들 -->
 </div>
 <div>
-  <a th:href="@{/streaming/generateKey}">스트리밍 키 재발급</a>
+  <a th:href="@{/streaming/re-generate-streaming-key}">스트리밍 키 재발급</a>
   <!-- 기타 필요한 링크나 기능 추가 -->
 </div>
 </body>
