@@ -1,8 +1,11 @@
 package com.itwill.beep.web;
 
 import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
+
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import com.itwill.beep.dto.StreamingOnDto;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
+import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +36,7 @@ public class StreamingController {
     private final UserService userService;
     private final ChatService chatService;
     private final ChannelService channelService;
+    private final FollowService followService;
 
     @PostMapping("/on")
     public String StreamingOn(Model model, StreamingOnDto streamingOnDto) {
@@ -47,6 +52,7 @@ public class StreamingController {
             UserAccountEntity user = userService.findUserByUserName(username);
             model.addAttribute("userAccount", user);
             model.addAttribute("streamer", user);
+            model.addAttribute("userState", "STREAMER");
 
             // 로그인한 사용자의 채널 정보
             ChannelEntity channel = channelService.findChannelByUserAccount(user);
