@@ -124,7 +124,7 @@
             <div class="msgArea"></div>
         </div>
         <div class="input-group input-group-sm">
-            <textarea type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="1"></textarea>
+            <textarea type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="3"></textarea>
             <button type="button" class="sendBtn btn text-white" style="background-color: blueviolet;" onclick="sendMsg()">전송이라네</button>
         </div>
     </div>
@@ -143,10 +143,15 @@
     let entMsg = user + "님 환영합니다! BEEP!! BEEP!! BEEP!!"
     let msgArea = document.querySelector('.msgArea');
     let newMsg = document.createElement('div');
-    newMsg.innerText = entMsg;
-    msgArea.append(newMsg);
+    if(user !== 'anonymousUser') {
+        newMsg.innerText = entMsg;
+        msgArea.append(newMsg);    
+    } else if(user === 'anonymousUser') {
+        newMsg.innerText = [[${streamer.userNickname}]] + "님의 방송에 오신 것을 환영합니다!"
+        msgArea.append(newMsg);
+    }
   }
-  let socket = new WebSocket("ws://localhost:8081/ws/chat");
+  let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
 
   socket.onopen = function (e) {
     console.log('open server!')
@@ -172,7 +177,13 @@
     let newMsg = document.createElement('div');
     //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함
     let message = JSON.parse(e.data);
-    newMsg.innerText = message.sender +': ' + message.msg;
+    
+    // sender가 해당 채널의 스트리머일 경우 강조해서 표시
+    if(message.sender === [[${streamer.userNickname}]]) {
+        newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.msg + '</strong>';        
+    } else {
+        newMsg.innerHTML = message.sender +': ' + message.msg;
+    }
     if(message.type === 'TALK') {
       msgArea.append(newMsg);
     }
@@ -193,6 +204,15 @@
     if(content === '') {
         return;
     }
+    let userId = [[${userAccount.userNickname}]];
+    console.log(userId);
+    
+    if([[${userAccount.userNickname}]] === 'anonymousUser'){
+        document.querySelector('.content').value = '채팅은 로그인 이후 이용하 실 수 있습니다.';
+        document.querySelector('.content').setAttribute('readonly', 'true');
+        return;
+    }
+    
     var talkMsg = {
             "type" : "TALK",
             "roomId":[[${room.roomId}]] ,
