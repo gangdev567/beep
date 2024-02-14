@@ -27,11 +27,9 @@ public class CategoryController {
     @GetMapping
     public String showCategories(Model model) {
         log.info("showCategories()");
-        
-        List<CategoryEntity> categories = categoryService.findAllAndSaveCategories();
+
         List<CategoryEntity> mostViewers = categoryService.findByTotalViewers();
-        
-        model.addAttribute("categories", categories);
+
         model.addAttribute("mostViewers", mostViewers);
 
         return "categories";
@@ -40,12 +38,13 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     public String categoriesChannelList(@PathVariable("categoryId") Long categoryId, Model model) {
         log.info("categoriesChannelList");
-        
+
         CategoryEntity categoryEntityDetails = categoryService.findByCategoryIdIs(categoryId);
-        List<ChannelEntity> categoryChannelList = channelService.findByCategoryCategoryId(categoryId);
-        
+        List<ChannelEntity> categoryChannelList =
+                channelService.findByCategoryCategoryId(categoryId);
+
         model.addAttribute("categoryDetails", categoryEntityDetails);
-        model.addAttribute("categoryChannelList", categoryChannelList);        
+        model.addAttribute("categoryChannelList", categoryChannelList);
 
         return "categories-channellist";
     }
@@ -56,7 +55,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryEntity>> searchGamesApi(
             @RequestParam(value = "keyword") String keyword) {
         log.info("searchGamesApi(keyword={})", keyword);
-        
+
         List<CategoryEntity> foundGames = categoryService.searchGames(keyword);
 
         // ResponseEntity를 사용하여 HTTP 응답을 반환

@@ -37,4 +37,9 @@ public class CategoryEntity {
      */
     @Column(name = "category_total_view")
     private Long categoryTotalView;
+
+    public void updateCategoryTotalView(Long categoryTotalView) {
+        this.categoryTotalView = categoryTotalView;
+    }
+
 }

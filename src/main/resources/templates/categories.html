@@ -61,10 +61,7 @@
     <!-- 카테고리 탭 -->
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="popular-tab" data-bs-toggle="tab" href="#popular" role="tab" aria-controls="popular" aria-selected="true">시청 순</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="viewers-tab" data-bs-toggle="tab" href="#viewers" role="tab" aria-controls="viewers" aria-selected="false">추천 순</a>
+            <a class="nav-link active" id="mostViewers-tab" data-bs-toggle="tab" href="#mostViewers" role="tab" aria-controls="mostViewers" aria-selected="true">시청 순</a>
         </li>
     </ul>
 
@@ -79,8 +76,7 @@
 
     <!-- 카테고리 탭 내용 -->
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="popular" role="tabpanel">
-            <h2 class="mb-4 text-center mt-3 section-title">시청자 순 카테고리</h2>
+        <div class="tab-pane fade show active" id="mostViewers" role="tabpanel">
             <div class="row">
                 <div th:each="mostViewers, iterStat : ${mostViewers}" class="col-lg-2 col-md-4 mb-4">
                     <div class="card category-card">
@@ -88,36 +84,17 @@
                             <img th:src="${mostViewers.categoryImageUrl}" class="card-img-top img-fluid" alt="Category Image">
                             <div class="card-body">
                                 <h5 class="card-title category-title text-left text-truncate fs-5" th:text="${mostViewers.categoryName}">Category Name</h5>
-                                <h5 class="card-title category-title text-left text-truncate fs-6" th:text="|시청자 ${mostViewers.categoryTotalView}명|"></h5>
+                                <h5 class="card-title category-title text-left text-truncate fs-6" th:text="${mostViewers.categoryTotalView != null ? '시청자 ' + mostViewers.categoryTotalView + '명' : '시청자 0명'}"></h5>
                             </div>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="tab-pane fade" id="viewers" role="tabpanel">
-            <h2 class="mb-4 text-center mt-3 section-title">추천 카테고리</h2>
-            <div class="row">
-                <div th:each="categories, iterStat : ${categories}" class="col-lg-2 col-md-4 mb-4">
-                    <div class="card category-card">
-                        <a th:href="@{/categories/{categoryId}(categoryId=${categories.categoryId})}" class="card-link text-decoration-none text-white">
-                            <img th:src="${categories.categoryImageUrl}" class="card-img-top img-fluid" alt="Category Image">
-                            <div class="card-body">
-                                <h5 class="card-title category-title text-center text-truncate fs-5" th:text="${categories.categoryName}">Category Name</h5>
-                                <h5 class="card-title category-title text-center text-truncate fs-6" th:text="${categories.categoryTotalView != null ? '시청자 ' + categories.categoryTotalView + '명' : '시청자 0명'}"></h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 <nav th:replace="layout/fragments :: mysidebar"></nav>
 <footer th:replace="layout/fragments :: myfooter"></footer>
-
 
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>

@@ -1,15 +1,12 @@
 package com.itwill.beep.service;
 
-import com.itwill.beep.domain.ChannelEntity;
-import com.itwill.beep.domain.UserAccountEntity;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
+import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.StreamingOnDto;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ChannelService {
-    
+
     private final ChannelRepository channelDao;
-    
+
     public ChannelEntity findChannelByUserAccount(UserAccountEntity userAcconut) {
 
         ChannelEntity channel = channelDao.findByChannelUserAccountEntity(userAcconut);
@@ -37,34 +34,34 @@ public class ChannelService {
     }
 
     public List<ChannelEntity> findAllChannel() {
-        
+
         List<ChannelEntity> channelList = channelDao.findAll();
-        
+
         return channelList;
     }
 
     @Transactional
     public void increaseViewers(Long channelId) {
-        
+
         // 청자수 증가
         channelDao.increaseViewer(channelId);
-        
+
     }
 
     @Transactional
     public void decreaseViewers(Long channelId) {
-        
+
         // 청자수 감소
         channelDao.decreaseViewer(channelId);
-        
+
         // 시청자 수 셀렉트
         Long viewers = channelDao.findViewersByChannelId(channelId);
-        
+
         // 시청자가 버그로 인해 0명 보다 적어질 경우 0명으로 리셋
         if (viewers < 0) {
             channelDao.viewersSetZero(channelId);
         }
-        
+
     }
 
     @Transactional
@@ -75,17 +72,16 @@ public class ChannelService {
         String content = dto.getContent();
         /* 카테고리아이디 추가 */
         Long categoryId = dto.getCategoryId();
-        
+
         channelDao.update(channelId, title, content, categoryId);
-        
+
     }
-    
+
     /* 카테고리 아이디로 채널 검색하기 */
     public List<ChannelEntity> findByCategoryCategoryId(Long categoryId) {
         log.info("findByCategoryCategoryId(categoryId={})", categoryId);
         List<ChannelEntity> list = channelDao.findByCategoryEntityOfChannelCategoryId(categoryId);
 
-        
         return list;
     }
 }
