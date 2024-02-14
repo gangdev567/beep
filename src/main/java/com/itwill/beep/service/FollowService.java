@@ -1,11 +1,11 @@
 package com.itwill.beep.service;
 
-import com.itwill.beep.domain.UserAccountEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.FollowRepository;
+import com.itwill.beep.domain.UserAccountEntity;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,41 +17,48 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     // 사용자를 팔로우하는 메서드
-    public void follow(UserAccountEntity followerUserAccount, UserAccountEntity followingUserAccount) {
+    public void follow(UserAccountEntity followerUserAccount,
+            UserAccountEntity followingUserAccount) {
         try {
             // 이미 팔로우 중인지 확인
-            if (!followRepository.existsByFollowerUserAccountAndFollowingUserAccount(followerUserAccount, followingUserAccount)) {
+            if (!followRepository.existsByFollowerUserAccountAndFollowingUserAccount(
+                    followerUserAccount, followingUserAccount)) {
                 // 팔로우 관계를 저장
-                FollowEntity followEntity = FollowEntity.builder()
-                    .followerUserAccount(followerUserAccount)
-                    .followingUserAccount(followingUserAccount)
-                    .build();
+                FollowEntity followEntity =
+                        FollowEntity.builder().followerUserAccount(followerUserAccount)
+                                .followingUserAccount(followingUserAccount)
+                                .createdTime(LocalDateTime.now()).build();
                 followRepository.save(followEntity);
-                log.info("User {} followed user {}", followerUserAccount.getUserName(), followingUserAccount.getUserName());
+                log.info("User {} followed user {}", followerUserAccount.getUserName(),
+                        followingUserAccount.getUserName());
             } else {
-                log.warn("User {} is already following user {}", followerUserAccount.getUserName(), followingUserAccount.getUserName());
+                log.warn("User {} is already following user {}", followerUserAccount.getUserName(),
+                        followingUserAccount.getUserName());
             }
         } catch (Exception e) {
-            log.error("Error occurred while following user {}: {}", followingUserAccount.getUserName(), e.getMessage());
+            log.error("Error occurred while following user {}: {}",
+                    followingUserAccount.getUserName(), e.getMessage());
         }
     }
 
     // 사용자의 팔로우를 취소하는 메서드
-    public void unfollow(UserAccountEntity followerUserAccount, UserAccountEntity followingUserAccount) {
-        try {
-            followRepository.deleteByFollowerUserAccountAndFollowingUserAccount(followerUserAccount, followingUserAccount);
-            log.info("User {} unfollowed user {}", followerUserAccount.getUserName(), followingUserAccount.getUserName());
-        } catch (Exception e) {
-            log.error("Error occurred while unfollowing user {}: {}", followingUserAccount.getUserName(), e.getMessage());
-        }
+    @Transactional
+    public void unfollow(UserAccountEntity followerUserAccount,
+            UserAccountEntity followingUserAccount) {
+        followRepository.deleteByFollowerUserAccountAndFollowingUserAccount(followerUserAccount,
+                followingUserAccount);
     }
 
     // 특정 사용자를 팔로우하는지 여부를 확인하는 메서드
-    public boolean isFollowing(UserAccountEntity followerUserAccount, UserAccountEntity followingUserAccount) {
+    public boolean isFollowing(UserAccountEntity followerUserAccount,
+            UserAccountEntity followingUserAccount) {
         try {
-            return followRepository.existsByFollowerUserAccountAndFollowingUserAccount(followerUserAccount, followingUserAccount);
+            return followRepository.existsByFollowerUserAccountAndFollowingUserAccount(
+                    followerUserAccount, followingUserAccount);
         } catch (Exception e) {
-            log.error("Error occurred while checking if user {} is following user {}: {}", followerUserAccount.getUserName(), followingUserAccount.getUserName(), e.getMessage());
+            log.error("Error occurred while checking if user {} is following user {}: {}",
+                    followerUserAccount.getUserName(), followingUserAccount.getUserName(),
+                    e.getMessage());
             return false;
         }
     }
@@ -61,7 +68,8 @@ public class FollowService {
         try {
             return followRepository.findByFollowerUserAccount(userAccount);
         } catch (Exception e) {
-            log.error("Error occurred while fetching followings for user {}: {}", userAccount.getUserName(), e.getMessage());
+            log.error("Error occurred while fetching followings for user {}: {}",
+                    userAccount.getUserName(), e.getMessage());
             return null;
         }
     }
@@ -71,7 +79,8 @@ public class FollowService {
         try {
             return followRepository.findByFollowingUserAccount(userAccount);
         } catch (Exception e) {
-            log.error("Error occurred while fetching followers for user {}: {}", userAccount.getUserName(), e.getMessage());
+            log.error("Error occurred while fetching followers for user {}: {}",
+                    userAccount.getUserName(), e.getMessage());
             return null;
         }
     }
@@ -81,7 +90,8 @@ public class FollowService {
         try {
             return followRepository.countByFollowerUserAccount(userAccount);
         } catch (Exception e) {
-            log.error("Error occurred while counting followings for user {}: {}", userAccount.getUserName(), e.getMessage());
+            log.error("Error occurred while counting followings for user {}: {}",
+                    userAccount.getUserName(), e.getMessage());
             return 0;
         }
     }
@@ -91,7 +101,8 @@ public class FollowService {
         try {
             return followRepository.countByFollowingUserAccount(userAccount);
         } catch (Exception e) {
-            log.error("Error occurred while counting followers for user {}: {}", userAccount.getUserName(), e.getMessage());
+            log.error("Error occurred while counting followers for user {}: {}",
+                    userAccount.getUserName(), e.getMessage());
             return 0;
         }
     }

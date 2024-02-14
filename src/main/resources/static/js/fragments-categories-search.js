@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 카테고리 이미지 추가
             const categoryImage = document.createElement('img');
-            categoryImage.src = category.imageUrl;
+            categoryImage.src = category.categoryImageUrl;
             categoryImage.alt = category.categoryName;
             categoryImage.width = 40; // 이미지 너비 설정
             categoryImage.height = 40; // 이미지 높이 설정
