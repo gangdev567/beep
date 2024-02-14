@@ -16,6 +16,7 @@ import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
+import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class ChannelController {
     private final UserService userSvc;
     private final ChatService chatSvc;
     private final ChannelService channelSvc;
+    private final FollowService followSvc;
 
     @GetMapping("/channel/{id}")
     public String channel(@PathVariable(name = "id") String id, Model model) {
@@ -45,14 +47,24 @@ public class ChannelController {
             // 유저 아이디로 유저의 상세정보를 불러올 쿼리를 실행한다.
             UserAccountEntity user = userSvc.findUserByUserName(username);
 
-            // model에 user를 보낸다.
-            log.info("user = {}", user);
-            model.addAttribute("userAccount", user);
-            
             // pathvariable로 스트리머 정보를 가져온다
             UserAccountEntity streamer = userSvc.findUserByUserNickname(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
+            
+            // user의 follow 여부를 체크한다. 
+            boolean followCheck = followSvc.isFollowing(user, streamer);
+            
+            if(followCheck == true) {
+                model.addAttribute("userState", "FOLLOW");
+            } else if(followCheck == false){
+                model.addAttribute("userState", "NON_FOLLOW");
+            }
+            
+            // model에 user를 보낸다.
+            log.info("user = {}", user);
+            model.addAttribute("userAccount", user);
+            
 
 
             // streamer정보로 channel정보를 불러온다.
@@ -74,11 +86,11 @@ public class ChannelController {
             String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
             model.addAttribute("streamingUrl", streamingUrl);
 
-            // TODO: 여기서 만들어져있는 방송으로 이동하는 메서드를 만들어야 함
+            
 
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
-            // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
-            // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다.
+            // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다. 
+            // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다. (해결법은 찾았지만 결국엔 이게 정답이었다.)
             ChannelEntity myChannel = channelSvc.findChannelByUserAccount(user);
             String status = myChannel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
@@ -95,6 +107,7 @@ public class ChannelController {
 
             // model에 user를 보낸다.
             model.addAttribute("userAccount", user);
+            model.addAttribute("userState", "ANONYMOUS");
             log.info("user = {}", user);
 
             // streamer정보로 channel정보를 불러온다.
@@ -117,4 +130,5 @@ public class ChannelController {
         return "/channel";
 
     }
+    
 }

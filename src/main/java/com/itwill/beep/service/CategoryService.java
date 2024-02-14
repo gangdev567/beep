@@ -58,9 +58,14 @@ public class CategoryService {
             CategoryEntity category = channel.getCategoryEntityOfChannel();
             Long totalViewerCount =
                     channelRepository.getTotalViewerCountByCategoryId(category.getCategoryId());
+<<<<<<< HEAD
             if (totalViewerCount != null
                     && channel.getStreamingStateSet().toString().contains("ON")) {
                 // totalViewerCount가 null 아닐 때, 방송 중일때만 불러오기
+=======
+            if (totalViewerCount != null && channel.getStreamingStateSet().toString().contains("ON")) {
+                // totalViewerCount가 null이거나 0이 아닐 때만 추가
+>>>>>>> 7ed2050086e9aa2e339092c3a9a7edb7aa316d3a
                 category.updateCategoryTotalView(totalViewerCount);
                 categoriesWithTotalViewers.add(category);
             }
