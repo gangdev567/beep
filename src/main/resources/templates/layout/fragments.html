@@ -575,8 +575,8 @@
                             </a>
                         </div>
                     </div>
-                    <div class="video-card-information mt-2">
-                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=${broadcast.categoryEntityOfChannel.categoryId})}">
+                    <div class="video-card-information mt-2" th:if="*{categoryEntityOfChannel != null}">
+                        <a class="video-card-item text-decoration-none" th:href="@{/categories/{categoryId}(categoryId=*{categoryEntityOfChannel.categoryId})}">
                             <span class="badge bg-secondary" th:text="*{categoryEntityOfChannel.categoryName}"></span>
                         </a>
                     </div>

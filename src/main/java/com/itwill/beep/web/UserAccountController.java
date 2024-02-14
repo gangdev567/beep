@@ -15,16 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserAccountController {
     
     private final UserService userService;
     
-    @GetMapping("/user/login")
+    @GetMapping("/login")
     public void userLogin() {
         log.info("userLogin()");
     }
     
-    @GetMapping("/user/signup")
+    @GetMapping("/signup")
     public void userSignin () {
         log.info("userSignup()");
     }
@@ -36,7 +37,7 @@ public class UserAccountController {
         userService.createUserAccount(signupRequestDto);
         
         // 회원가입 이후 로그인 페이지로
-        return "redirect:/login";
+        return "redirect:/user/login";
     }
     
 }   
