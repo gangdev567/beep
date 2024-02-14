@@ -7,6 +7,7 @@
 <body>
 
 <div class="container mt-5 pt-5">
+
     <div class="row">
         <div class="col-md-12 d-flex align-items-center">
             <img th:src="${categoryDetails.categoryImageUrl}" class="card-img-top img-fluid float-md-start me-md-3" alt="Category Image" style="width: 200px; height: 250px;">
@@ -15,10 +16,15 @@
                 <h5 class="card-title category-title text-left text-truncate text-white" th:text="${categoryDetails.categoryTotalView != null ? categoryDetails.categoryTotalView + ' 명' : '0 명'}"></h5>
             </div>
         </div>
-    </div>
-    
+    </div>    
     
     <h1 class="my-3 text-white">생방송 중인 채널</h1>
+    
+    <div class="row mt-3 custom" th:if="${#lists.isEmpty(categoryChannelList)}">
+        <div class="col-md-12">
+            <h5 class="text-white">생방송 중인 채널이 없습니다.</h5>
+        </div>
+    </div>    
     
     <div class="row mt-3 custom">
         <div class="col-md-4 mb-4" th:each="categoryChannelList, iterStat : ${categoryChannelList}" th:if="${categoryChannelList.streamingStateSet.toString().contains('ON')}">
@@ -63,10 +69,6 @@
 <header th:replace="layout/fragments :: myheader"></header>
 
 <nav th:replace="layout/fragments :: mysidebar"></nav>
-
-<!-- 모달 확인 
-<div th:replace="layout/fragments :: myModal"></div>
- -->
 
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
