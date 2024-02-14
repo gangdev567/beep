@@ -1,13 +1,11 @@
 package com.itwill.beep.web;
 
-import com.itwill.beep.domain.UserAccountEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.itwill.beep.domain.FollowEntity;
+import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +32,12 @@ public class FollowRestController {
         log.info("follow(following: {})", following);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserAccountEntity followerEntity = userService.findUserByUserName(authentication.getName());
         UserAccountEntity followingEntity = userService.findByUserId(following);
 
         followService.follow(followerEntity, followingEntity);
-        log.info("{} 님이 {} 님을 팔로우합니다.", followerEntity.getUserName(), followingEntity.getUserName());
+        log.info("{} 님이 {} 님을 팔로우합니다.", followerEntity.getUserName(),
+                followingEntity.getUserName());
 
         return ResponseEntity.ok(true);
     }
@@ -48,7 +47,6 @@ public class FollowRestController {
         log.info("unfollow(following: {})", following);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserAccountEntity loggedInUser = userService.findUserByUserName(authentication.getName());
         UserAccountEntity unfollowUser = userService.findByUserId(following);
 
@@ -79,10 +77,9 @@ public class FollowRestController {
     public ResponseEntity<Map<String, Object>> getFollowerList(
             @PathVariable("follower") Long follower) {
         log.info("getFollowerList(follower: {})", follower);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserAccountEntity followerEntity = userService.findUserByUserName(authentication.getName());
-
         Long countByfollower = followService.countFollowings(followerEntity);
         List<FollowEntity> followList = followService.getFollowings(followerEntity);
 

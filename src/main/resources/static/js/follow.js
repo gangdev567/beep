@@ -121,9 +121,9 @@ function isLoggedIn() {
 }
 
 async function fetchFollowList() {
-    const fromUserNo = document.getElementById('loginUserId').value;
+    const follower = document.getElementById('loginUserId').value;
     try {
-        const response = await fetch(`/api/follow/followlist/${fromUserNo}`);
+        const response = await fetch(`/api/follow/followlist/${follower}`);
         if (response.ok) {
             const data = await response.json();
             console.log(data);
@@ -135,7 +135,7 @@ async function fetchFollowList() {
             data.followList.forEach(follow => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
-                a.href = `/channel/${follow.followingUserAccount.userName}`; // 여기에 주소를 넣어줍니다.
+                a.href = `/channel/${follow.followingUserAccount.userNickname}`; // 여기에 주소를 넣어줍니다.
                 a.innerText = follow.followingUserAccount.userNickname;
                 li.appendChild(a);
                 followListElement.appendChild(li);
