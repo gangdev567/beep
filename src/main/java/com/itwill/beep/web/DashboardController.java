@@ -32,6 +32,6 @@ public class DashboardController {
         model.addAttribute("user", userDetails);
 
         // 대시보드 홈 페이지로 이동
-        return "user/dashboard/home"; // Thymeleaf 경로 수정 필요
+        return "dashboard/user/dash-home"; // Thymeleaf 경로 수정 필요
     }
 }

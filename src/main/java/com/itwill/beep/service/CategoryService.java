@@ -1,6 +1,5 @@
 package com.itwill.beep.service;
 
-import com.itwill.beep.domain.CategoryEntity;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +11,7 @@ import com.api.igdb.request.IGDBWrapper;
 import com.api.igdb.request.ProtoRequestKt;
 import com.api.igdb.request.TwitchAuthenticator;
 import com.api.igdb.utils.TwitchToken;
+import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelRepository;
 import jakarta.transaction.Transactional;
@@ -41,7 +41,8 @@ public class CategoryService {
      */
     public List<CategoryEntity> findByTotalViewers() {
         log.info("findByTotalViewers()");
-        List<CategoryEntity> categories = categoryRepository.findByCategoryTotalViewNotNullOrderByCategoryTotalViewDesc();
+        List<CategoryEntity> categories =
+                categoryRepository.findByCategoryTotalViewNotNullOrderByCategoryTotalViewDesc();
 
         return categories;
     }
@@ -68,14 +69,13 @@ public class CategoryService {
 
         // IGDB API를 통해 인기 게임 목록 조회
         APICalypse gamesQuery =
-                new APICalypse().fields("*").limit(30).sort("rating_count", Sort.DESCENDING);
+                new APICalypse().fields("*").limit(18).sort("rating_count", Sort.DESCENDING);
 
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gamesQuery);
             for (var game : games) {
                 // 이미 저장된 CategoryEntity 확인
-                CategoryEntity existingCategory =
-                        categoryRepository.findByCategoryId(game.getId());
+                CategoryEntity existingCategory = categoryRepository.findByCategoryId(game.getId());
 
                 if (existingCategory == null) {
                     // 각 게임에 대한 커버 정보 가져오기
@@ -129,8 +129,7 @@ public class CategoryService {
 
             for (var game : games) {
 
-                CategoryEntity existingCategory =
-                        categoryRepository.findByCategoryId(game.getId());
+                CategoryEntity existingCategory = categoryRepository.findByCategoryId(game.getId());
 
                 if (existingCategory == null) {
                     // 각 게임에 대한 커버 정보 가져오기
