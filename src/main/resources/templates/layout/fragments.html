@@ -116,7 +116,7 @@
 <body>
 
 
-<div sec:authorize= "isAuthenticated()" th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog">
+
 <div th:fragment="myModal" id="myModal" class="modal" tabindex="-1" role="dialog" sec:authorize="isAuthenticated()">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" role="document">
