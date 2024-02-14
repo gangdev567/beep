@@ -1,7 +1,11 @@
 package com.itwill.beep.web;
 
+import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.StreamingState;
+import com.itwill.beep.domain.UserAccountEntity;
 
 import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,9 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.itwill.beep.domain.ChannelEntity;
-import com.itwill.beep.domain.StreamingState;
-import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.dto.StreamingOnDto;
 import com.itwill.beep.service.ChannelService;
@@ -47,6 +48,7 @@ public class StreamingController {
             UserAccountEntity user = userService.findUserByUserName(username);
             model.addAttribute("userAccount", user);
             model.addAttribute("streamer", user);
+            model.addAttribute("userState", "STREAMER");
 
             // 로그인한 사용자의 채널 정보
             ChannelEntity channel = channelService.findChannelByUserAccount(user);

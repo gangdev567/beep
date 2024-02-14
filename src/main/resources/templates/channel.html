@@ -124,7 +124,7 @@
             <div class="msgArea"></div>
         </div>
         <div class="input-group input-group-sm">
-            <textarea type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="1"></textarea>
+            <textarea type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="3"></textarea>
             <button type="button" class="sendBtn btn text-white" style="background-color: blueviolet;" onclick="sendMsg()">전송이라네</button>
         </div>
     </div>
@@ -136,17 +136,22 @@
 <script th:inline="javascript">
 
   function enterRoom(socket){
-    var enterMsg={"type" : "ENTER","roomId":[[${room.roomId}]],"sender":[[${userAccount.userNickname}]],"msg":""};
+    var enterMsg={"type" : "ENTER", "userType" : [[${userState}]], "roomId":[[${room.roomId}]],"sender":[[${userAccount.userNickname}]],"msg":""};
     console.log(enterMsg);
     socket.send(JSON.stringify(enterMsg));
     let user = [[${userAccount.userNickname}]];
     let entMsg = user + "님 환영합니다! BEEP!! BEEP!! BEEP!!"
     let msgArea = document.querySelector('.msgArea');
     let newMsg = document.createElement('div');
-    newMsg.innerText = entMsg;
-    msgArea.append(newMsg);
+    if(user !== 'anonymousUser') {
+        newMsg.innerText = entMsg;
+        msgArea.append(newMsg);    
+    } else if(user === 'anonymousUser') {
+        newMsg.innerText = [[${streamer.userNickname}]] + "님의 방송에 오신 것을 환영합니다!"
+        msgArea.append(newMsg);
+    }
   }
-  let socket = new WebSocket("ws://localhost:8081/ws/chat");
+  let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
 
   socket.onopen = function (e) {
     console.log('open server!')
@@ -172,7 +177,15 @@
     let newMsg = document.createElement('div');
     //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함
     let message = JSON.parse(e.data);
-    newMsg.innerText = message.sender +': ' + message.msg;
+    
+    // sender가 해당 채널의 스트리머일 경우 강조해서 표시
+    if(message.sender === [[${streamer.userNickname}]]) {
+        newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.msg + '</strong>';        
+    } else if(message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
+        newMsg.innerHTML = '👍︎' + message.sender + ':' + message.msg;
+    } else if(message.userType === "NON_FOLLOW") {
+        newMsg.innerHTML = message.sender + ':' + message.msg;
+    }
     if(message.type === 'TALK') {
       msgArea.append(newMsg);
     }
@@ -193,10 +206,21 @@
     if(content === '') {
         return;
     }
+    let userId = [[${userAccount.userNickname}]];
+    let userType = [[${userState}]];
+     
+     // 익명채팅기능을 만들건데 조건문에 뭐 선택지가 on이냐 off냐로 && 조건문 걸면 될 듯
+    if([[${userAccount.userNickname}]] === 'anonymousUser'){
+        document.querySelector('.content').value = '채팅은 로그인 이후 이용하 실 수 있습니다.';
+        document.querySelector('.content').setAttribute('readonly', 'true');
+        return;
+    }
+    
     var talkMsg = {
             "type" : "TALK",
-            "roomId":[[${room.roomId}]] ,
-            "sender":[[${userAccount.userNickname}]],
+            "userType" : userType,
+            "roomId":[[${room.roomId}]],
+            "sender": userId,
             "msg":content};
     //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
     socket.send(JSON.stringify(talkMsg));
@@ -208,7 +232,7 @@
   window.addEventListener('beforeunload', handlePageUnload);
 
   function quit(){
-    var quitMsg={"type" : "QUIT","roomId":[[${room.roomId}]] ,"sender":[[${userAccount.userNickname}]],"msg":""};
+    var quitMsg={"type" : "QUIT", "userType" : [[${userState}]], "roomId":[[${room.roomId}]] ,"sender":[[${userAccount.userNickname}]],"msg":""};
     //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
     socket.send(JSON.stringify(quitMsg));
     socket.close();

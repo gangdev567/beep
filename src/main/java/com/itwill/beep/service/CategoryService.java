@@ -58,7 +58,7 @@ public class CategoryService {
             CategoryEntity category = channel.getCategoryEntityOfChannel();
             Long totalViewerCount =
                     channelRepository.getTotalViewerCountByCategoryId(category.getCategoryId());
-            if (totalViewerCount != null && totalViewerCount != 0) {
+            if (totalViewerCount != null && channel.getStreamingStateSet().toString().contains("ON")) {
                 // totalViewerCount가 null이거나 0이 아닐 때만 추가
                 category.updateCategoryTotalView(totalViewerCount);
                 categoriesWithTotalViewers.add(category);
