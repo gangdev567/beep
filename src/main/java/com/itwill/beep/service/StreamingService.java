@@ -14,20 +14,9 @@ public class StreamingService {
 
     private final UserAccountRepository userAccountRepository;
 
-    public String generateStreamingKey(String userName) {
-        try {
-            UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(userName);
-
-            String generatedStreamingKey = UUID.randomUUID().toString();
-            userAccountEntity.updateUserStreamingKey(generatedStreamingKey); // updateStreamingKey 메서드를 사용하여 streamingKey 설정
-            userAccountRepository.save(userAccountEntity);
-
-            log.info("Streaming key generated for user: {}", userName);
-            return generatedStreamingKey;
-        } catch (Exception e) {
-            log.error("Error generat1ing streaming key for user: {}", userName, e);
-            throw e; // 예외 다시 던지기
-        }
+    public String generateStreamingKey() {
+        // 단순히 UUID를 기반으로 streamingKey 생성
+        return UUID.randomUUID().toString();
     }
 
     public boolean validateStreamingKey(String streamingKey) {

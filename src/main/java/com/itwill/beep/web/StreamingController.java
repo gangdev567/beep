@@ -71,7 +71,8 @@ public class StreamingController {
 
             // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
             String streamingKey = user.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
-            String streamingUrl = String.format("http://localhost:8088/stream/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
+            log.info("streamingKey = {}", streamingKey);
+            String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
             model.addAttribute("streamingUrl", streamingUrl);
 
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
@@ -101,7 +102,7 @@ public class StreamingController {
     @GetMapping("/generate-streaming-key")
     public ResponseEntity<?> generateStreamingKey(Authentication authentication) {
         String userName = authentication.getName();
-        String streamingKey = streamingService.generateStreamingKey(userName);
+        String streamingKey = streamingService.generateStreamingKey();
 
         // 로그 추가: 스트리밍 키 발급 로그
         log.info("스트리밍 키를 발급받았습니다. userName: {}, streamingKey: {}", userName, streamingKey);
