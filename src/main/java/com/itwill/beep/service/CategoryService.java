@@ -1,7 +1,10 @@
 package com.itwill.beep.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.api.igdb.apicalypse.APICalypse;
@@ -13,6 +16,7 @@ import com.api.igdb.request.TwitchAuthenticator;
 import com.api.igdb.utils.TwitchToken;
 import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
+import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,24 +45,47 @@ public class CategoryService {
      */
     public List<CategoryEntity> findByTotalViewers() {
         log.info("findByTotalViewers()");
-        List<CategoryEntity> categories =
-                categoryRepository.findByCategoryTotalViewNotNullOrderByCategoryTotalViewDesc();
 
-        return categories;
+        // 중복된 카테고리를 제거하기 위해 Set을 사용
+        Set<CategoryEntity> categoriesWithTotalViewers = new HashSet<>();
+
+        // 카테고리의 시청자 수가 있는 채널을 조회하여 가져옴
+        List<ChannelEntity> channels = channelRepository.findByCategoryEntityOfChannelIsNotNull();
+
+        // 각 채널의 카테고리를 가져와서 시청자 수를 업데이트하고,
+        // 시청자 수가 있는 카테고리만 Set에 추가
+        for (ChannelEntity channel : channels) {
+            CategoryEntity category = channel.getCategoryEntityOfChannel();
+            Long totalViewerCount =
+                    channelRepository.getTotalViewerCountByCategoryId(category.getCategoryId());
+            if (totalViewerCount != null && channel.getStreamingStateSet().toString().contains("ON")) {
+                // totalViewerCount가 null이거나 0이 아닐 때만 추가
+                category.updateCategoryTotalView(totalViewerCount);
+                categoriesWithTotalViewers.add(category);
+            }
+        }
+
+        // Set을 List로 변환하여 List에 저장
+        List<CategoryEntity> sortedCategories = new ArrayList<>(categoriesWithTotalViewers);
+
+        // 시청자 수가 높은 순서대로 정렬
+        sortedCategories
+                .sort(Comparator.comparingLong(CategoryEntity::getCategoryTotalView).reversed());
+
+        // 정렬된 리스트를 반환
+        return sortedCategories;
     }
 
     public CategoryEntity findByCategoryIdIs(Long categoryId) {
         log.info("findByCategoryId(categoryId={})", categoryId);
         CategoryEntity category = categoryRepository.findByCategoryId(categoryId);
+        category.updateCategoryTotalView(
+                channelRepository.getTotalViewerCountByCategoryId(categoryId));
 
         return category;
     }
 
-    /**
-     * IGDB API를 통해 게임 목록을 가져와 카테고리로 저장합니다.
-     *
-     * @return 저장된 카테고리 목록
-     */
+    /* 카테고리를 필요시 저장할 때만 사용하겠습니다. */
     @Transactional
     public List<CategoryEntity> findAllAndSaveCategories() {
         log.info("findAllAndSaveCategories()");
@@ -67,33 +94,30 @@ public class CategoryService {
         // Twitch API 토큰 요청
         setTwitchAuthCredentials();
 
-        // IGDB API를 통해 인기 게임 목록 조회
+        // IGDB API를 통해 신규 게임 목록
         APICalypse gamesQuery =
-                new APICalypse().fields("*").limit(18).sort("rating_count", Sort.DESCENDING);
+                new APICalypse().fields("*").limit(20).sort("release_dates", Sort.DESCENDING);
 
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gamesQuery);
             for (var game : games) {
-                // 이미 저장된 CategoryEntity 확인
-                CategoryEntity existingCategory = categoryRepository.findByCategoryId(game.getId());
+                // 각 게임에 대한 커버 정보 가져오기
+                Cover cover = getCoverForGame(game.getId());
+                String imageUrl =
+                        (cover != null) ? cover.getUrl().replace("/t_thumb/", "/t_cover_big/")
+                                : defaultStaticUrl;
 
-                if (existingCategory == null) {
-                    // 각 게임에 대한 커버 정보 가져오기
-                    Cover cover = getCoverForGame(game.getId());
+                // 해당 카테고리의 채널들의 뷰어 수를 합산
+                Long totalViewerCount =
+                        channelRepository.getTotalViewerCountByCategoryId(game.getId());
+                log.info("totalViewerCount={}", totalViewerCount);
 
-                    String imageUrl =
-                            (cover != null) ? cover.getUrl().replace("/t_thumb/", "/t_cover_big/")
-                                    : defaultStaticUrl;
+                // CategoryEntity 엔터티 생성 및 저장
+                CategoryEntity category = CategoryEntity.builder().categoryId(game.getId())
+                        .categoryName(game.getName()).categoryImageUrl(imageUrl)
+                        .categoryTotalView(totalViewerCount).build();
 
-                    // CategoryEntity 엔터티 생성 및 저장
-                    CategoryEntity category = CategoryEntity.builder().categoryId(game.getId())
-                            .categoryName(game.getName()).categoryImageUrl(imageUrl).build();
-
-                    savedCategories.add(categoryRepository.save(category));
-                } else {
-                    // 이미 존재하면 넘어감
-                    savedCategories.add(existingCategory);
-                }
+                savedCategories.add(categoryRepository.save(category));
             }
         } catch (RequestException e) {
             log.error("RequestException");
@@ -118,7 +142,7 @@ public class CategoryService {
         setTwitchAuthCredentials();
 
         // IGDB API를 통해 키워드로 게임 검색
-        APICalypse gameFindQuery = new APICalypse().search(keyword).fields("name").limit(6);
+        APICalypse gameFindQuery = new APICalypse().search(keyword).fields("*").limit(6);
 
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gameFindQuery);
@@ -130,7 +154,6 @@ public class CategoryService {
             for (var game : games) {
 
                 CategoryEntity existingCategory = categoryRepository.findByCategoryId(game.getId());
-
                 if (existingCategory == null) {
                     // 각 게임에 대한 커버 정보 가져오기
                     Cover cover = getCoverForGame(game.getId());
@@ -141,11 +164,16 @@ public class CategoryService {
 
                     // CategoryEntity 엔터티 생성 및 저장
                     CategoryEntity category = CategoryEntity.builder().categoryId(game.getId())
-                            .categoryName(game.getName()).categoryImageUrl(imageUrl).build();
+                            .categoryName(game.getName()).categoryImageUrl(imageUrl)
+                            .categoryTotalView(
+                                    channelRepository.getTotalViewerCountByCategoryId(game.getId()))
+                            .build();
 
                     foundGames.add(categoryRepository.save(category));
                 } else {
                     // 이미 존재하면 넘어감
+                    existingCategory.updateCategoryTotalView(
+                            channelRepository.getTotalViewerCountByCategoryId(game.getId()));
                     foundGames.add(existingCategory);
                 }
             }
