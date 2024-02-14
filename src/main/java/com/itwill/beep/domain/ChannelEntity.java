@@ -85,4 +85,9 @@ public class ChannelEntity {
         return this;
     }
 
+    /* 방송 OFF시 시청자 수 조정하는 메서드 추가헀습니다. 확인必 */
+    public void resetTotalViewerCount(Long channelViewerCount) {
+        this.channelViewerCount = channelViewerCount;
+    }
+
 }

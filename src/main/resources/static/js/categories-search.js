@@ -58,4 +58,14 @@ function displaySearchResults(results) {
         // 결과를 화면에 추가
         resultContainer.appendChild(card);
     }
+
+    // 검색 결과를 삭제하는 버튼 추가
+    const clearButton = document.createElement("button");
+    clearButton.type = "button";
+    clearButton.className = "btn btn-danger mt-3";
+    clearButton.textContent = "검색 결과 지우기";
+    clearButton.addEventListener("click", () => {
+        resultContainer.innerHTML = ""; // 검색 결과를 모두 지움
+    });
+    resultContainer.appendChild(clearButton);
 }
