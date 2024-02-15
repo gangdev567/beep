@@ -72,6 +72,10 @@ public class ChannelService {
         String content = dto.getContent();
         /* 카테고리아이디 추가 */
         Long categoryId = dto.getCategoryId();
+        /* 카테고리 없이 방송하는 동작을 막기위해 null일 시에 JustChatting 번호를 부여 */
+        if (categoryId == null) {
+            categoryId = 100_000_000L;
+        }
 
         channelDao.update(channelId, title, content, categoryId);
 

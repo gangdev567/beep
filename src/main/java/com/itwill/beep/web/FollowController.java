@@ -34,9 +34,8 @@ public class FollowController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
-        log.info("followerUserAccount={}", loginUser);
+
         List<FollowEntity> followList = followService.getFollowings(loginUser);
-        log.info("followList={}", followList);
         List<ChannelEntity> channelList = new ArrayList<>();
 
         followList.forEach((follow) -> {
@@ -54,7 +53,15 @@ public class FollowController {
         log.info(data.toString());
 
         model.addAttribute("data", data);
+
+        // fragments 에 필요한 모델
         model.addAttribute("userAccount", loginUser);
+
+        // myModal에 필요한 모델
+        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+        model.addAttribute("channel", forModal);
+        String status = forModal.getStreamingStateSet().toString();
+        model.addAttribute("status", status);
 
         return "followlist";
     }
