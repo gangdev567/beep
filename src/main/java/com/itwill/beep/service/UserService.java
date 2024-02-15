@@ -18,6 +18,7 @@ import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -127,5 +128,18 @@ public class UserService implements UserDetailsService {
             log.error("Error validating streaming key: {}", streamingKey, e);
             throw e; // 예외 다시 던지기
         }
+    }
+
+    @Transactional
+    public void updateProfile(String username, String nickname, String selfIntroduction) {
+        // TODO: 이메일 인증 로직 구현 필요
+        // 사용자 정보 업데이트 로직 구현
+        UserAccountEntity user = userAccountRepository.findByUserName(username);
+        if (user == null) {
+            throw new IllegalArgumentException("해당 사용자가 존재하지 않습니다. username=" + username);
+        }
+        user.updateUserNickname(nickname);
+        user.updateUserSelfIntroduction(selfIntroduction);
+        // TODO: 이메일 변경 시 인증 로직 추가 필요
     }
 }

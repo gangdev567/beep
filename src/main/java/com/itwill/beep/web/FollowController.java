@@ -60,9 +60,10 @@ public class FollowController {
         // myModal에 필요한 모델
         ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
         model.addAttribute("channel", forModal);
-        String status = forModal.getStreamingStateSet().toString();
-        model.addAttribute("status", status);
-
+        if (forModal != null) {
+            String status = forModal.getStreamingStateSet().toString();
+            model.addAttribute("status", status);
+        }
         return "followlist";
     }
 
