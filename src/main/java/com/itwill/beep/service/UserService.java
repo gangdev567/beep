@@ -7,6 +7,8 @@ import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserRoleType;
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +32,15 @@ public class UserService implements UserDetailsService {
     private final ChannelRepository channelRepository; // ChannelEntity를 저장하기 위한 Repository
     private final StreamingService streamingService; // StreamingService 주입
     private final CategoryRepository categoryRepository;
+    
+    /**
+     * Spring Security의 UserDetailsService를 구현한 메소드.
+     * 주어진 사용자 이름으로 사용자를 조회하고, 해당 사용자가 존재할 경우 UserDetails로 변환하여 반환한다.
+     *
+     * @param userName 조회할 사용자 이름
+     * @return UserDetails로 변환된 사용자 정보
+     * @throws UsernameNotFoundException 사용자를 찾을 수 없는 경우 발생하는 예외
+     */
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         log.info("username = {}", userName);
@@ -40,6 +53,11 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /**
+     * 회원 가입을 처리하는 메소드.
+     *
+     * @param signupRequestDto 회원 가입 정보를 담고 있는 DTO
+     */
     public void createUserAccount(SignupRequestDto signupRequestDto) {
         // DTO를 UserAccountEntity 객체로 변환
         UserAccountEntity userEntity = signupRequestDto.toEntity(passwordEncoder);
@@ -74,30 +92,61 @@ public class UserService implements UserDetailsService {
         log.info("Created user account with streaming key and channel for user: {}", signupRequestDto.getUserName());
     }
 
+    /**
+     * 사용자 이름으로 사용자를 조회하는 메소드.
+     *
+     * @param userName 조회할 사용자 이름
+     * @return 조회된 사용자 정보
+     */
     public UserAccountEntity findUserByUserName(String userName) {
-
-        // repository에서 쿼리를 실행
-        UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(userName);
-
-        return userAccountEntity;
+        return userAccountRepository.findByUserName(userName);
     }
-  
+
+    /**
+     * 사용자 닉네임으로 사용자를 조회하는 메소드.
+     *
+     * @param userNickname 조회할 사용자 닉네임
+     * @return 조회된 사용자 정보
+     */
     public UserAccountEntity findUserByUserNickname(String userNickname) {
-
-        UserAccountEntity userAccountEntity = userAccountRepository.findByUserNickname(userNickname);
-        
-        return userAccountEntity;
+        return userAccountRepository.findByUserNickname(userNickname);
     }
-    
 
-    /* follow 기능에 필요한 메서드 */
+    /**
+     * 사용자 ID로 사용자를 조회하는 메소드.
+     *
+     * @param userId 조회할 사용자 ID
+     * @return 조회된 사용자 정보
+     */
     public UserAccountEntity findByUserId(Long userId) {
-        UserAccountEntity userAccountEntity = userAccountRepository.findByUserId(userId);
-
-        return userAccountEntity;
+        return userAccountRepository.findByUserId(userId);
     }
-    
+
+    /**
+     * 사용자 이름이 존재하는지 여부를 확인하는 메소드.
+     *
+     * @param userName 확인할 사용자 이름
+     * @return 사용자 이름이 존재하면 true, 그렇지 않으면 false
+     */
     public boolean isUserNameExists(String userName) {
         return userAccountRepository.existsByUserName(userName);
     }
+    
+   
+
+    // 비밀번호 변경 메소드
+    @Transactional
+    public void changePasswordByUsername(String username, String newPassword) {
+        int updatedRows = userAccountRepository.changePasswordByUsername(username, passwordEncoder.encode(newPassword));
+
+        if (updatedRows > 0) {
+            log.info("비밀번호가 성공적으로 변경되었습니다. 사용자: {}", username);
+        } else {
+            throw new UsernameNotFoundException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다.");
+        }
+    }
 }
+
+  
+  
+

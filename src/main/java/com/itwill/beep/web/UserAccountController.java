@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.service.UserService;
 
@@ -68,4 +67,10 @@ public class UserAccountController {
                 ? ResponseEntity.ok("Y") // 아이디가 이미 존재하는 경우
                 : ResponseEntity.ok("N"); // 아이디가 존재하지 않는 경우
     }
+    
+    @GetMapping("/recovery")
+    public void userRecovery() {
+    	log.info("userRecovery()");
+    }
+    
 }

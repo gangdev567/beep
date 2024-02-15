@@ -3,6 +3,8 @@ package com.itwill.beep.domain;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -33,6 +35,8 @@ import lombok.ToString;
 @Entity
 @Table(name = "user_accounts") // 원래 users -> user_accounts로 변경
 public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 변경
+	
+	PasswordEncoder passwordEncoder;
 
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 열시퀸스
@@ -87,5 +91,7 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     public void updateUserStreamingKey(String newUserStreamingKey) {
         this.userStreamingKey = newUserStreamingKey;
     }
+    
+ 
 
 }
