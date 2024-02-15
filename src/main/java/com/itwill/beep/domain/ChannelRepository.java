@@ -32,14 +32,21 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
     @Modifying
     @Query("UPDATE ChannelEntity c SET c.channelViewerCount = 0 WHERE c.channelId = :channelId")
     void viewersSetZero(@Param("channelId") Long channelId);
-    
+
     @Modifying
     @Query("UPDATE ChannelEntity c SET c.channelTitle = :title, c.channelContent = :content, c.categoryEntityOfChannel.categoryId = :categoryId WHERE c.channelId = :channelId")
-    void update(@Param("channelId") Long channelId,@Param("title") String title,@Param("content") String content, @Param("categoryId")Long categoryId);
-    
-    /* 카테고리 아이디로 채널 검색하기 */
+    void update(@Param("channelId") Long channelId, @Param("title") String title,
+            @Param("content") String content, @Param("categoryId") Long categoryId);
 
+    /* 카테고리 아이디로 채널 검색하기 */
     List<ChannelEntity> findByCategoryEntityOfChannelCategoryId(Long categoryId);
 
-    
+    /* 카테고리의 채널들의 totalViewerCount 합을 나타낸 값 */
+    @Query("SELECT SUM(c.channelViewerCount) " + "FROM ChannelEntity c "
+            + "WHERE c.categoryEntityOfChannel.categoryId = :categoryId")
+    Long getTotalViewerCountByCategoryId(@Param("categoryId") Long categoryId);
+
+    List<ChannelEntity> findByCategoryEntityOfChannelIsNotNull();
+
+
 }

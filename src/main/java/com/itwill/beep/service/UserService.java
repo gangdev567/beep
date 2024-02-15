@@ -7,8 +7,12 @@ import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserRoleType;
 import java.time.LocalDateTime;
+<<<<<<< HEAD
 import java.util.Optional;
 
+=======
+import java.util.UUID;
+>>>>>>> dffc02f6f6ca62ab79cdbcc0ff339a805d1b0ac6
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,7 +34,6 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserAccountRepository userAccountRepository;
     private final ChannelRepository channelRepository; // ChannelEntity를 저장하기 위한 Repository
-    private final StreamingService streamingService; // StreamingService 주입
     private final CategoryRepository categoryRepository;
     
     /**
@@ -66,7 +69,7 @@ public class UserService implements UserDetailsService {
         userEntity.addUserRole(UserRoleType.USER);
 
         // streamingKey 생성 및 설정
-        String streamingKey = streamingService.generateStreamingKey();
+        String streamingKey = generateStreamingKey();
         userEntity.updateUserStreamingKey(streamingKey);
 
         // 사용자 계정 저장
@@ -143,6 +146,38 @@ public class UserService implements UserDetailsService {
             log.info("비밀번호가 성공적으로 변경되었습니다. 사용자: {}", username);
         } else {
             throw new UsernameNotFoundException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    public String generateStreamingKey() {
+        // 단순히 UUID를 기반으로 streamingKey 생성
+        return UUID.randomUUID().toString();
+    }
+
+    public String reGenerateStreamingKey(String userName) {
+        UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(userName);
+        if (userAccountEntity == null) {
+            // 사용자 계정을 찾을 수 없는 경우, 적절한 예외 처리 또는 로그를 추가
+            log.error("사용자 계정을 찾을 수 없습니다. userName: {}", userName);
+            return null; // 또는 적절한 예외를 던짐
+        }
+
+        String streamingKey = generateStreamingKey();
+        userAccountEntity.updateUserStreamingKey(streamingKey);
+
+        userAccountRepository.save(userAccountEntity);
+
+        return streamingKey;
+    }
+
+    public boolean validateStreamingKey(String streamingKey) {
+        try {
+            boolean streamingKeyValid = (userAccountRepository.findByUserStreamingKey(streamingKey) !=null);
+            log.info("Validating streaming key: {} - Result: {}", streamingKey, streamingKeyValid);
+            return streamingKeyValid;
+        } catch (Exception e) {
+            log.error("Error validating streaming key: {}", streamingKey, e);
+            throw e; // 예외 다시 던지기
         }
     }
 }

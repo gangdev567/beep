@@ -2,6 +2,8 @@ package com.itwill.beep.web;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.service.CategoryService;
 import com.itwill.beep.service.ChannelService;
+import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,16 +27,18 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryController {
     private final CategoryService categoryService;
     private final ChannelService channelService;
+    private final UserService userService;
 
     @GetMapping
     public String showCategories(Model model) {
         log.info("showCategories()");
-        
-        List<CategoryEntity> categories = categoryService.findAllAndSaveCategories();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
+
         List<CategoryEntity> mostViewers = categoryService.findByTotalViewers();
-        
-        model.addAttribute("categories", categories);
+
         model.addAttribute("mostViewers", mostViewers);
+        model.addAttribute("userAccount", loginUser);
 
         return "categories";
     }
@@ -40,12 +46,16 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     public String categoriesChannelList(@PathVariable("categoryId") Long categoryId, Model model) {
         log.info("categoriesChannelList");
-        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
+
         CategoryEntity categoryEntityDetails = categoryService.findByCategoryIdIs(categoryId);
-        List<ChannelEntity> categoryChannelList = channelService.findByCategoryCategoryId(categoryId);
-        
+        List<ChannelEntity> categoryChannelList =
+                channelService.findByCategoryCategoryId(categoryId);
+
         model.addAttribute("categoryDetails", categoryEntityDetails);
-        model.addAttribute("categoryChannelList", categoryChannelList);        
+        model.addAttribute("categoryChannelList", categoryChannelList);
+        model.addAttribute("userAccount", loginUser);
 
         return "categories-channellist";
     }
@@ -56,7 +66,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryEntity>> searchGamesApi(
             @RequestParam(value = "keyword") String keyword) {
         log.info("searchGamesApi(keyword={})", keyword);
-        
+
         List<CategoryEntity> foundGames = categoryService.searchGames(keyword);
 
         // ResponseEntity를 사용하여 HTTP 응답을 반환

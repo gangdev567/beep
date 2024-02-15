@@ -31,21 +31,22 @@ public class FollowController {
     @GetMapping("/list")
     public String getFollowingList(Model model) {
         log.info("getFollowingList()");
-        
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity followerUserAccount = userService.findUserByUserName(authentication.getName());
-        log.info("followerUserAccount={}", followerUserAccount);
-        List<FollowEntity> followList = followService.getFollowings(followerUserAccount);
+        UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
+        log.info("followerUserAccount={}", loginUser);
+        List<FollowEntity> followList = followService.getFollowings(loginUser);
         log.info("followList={}", followList);
         List<ChannelEntity> channelList = new ArrayList<>();
-        
+
         followList.forEach((follow) -> {
-            ChannelEntity channel = channelService.findChannelByUserAccount(follow.getFollowingUserAccount());
+            ChannelEntity channel =
+                    channelService.findChannelByUserAccount(follow.getFollowingUserAccount());
             if (channel != null) {
                 channelList.add(channel);
             }
         });
-        
+
         Map<String, Object> data = new HashMap<>();
         data.put("followList", followList);
         data.put("channelList", channelList);
@@ -53,7 +54,7 @@ public class FollowController {
         log.info(data.toString());
 
         model.addAttribute("data", data);
-
+        model.addAttribute("userAccount", loginUser);
 
         return "followlist";
     }
