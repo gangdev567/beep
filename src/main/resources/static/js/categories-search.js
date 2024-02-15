@@ -46,8 +46,8 @@ function displaySearchResults(results) {
                 <a href="/categories/${category.categoryId}" class="card-link text-decoration-none text-white">
                     <img src="${category.categoryImageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
                     <div class="card-body">
-                        <h5 class="card-title category-title text-left text-truncate fs-5">${category.categoryName}</h5>
-                        <h5 class="card-title category-title text-left text-truncate fs-6">
+                        <h5 class="card-title category-title text-left text-black text-truncate fs-5">${category.categoryName}</h5>
+                        <h5 class="card-title category-title text-left text-black text-truncate fs-6">
                             <span class="totalViewSpan">${category.categoryTotalView != null ? '시청자 ' + category.categoryTotalView + ' 명' : '시청자 0명'}</span>
                         </h5>
                     </div>
@@ -62,8 +62,8 @@ function displaySearchResults(results) {
     // 검색 결과를 삭제하는 버튼 추가
     const clearButton = document.createElement("button");
     clearButton.type = "button";
-    clearButton.className = "btn btn-danger mt-3";
-    clearButton.textContent = "검색 결과 지우기";
+    clearButton.className = "btn btn-danger my-3";
+    clearButton.textContent = "검색 결과 삭제";
     clearButton.addEventListener("click", () => {
         resultContainer.innerHTML = ""; // 검색 결과를 모두 지움
     });

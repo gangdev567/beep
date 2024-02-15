@@ -62,7 +62,7 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     @Column(name = "user_streaming_key")
     private String userStreamingKey;
 
-    @Column(name = "user_image_url")
+    @Column(name = "user_profile_image_url")
     private String userImageUrl;
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을

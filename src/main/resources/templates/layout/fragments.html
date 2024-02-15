@@ -133,10 +133,10 @@
                     
                     <label for="categoryEntity">카테고리:</label>
                     <!-- 카테고리 검색 입력란 -->
-                    <input type="text" id="categoryInput" placeholder="Just Chatting">                    
+                    <input type="text" id="categoryInput" placeholder="Just chatting">                    
                     <!-- 검색된 카테고리 목록을 표시할 div -->
                     <div id="categoryList"></div>
-                    <input type="hidden" name="categoryId" id="categoryId"> <!-- 숨겨진 입력 필드 -->
+                    <input type="hidden" name="categoryId" id="categoryId" value=""> <!-- 숨겨진 입력 필드 -->
                     <input type="text" th:name="channelId" class="d-none" th:value="${channel.channelId}">
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">방송시작</button>

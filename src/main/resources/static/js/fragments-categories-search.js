@@ -44,8 +44,9 @@ document.addEventListener('DOMContentLoaded', function() {
         categoryList.innerHTML = '';
 
         if (categoryInput.value === '') {
+            const justChatting = 100_000_000;
             // 검색어가 비어 있을 때 기본 카테고리 선택
-            selectCategory(100000000); // Just Chatting의 카테고리 ID를 사용합니다.
+            selectCategory(justChatting); // Just chatting의 카테고리 ID를 사용합니다.
         } else {
             categories.forEach(function(category) {
                 const categoryItem = document.createElement('div');
