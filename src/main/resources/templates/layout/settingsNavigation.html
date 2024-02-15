@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Settings Navigation</title>
+</head>
+<body>
+<nav th:fragment="settingsNavigation(active)">
+  <ul class="settings-nav">
+    <li th:class="${active == 'profile' ? 'active' : ''}"><a th:href="@{/settings/profile}">프로필</a></li>
+    <li th:class="${active == 'security' ? 'active' : ''}"><a th:href="@{/settings/security}">보안</a></li>
+    <li th:class="${active == 'notifications' ? 'active' : ''}"><a th:href="@{/settings/notifications}">알림</a></li>
+    <li th:class="${active == 'connections' ? 'active' : ''}"><a th:href="@{/settings/connections}">연결</a></li>
+    <li th:class="${active == 'recommendations' ? 'active' : ''}"><a th:href="@{/settings/recommendations}">추천</a></li>
+  </ul>
+</nav>
+</body>
+</html>
