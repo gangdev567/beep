@@ -2,74 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="layout/fragments :: myhead"></head>
-<style>
-    body {
-        background-color: #000;
-        color: #fff;
-    }
 
-    .category-card {
-        border: none;
-        transition: transform 0.2s ease-in-out;
-        background-color: #333;
-        color: #fff;
-    }
-
-    .category-card:hover {
-        transform: scale(1.05);
-    }
-
-    .category-title {
-        font-weight: bold;
-        margin-top: 10px;
-    }
-
-    .container {
-        max-width: 1200px;
-    }
-
-    .search-form {
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-
-    .search-input {
-        border-radius: 5px 0 0 5px;
-    }
-
-    .search-button {
-        border-radius: 0 5px 5px 0;
-    }
-
-    .tab-content {
-        padding-top: 20px;
-    }
-
-    .section-title, .nav-link {
-        color: #fff;
-    }
-
-    .nav-link.active {
-        color: #007bff;
-    }
-</style>
 <body>
+
 <header th:replace="layout/fragments :: myheader"></header>
+<nav th:replace="layout/fragments :: mysidebar"></nav>
+
+<section class="home">
+
 <div class="container mt-5">
-    <h1 class="my-5 pt-5 text-left section-title">탐색</h1>
+    <div>
+    <h1 class="fw-bold text-start text-white">탐색</h1>
+    </div>
 
     <!-- 카테고리 탭 -->
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-tabs my-3" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="mostViewers-tab" data-bs-toggle="tab" href="#mostViewers" role="tab" aria-controls="mostViewers" aria-selected="true">시청 순</a>
         </li>
     </ul>
 
     <!-- 검색 입력 폼과 검색 결과 표시 컨테이너 -->
-    <div class="search-form mt-3 mb-4">
-        <div class="input-group">
-            <input type="text" id="searchKeyword" class="form-control" placeholder="카테고리 검색" />
-            <button th:onclick="searchKeyword()" class="btn btn-primary mx-3">검색</button>
+    <div class="row justify-content-end mb-5">
+        <div class="col-4">
+            <div class="input-group">
+                <input type="text" id="searchKeyword" class="form-control" placeholder="카테고리 검색" />
+                <button th:onclick="searchKeyword()" class="btn btn-primary">검색</button>
+            </div>
         </div>
     </div>
     <div id="searchResults" class="row"></div>
@@ -83,8 +42,8 @@
                         <a th:href="@{/categories/{categoryId}(categoryId=${mostViewers.categoryId})}" class="card-link text-decoration-none text-white">
                             <img th:src="${mostViewers.categoryImageUrl}" class="card-img-top img-fluid" alt="Category Image">
                             <div class="card-body">
-                                <h5 class="card-title category-title text-left text-truncate fs-5" th:text="${mostViewers.categoryName}">Category Name</h5>
-                                <h5 class="card-title category-title text-left text-truncate fs-6" th:text="${mostViewers.categoryTotalView != null ? '시청자 ' + mostViewers.categoryTotalView + '명' : '시청자 0명'}"></h5>
+                                <h5 class="card-title category-title text-left text-black text-truncate fs-5" th:text="${mostViewers.categoryName}">Category Name</h5>
+                                <h5 class="card-title category-title text-left text-black text-truncate fs-6" th:text="${mostViewers.categoryTotalView != null ? '시청자 ' + mostViewers.categoryTotalView + '명' : '시청자 0명'}"></h5>
                             </div>
                         </a>
                     </div>
@@ -93,8 +52,8 @@
         </div>
     </div>
 </div>
-<nav th:replace="layout/fragments :: mysidebar"></nav>
 <footer th:replace="layout/fragments :: myfooter"></footer>
+</section>
 
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
