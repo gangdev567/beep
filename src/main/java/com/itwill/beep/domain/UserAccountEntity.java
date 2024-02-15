@@ -63,7 +63,10 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     private String userStreamingKey;
 
     @Column(name = "user_profile_image_url")
-    private String userImageUrl;
+    private String userProfileImageUrl;
+
+    @Column(length = 300)
+    private String userSelfIntroduction; // 자기 소개
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
@@ -90,5 +93,14 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     public void updateUserStreamingKey(String newUserStreamingKey) {
         this.userStreamingKey = newUserStreamingKey;
     }
+
+    public void updateUserNickname(String newUserNickname){
+        this.userNickname = newUserNickname;
+    }
+
+    public void updateUserSelfIntroduction(String newUserSelfIntroduction){
+        this.userSelfIntroduction = newUserSelfIntroduction;
+    }
+
 
 }
