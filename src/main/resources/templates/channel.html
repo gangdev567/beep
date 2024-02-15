@@ -54,7 +54,7 @@
       margin-top: auto;
     }
     .scrollbarContainer {
-      height: calc(85vh);
+      height: calc(83vh);
       overflow-y: scroll;
     }
     .flexAndBetween {
@@ -65,7 +65,9 @@
 </head>
 <body>
 <div th:replace="~{/layout/fragments :: myheader}"></div>
-<div class="void"></div>
+<div class="void" >
+    <input class="jjindda"d-none th:value="${channel.channelId}">
+</div>
 <main class="cnter">
   <div class="cnter-item">
     <div>
@@ -137,6 +139,7 @@
             <textarea type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="2" style="margin-bottom: 5px;"></textarea>
         </div>
         <div class="flexAndBetween">
+            <input class="chatState" style="display: none;" th:value="${chatState}">
             <div class="dropup">
                 <button type="button" class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                     <svg width="20" height="20" viewBox="0 0 20 20" focusable="false" aria-hidden="true" role="presentation" style="margin-right: 0%;">
@@ -152,33 +155,41 @@
                     </svg>
                 </button>
                 <ul class="dropdown-menu" style="width: 15vw">
-                    <li class="tmtm">
-                        <div class="wrapper flexAndBetween">
-                            <span style="font-size: small; padding-top: 4px;">팔로워 챗 활성화</span>
-                            <input type="checkbox" id="switch1">
-                            <label for="switch1" class="switch_label">
-                                <span class="onf_btn"></span>
-                            </label>
-                        </div>
-                    </li>
-                    <li class="tmtm">
-                        <div class="wrapper flexAndBetween">
-                            <span style="font-size: small; padding-top: 4px;">TODO: 익명채팅</span>
-                            <input type="checkbox" id="switch2">
-                            <label for="switch2" class="switch_label">
-                                <span class="onf_btn"></span>
-                            </label>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="wrapper flexAndBetween">
-                            <span style="font-size: small; padding-top: 2px;">TODO: 스트리머만 채팅 (얼리기)</span>
-                            <input type="checkbox" id="switch3">
-                            <label for="switch3" class="switch_label">
-                                <span class="onf_btn"></span>
-                            </label>
-                        </div>
-                    </li>
+                    <th:block th:if="${userAccount.userId == streamer.userId}">
+                        <li class="tmtm">
+                            <div class="wrapper flexAndBetween">
+                                <span style="font-size: small; padding-top: 4px;">팔로워 챗 활성화</span>
+                                <input type="checkbox" id="switch1">
+                                <label for="switch1" class="switch_label">
+                                    <span class="onf_btn"></span>
+                                </label>
+                            </div>
+                        </li>
+                        <li class="tmtm">
+                            <div class="wrapper flexAndBetween">
+                                <span style="font-size: small; padding-top: 4px;">익명채팅</span>
+                                <input type="checkbox" id="switch2">
+                                <label for="switch2" class="switch_label">
+                                    <span class="onf_btn"></span>
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="wrapper flexAndBetween">
+                                <span style="font-size: small; padding-top: 2px;">스트리머만 채팅 (얼리기)</span>
+                                <input type="checkbox" id="switch3">
+                                <label for="switch3" class="switch_label">
+                                    <span class="onf_btn"></span>
+                                </label>
+                            </div>
+                        </li>
+                    </th:block>
+                        <li>
+                            <span style="font-size: small; padding-top: 2px;">채팅제한 기능은 스트리머에게만 보입니다.</span>
+                        </li>
+                        <li>
+                            <span style="font-size: small; padding-top: 2px;">TODO: 사용자 편의 채팅창 설정 기능</span>
+                        </li>
                 </ul>
             </div>
             <button type="button" class="sendBtn btn btn-sm text-white flex-right" 
@@ -189,116 +200,128 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script th:inline="javascript"> const channelId = [[${channel.channelId}]]</script>
+<script src="/js/switch.js"></script>
 <script th:inline="javascript">
-
-  function enterRoom(socket){
-    var enterMsg={"type" : "ENTER", "userType" : [[${userState}]], "roomId":[[${room.roomId}]],"sender":[[${userAccount.userNickname}]],"msg":""};
-    console.log(enterMsg);
-    socket.send(JSON.stringify(enterMsg));
-    let user = [[${userAccount.userNickname}]];
-    let entMsg = user + "님 환영합니다! BEEP!! BEEP!! BEEP!!"
-    let msgArea = document.querySelector('.msgArea');
-    let newMsg = document.createElement('div');
-    if(user !== 'anonymousUser') {
-        newMsg.innerText = entMsg;
-        msgArea.append(newMsg);    
-    } else if(user === 'anonymousUser') {
-        newMsg.innerText = [[${streamer.userNickname}]] + "님의 방송에 오신 것을 환영합니다!"
-        msgArea.append(newMsg);
-    }
-  }
-  let socket = new WebSocket("ws://localhost:8081/ws/chat");
-
-  socket.onopen = function (e) {
-    console.log('open server!')
-    enterRoom(socket);
-  };
-  socket.onclose = function(e){
-    console.log('disconnet');
-  }
-
-  socket.onerror = function (e){
-    console.log(e);
-  }
-
-  function updateScroll() {
-    var scroll = document.querySelector('.scrollbarContainer');
-    scroll.scrollTop = scroll.scrollHeight;
-  }
-
-  //메세지 수신했을 때 이벤트.
-  socket.onmessage = function (e) {
-    console.log(e.data);
-    let msgArea = document.querySelector('.msgArea');
-    let newMsg = document.createElement('div');
-    //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함
-    let message = JSON.parse(e.data);
     
-    // sender가 해당 채널의 스트리머일 경우 강조해서 표시
-    if(message.sender === [[${streamer.userNickname}]]) {
-        newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.msg + '</strong>';        
-    } else if(message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
-        newMsg.innerHTML = '👍︎' + message.sender + ':' + message.msg;
-    } else if(message.userType === "NON_FOLLOW") {
-        newMsg.innerHTML = message.sender + ':' + message.msg;
+    const chatState = document.querySelector('.chatState').value
+    
+    function enterRoom(socket){
+        var enterMsg={"type" : "ENTER", "userType" : [[${userState}]], "roomId":[[${room.roomId}]],"sender":[[${userAccount.userNickname}]],"msg":""};
+        console.log(enterMsg);
+        socket.send(JSON.stringify(enterMsg));
+        let user = [[${userAccount.userNickname}]];
+        let entMsg = user + "님 환영합니다! BEEP!! BEEP!! BEEP!!"
+        let msgArea = document.querySelector('.msgArea');
+        let newMsg = document.createElement('div');
+        if(user !== 'anonymousUser') {
+            newMsg.innerText = entMsg;
+            msgArea.append(newMsg);    
+        } else if(user === 'anonymousUser') {
+            newMsg.innerText = [[${streamer.userNickname}]] + "님의 방송에 오신 것을 환영합니다!"
+            msgArea.append(newMsg);
+        }
     }
-    if(message.type === 'TALK') {
-      msgArea.append(newMsg);
+    let socket = new WebSocket("ws://localhost:8081/ws/chat");
+
+    socket.onopen = function (e) {
+        console.log('open server!')
+        enterRoom(socket);
+    };
+    socket.onclose = function(e){
+        console.log('disconnet');
     }
 
-    updateScroll();
-
-  }
-
-  document.addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-        event.preventDefault(); // 기본 Enter 행동 막기 (폼 전송 등)
-        sendMsg();
+    socket.onerror = function (e){
+        console.log(e);
     }
-  });
-  //메세지 보내기 버튼 눌렀을 떄..
-  function sendMsg() {
-    let content=document.querySelector('.content').value;
-    if(content === '') {
-        return;
+
+    function updateScroll() {
+        var scroll = document.querySelector('.scrollbarContainer');
+        scroll.scrollTop = scroll.scrollHeight;
     }
-    let userId = [[${userAccount.userNickname}]];
-    let userType = [[${userState}]];
+
+    //메세지 수신했을 때 이벤트.
+    socket.onmessage = function (e) {
+        console.log(e.data);
+        let msgArea = document.querySelector('.msgArea');
+        let newMsg = document.createElement('div');
+        //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함
+        let message = JSON.parse(e.data);
+        
+        // sender가 해당 채널의 스트리머일 경우 강조해서 표시
+        if(message.sender === [[${streamer.userNickname}]]) {
+            newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.msg + '</strong>';        
+        } else if(message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
+            newMsg.innerHTML = '👍︎' + message.sender + ':' + message.msg;
+        } else if(message.userType === "NON_FOLLOW" || message.userType === "ANONYMOUS") {
+            newMsg.innerHTML = message.sender + ':' + message.msg;
+        }
+        if(message.type === 'TALK') {
+          msgArea.append(newMsg);
+        }
+
+        updateScroll();
+
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault(); // 기본 Enter 행동 막기 (폼 전송 등)
+            sendMsg();
+        }
+    });
+    //메세지 보내기 버튼 눌렀을 떄..
+    function sendMsg() {
+        let content=document.querySelector('.content').value;
+        if(content === '') {
+            return;
+        }
+        let userId = [[${userAccount.userNickname}]];
+        let userType = [[${userState}]];
      
      // 익명채팅기능을 만들건데 조건문에 뭐 선택지가 on이냐 off냐로 && 조건문 걸면 될 듯
-    if([[${userAccount.userNickname}]] === 'anonymousUser'){
-        document.querySelector('.content').value = '채팅은 로그인 이후 이용하 실 수 있습니다.';
-        document.querySelector('.content').setAttribute('readonly', 'true');
-        return;
+        if([[${userAccount.userNickname}]] === 'anonymousUser' && chatState !== '[ANONYMOUS]'){
+            document.querySelector('.content').value = '채팅은 로그인 이후 이용하 실 수 있습니다.';
+            document.querySelector('.content').setAttribute('readonly', 'true');
+            return;
+        } else if(userType === 'NON_FOLLOW' && chatState === '[FOLLOW]') {
+            document.querySelector('.content').value = '현재 채팅방에 팔로우챗이 적용되고 있습니다.';
+            document.querySelector('.content').setAttribute('readonly', 'true');
+            return;
+        } else if(userType !== 'STREAMER' && chatState === '[STREAMER_ONLY]') {
+            document.querySelector('.content').value = '현재 채팅방에 스트리머챗이 적용되고 있습니다.';
+            document.querySelector('.content').setAttribute('readonly', 'true');
+            return;
+        } 
+    
+        var talkMsg = {
+                "type" : "TALK",
+                "userType" : userType,
+                "roomId":[[${room.roomId}]],
+                "sender": userId,
+                "msg":content};
+    //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
+        socket.send(JSON.stringify(talkMsg));
+    
+        document.querySelector('.content').value = '';
+
     }
-    
-    var talkMsg = {
-            "type" : "TALK",
-            "userType" : userType,
-            "roomId":[[${room.roomId}]],
-            "sender": userId,
-            "msg":content};
-    //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
-    socket.send(JSON.stringify(talkMsg));
-    
-    document.querySelector('.content').value = '';
 
-  }
+    window.addEventListener('beforeunload', handlePageUnload);
 
-  window.addEventListener('beforeunload', handlePageUnload);
+    function quit(){
+        var quitMsg={"type" : "QUIT", "userType" : [[${userState}]], "roomId":[[${room.roomId}]] ,"sender":[[${userAccount.userNickname}]],"msg":""};
+        //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
+        socket.send(JSON.stringify(quitMsg));
+        socket.close();
+        location.href="/";
+    }
 
-  function quit(){
-    var quitMsg={"type" : "QUIT", "userType" : [[${userState}]], "roomId":[[${room.roomId}]] ,"sender":[[${userAccount.userNickname}]],"msg":""};
-    //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
-    socket.send(JSON.stringify(quitMsg));
-    socket.close();
-    location.href="/";
-  }
-
-  function handlePageUnload() {
-    quit();
-  }
+    function handlePageUnload() {
+        quit();
+    }
 
 
 </script>
