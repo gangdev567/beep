@@ -40,9 +40,9 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     private Long userId; // 원래 id -> userId 변경
 
     @EqualsAndHashCode.Include // username 필드 만으로 equals 비교를 하기 위해서.
-    @NaturalId // unique
+    @NaturalId(mutable = true) // 여기서 mutable=true를 추가하여 변경 가능하게 설정
     @Basic(optional = false)
-    @Column(name = "user_name", updatable = false) // set절에서 제외
+    @Column(name = "user_name") // set절에서 제외
     // 원래 user_id -> user_name 변경
     private String userName; // username -> userName 변경(security의 username과 구분하기 위함)
 
@@ -94,6 +94,9 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
         return this;
     }
 
+    public void updateUserName(String newUserName){
+        this.userName = newUserName;
+    }
     public void updateUserStreamingKey(String newUserStreamingKey) {
         this.userStreamingKey = newUserStreamingKey;
     }

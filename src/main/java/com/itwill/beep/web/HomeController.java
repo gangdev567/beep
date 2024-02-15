@@ -30,9 +30,9 @@ public class HomeController {
     @GetMapping("/")
     @PreAuthorize("permitAll")
     public String home(Model model) {
-
         // 로그인한 유저 정보를 가지고 있는 클래스에서 username이 anonymousUser(익명)이 아닐경우에
-        if (SecurityContextHolder.getContext().getAuthentication().getName() != "anonymousUser") {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!"anonymousUser".equals(username)) { // 여기를 수정했습니다.
 
             // 로그인한 유저 정보를 불러온다.
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -49,25 +49,25 @@ public class HomeController {
 
             ChannelEntity channel = channelService.findChannelByUserAccount(userAccountEntity);
             log.info("channel = {}", channel);
-            model.addAttribute("channel", channel);
 
-            // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
-            // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
-            // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다.
-            String status = channel.getStreamingStateSet().toString();
-            model.addAttribute("status", status);
-
+            if (channel != null) {
+                model.addAttribute("channel", channel);
+                // channel이 null이 아닐 때만 상태를 가져옵니다.
+                String status = channel.getStreamingStateSet().toString();
+                model.addAttribute("status", status);
+            } else {
+                // channel이 null일 경우 기본 값을 설정할 수 있습니다.
+                model.addAttribute("status", "No Channel");
+            }
         }
+
         // 현재 진행중인 방송의 리스트를 홈으로 보낸다.
         List<ChatRoom> broadcastList = chatService.findAllRoom();
 
         // 처음에 구조 설계를 잘못잡고 들어가서 chatroom을 따로 만들고 그 정보로 다시 채널 정보를 가져온다.
-        // 잘 정리하면 콘트롤러에서 쓰이는 코드가 좀 줄어들 것 같기는 하지만
-        // 여러군데에서 쓸 코드도 아니고 그냥 여기서 한 번 고생했다.
         List<ChannelEntity> channelList = broadcastList.stream().map(room -> convertToChannel(room))
-                .filter(channel -> channel.getStreamingStateSet().contains(StreamingState.ON))
-                .collect(Collectors.toList());
-
+            .filter(channel -> channel != null && channel.getStreamingStateSet().contains(StreamingState.ON))
+            .collect(Collectors.toList());
 
         model.addAttribute("channelList", channelList);
 

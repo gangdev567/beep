@@ -8,10 +8,12 @@
 
 <div th:replace="layout/settingsNavigation :: settingsNavigation(${active})"></div>
 
+<form action="/settings/profile/updateUsername" method="post">
+  새 아이디: <input type="text" name="newUsername" required/>
+  <button type="submit">아이디 변경</button>
+</form>
+
 <form action="/settings/profile" method="post">
-  <!-- 읽기 전용 필드로 username을 표시합니다. -->
-  아이디: <input type="text" name="usernameDisplay" th:value="${user.userName}" disabled/>
-  <br/>
   <!-- 실제로 서버로 전송될 hidden 필드를 추가합니다. -->
   <input type="hidden" name="username" th:value="${user.userName}"/>
 

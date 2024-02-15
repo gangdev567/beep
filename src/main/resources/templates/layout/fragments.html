@@ -126,10 +126,10 @@
             <div class="modal-body" style="padding: 0px 16px;">
                 <form th:action="@{/streaming/on}" method="post">
                     <label for="title">방송 제목:</label>
-                    <textarea class="form-control" id="title" name="title" th:text="${channel.channelTitle}" required></textarea><br>
-                    
+                    <textarea class="form-control" id="title" name="title" required th:value="${channel != null ? channel.channelTitle : ''}"></textarea><br>
+
                     <label for="description">설명:</label>
-                    <textarea class="form-control" id="description" name="content" th:text="${channel.channelContent}" required></textarea><br>
+                    <textarea class="form-control" id="description" name="content" required th:value="${channel != null ? channel.channelContent : ''}"></textarea><br>
                     
                     <label for="categoryEntity">카테고리:</label>
                     <!-- 카테고리 검색 입력란 -->
@@ -137,7 +137,7 @@
                     <!-- 검색된 카테고리 목록을 표시할 div -->
                     <div id="categoryList"></div>
                     <input type="hidden" name="categoryId" id="categoryId" value=""> <!-- 숨겨진 입력 필드 -->
-                    <input type="text" th:name="channelId" class="d-none" th:value="${channel.channelId}">
+                    <input type="text" name="channelId" class="d-none" th:value="${channel != null ? channel.channelId : ''}">
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">방송시작</button>
                         <button id="cancelBtn"type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
@@ -214,10 +214,12 @@
                         </li>
 
                     <!-- 로그아웃 버튼 -->
-                    <li class="nav-item" sec:authorize="isAuthenticated()"><a
-                            class="btn mx-2 custom-btn-gray" th:href="@{/logout}"> <span
-                            th:text="${userAccount.userNickname}"></span> 로그아웃
-                    </a></li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="btn mx-2 custom-btn-gray" th:href="@{/logout}">
+                            <!-- userAccount가 null이 아닐 때만 userNickname을 표시합니다. -->
+                            <span th:if="${userAccount != null}" th:text="${userAccount.userNickname}">사용자</span> 로그아웃
+                        </a>
+                    </li>
 
                     <!-- 드롭다운 메뉴 -->
                     <li class="nav-item dropdown">

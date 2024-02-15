@@ -132,7 +132,6 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void updateProfile(String username, String nickname, String selfIntroduction) {
-        // TODO: 이메일 인증 로직 구현 필요
         // 사용자 정보 업데이트 로직 구현
         UserAccountEntity user = userAccountRepository.findByUserName(username);
         if (user == null) {
@@ -140,6 +139,18 @@ public class UserService implements UserDetailsService {
         }
         user.updateUserNickname(nickname);
         user.updateUserSelfIntroduction(selfIntroduction);
-        // TODO: 이메일 변경 시 인증 로직 추가 필요
+    }
+
+    public boolean checkIfUserEmailVerified(String username) {
+        UserAccountEntity user = userAccountRepository.findByUserName(username);
+        return user.isUserEmailVerified();
+    }
+
+    public void updateUsername(String currentUsername, String newUsername) {
+        UserAccountEntity user = userAccountRepository.findByUserName(currentUsername);
+        if (user != null && user.isUserEmailVerified()) {
+            user.updateUserName(newUsername);
+            userAccountRepository.save(user);
+        }
     }
 }
