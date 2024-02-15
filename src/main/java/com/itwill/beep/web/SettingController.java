@@ -15,14 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/settings")
 public class SettingController {
 
-
-
-    @GetMapping("/security")
-    public String securitySettings(Authentication authentication, Model model) {
-        model.addAttribute("active", "sercurity");
-        return "settings/security";
-    }
-
     @GetMapping("/notifications")
     public String notificationSettings(Authentication authentication, Model model) {
         model.addAttribute("active", "notifications");

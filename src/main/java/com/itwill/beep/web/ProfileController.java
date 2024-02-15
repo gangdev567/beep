@@ -43,4 +43,20 @@ public class ProfileController {
         userService.updateProfile(username, nickname, selfIntroduction);
         return "redirect:/settings/profile?success";
     }
+
+    // "/profile/security" 경로로 요청이 오면 이 메소드가 처리합니다.
+    @GetMapping("/security")
+    public String securitySettings(Authentication authentication, Model model) {
+        String userName = authentication.getName(); // 현재 인증된 사용자의 이메일(Username)을 가져옵니다.
+
+        // 이메일을 사용하여 사용자 정보를 조회합니다.
+        UserAccountEntity currentUser = userAccountRepository.findByUserName(userName);
+
+        // Model 객체에 현재 사용자 정보와 활성 탭을 추가합니다.
+        model.addAttribute("user", currentUser);
+        model.addAttribute("active", "security"); // 활성 탭을 표시하기 위한 속성
+
+        // "settings/security" 뷰를 반환합니다. (HTML 파일 이름이 "settings/security.html" 이라고 가정)
+        return "settings/security";
+    }
 }

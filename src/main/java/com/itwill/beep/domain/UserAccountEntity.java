@@ -65,8 +65,12 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     @Column(name = "user_profile_image_url")
     private String userProfileImageUrl;
 
-    @Column(length = 300)
+    @Column(length = 300, name = "user_self_introduction")
     private String userSelfIntroduction; // 자기 소개
+
+    @Column(name = "user_email_verified")
+    private boolean userEmailVerified = false;
+
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
@@ -102,5 +106,9 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
         this.userSelfIntroduction = newUserSelfIntroduction;
     }
 
+    // 이메일 인증 여부를 설정하는 메소드
+    public void updateEmailVerified(boolean NewEmailVerified) {
+        this.userEmailVerified = NewEmailVerified;
+    }
 
 }

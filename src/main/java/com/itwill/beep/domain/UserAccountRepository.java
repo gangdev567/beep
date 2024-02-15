@@ -15,4 +15,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccountEntity, 
 
     UserAccountEntity findByUserStreamingKey(String userStreamingKey);
 
+    UserAccountEntity findByUserEmail(String email);
+
 }
