@@ -32,9 +32,6 @@ public class CategoryEntity {
     @Column(name = "category_image_url")
     private String categoryImageUrl;
 
-    /**
-     * 토탈뷰 고쳐야함
-     */
     @Column(name = "category_total_view")
     private Long categoryTotalView;
 

@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-
 <head th:replace="~{layout/fragments :: myhead}"></head>
 
-<style>
-    .card:hover {
-        transform: scale(1.05);
-        transition: transform 0.3s ease;
-    }
-    
-</style>
-
 <body>
+<header th:replace="layout/fragments :: myheader"></header>
+<nav th:replace="layout/fragments :: mysidebar"></nav>
+
+<section class="home">
 
 <div class="container mt-5 p-5" th:if="${#authentication.name == 'anonymousUser'}">
     <h1 class="fw-bold text-white">로그인이 필요합니다</h1>
@@ -29,7 +24,7 @@
         <h3 class="my-3 text-white">팔로우 한 대상이 없습니다.</h3>
     </th:block>
     <!-- 생방송 중인 채널 -->
-    <div class="row mt-3 custom">
+    <div class="row my-5 custom">
         <th:block th:each="followList, iterStat : ${data.followList}">
             <div class="col-md-4 mb-4" th:if="${data.channelList[iterStat.index].streamingStateSet.toString().contains('ON')}">
                 <div class="card border-dark">
@@ -73,7 +68,7 @@
     <th:block th:if="${data.followList.size() eq 0}">
         <h3 class="my-3 text-white">팔로우 한 대상이 없습니다.</h3>
     </th:block>
-    <div class="row mt-3 custom">
+    <div class="row mt-5 custom">
         <th:block th:each="followList, iterStat : ${data.followList}">
             <div class="col-md-4 mb-4" th:if="${not data.channelList[iterStat.index].streamingStateSet.toString().contains('ON')}">
                 <a th:href="@{/channel/{userId}(userId=${data.channelList[iterStat.index].channelUserAccountEntity.userNickname})}" class="text-decoration-none text-dark">
@@ -93,13 +88,12 @@
     
 </div>
 
-<header th:replace="layout/fragments :: myheader"></header>
+<footer th:replace="layout/fragments :: myfooter"></footer>
+</section>
 
-<nav th:replace="layout/fragments :: mysidebar"></nav>
-
-<!-- 모달 확인 
+<!-- 방송하기/방송종료 -->
 <div th:replace="layout/fragments :: myModal"></div>
- -->
+<script src="/js/broadcast.js"></script>
 
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>

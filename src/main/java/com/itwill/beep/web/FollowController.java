@@ -31,21 +31,21 @@ public class FollowController {
     @GetMapping("/list")
     public String getFollowingList(Model model) {
         log.info("getFollowingList()");
-        
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity followerUserAccount = userService.findUserByUserName(authentication.getName());
-        log.info("followerUserAccount={}", followerUserAccount);
-        List<FollowEntity> followList = followService.getFollowings(followerUserAccount);
-        log.info("followList={}", followList);
+        UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
+
+        List<FollowEntity> followList = followService.getFollowings(loginUser);
         List<ChannelEntity> channelList = new ArrayList<>();
-        
+
         followList.forEach((follow) -> {
-            ChannelEntity channel = channelService.findChannelByUserAccount(follow.getFollowingUserAccount());
+            ChannelEntity channel =
+                    channelService.findChannelByUserAccount(follow.getFollowingUserAccount());
             if (channel != null) {
                 channelList.add(channel);
             }
         });
-        
+
         Map<String, Object> data = new HashMap<>();
         data.put("followList", followList);
         data.put("channelList", channelList);
@@ -54,6 +54,14 @@ public class FollowController {
 
         model.addAttribute("data", data);
 
+        // fragments 에 필요한 모델
+        model.addAttribute("userAccount", loginUser);
+
+        // myModal에 필요한 모델
+        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+        model.addAttribute("channel", forModal);
+        String status = forModal.getStreamingStateSet().toString();
+        model.addAttribute("status", status);
 
         return "followlist";
     }
