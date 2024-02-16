@@ -153,4 +153,15 @@ public class UserService implements UserDetailsService {
             userAccountRepository.save(user);
         }
     }
+
+    // 이메일을 통해 사용자 아이디(이름)을 찾는 기능
+    public String findUserNameByEmail(String email) {
+        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email);
+        if (userAccount != null) {
+            return userAccount.getUserName();
+        } else {
+            // 사용자가 없을 경우 적절한 예외 처리 또는 메시지 반환
+            throw new UsernameNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다.");
+        }
+    }
 }
