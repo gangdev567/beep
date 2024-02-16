@@ -71,9 +71,6 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     private String userStreamingKey;
 
     @Column(name = "user_profile_image_url")
-<<<<<<< HEAD
-    private String userImageUrl;
-=======
     private String userProfileImageUrl;
 
     @Column(length = 300, name = "user_self_introduction")
@@ -82,7 +79,6 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     @Column(name = "user_email_verified")
     private boolean userEmailVerified = false;
 
->>>>>>> c84259d2ccc11c01272bb66cd3d4ba4b5eb320a0
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션

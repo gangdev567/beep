@@ -4,13 +4,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration // 설정파일임을 스프링컨테이너에게 알려주는 애너테이션
 @EnableMethodSecurity // -> 스프링 세큐리티 메서드 활성화
+@EnableWebSecurity
 public class SecurityConfig {
+	
+	
+		
 
     @Bean // 의존성 주입을 위한 객체설정
     // Spring Security 5 버전부터 비밀번호는 반드시 암호화를 해야 함.
@@ -33,9 +39,9 @@ public class SecurityConfig {
             .formLogin(login -> login.loginPage("/user/login"))
             .logout(logout -> logout.logoutSuccessUrl("/"))
             .sessionManagement(management -> management
-                .maximumSessions(1) /* session 허용 갯수 */
-                .expiredUrl("/user/login") /* session 만료시 이동 페이지*/
-                .maxSessionsPreventsLogin(false) /* 동일한 사용자 로그인시 x, false 일 경우 기존 사용자 session 종료*/)
+             .maximumSessions(1) /* session 허용 갯수 */
+             .expiredUrl("/user/login") /* session 만료시 이동 페이지*/
+             .maxSessionsPreventsLogin(false) /* 동일한 사용자 로그인시 x, false 일 경우 기존 사용자 session 종료*/)
             .build();
     }
 }
