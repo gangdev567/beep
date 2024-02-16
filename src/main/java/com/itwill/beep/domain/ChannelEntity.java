@@ -84,6 +84,18 @@ public class ChannelEntity {
         streamingStateSet.add(streamingState);
         return this;
     }
+    
+    @Builder.Default
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "chat_state", joinColumns = @JoinColumn(name = "channel_id"))
+    private Set<ChatState> chatStateSet = new HashSet<>();
+
+    public ChannelEntity setChatState(ChatState chatState) {
+        chatStateSet.clear();
+        chatStateSet.add(chatState);
+        return this;
+    }
 
     /* 방송 OFF시 시청자 수 조정하는 메서드 추가헀습니다. 확인必 */
     public void resetTotalViewerCount(Long channelViewerCount) {

@@ -1,11 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>프로필 설정</title>
-  <link rel="stylesheet" href="/css/settingNavigation.css"> <!-- CSS 파일을 포함합니다. -->
+  <title>Settings/Security</title>
+  <!-- 필요한 CSS와 JavaScript를 여기에 포함 -->
 </head>
 <body>
 <div th:replace="layout/settingsNavigation :: settingsNavigation('security')"></div>
-<!-- 프로필 설정과 관련된 나머지 내용 -->
+
+
+  <h2>Security Settings</h2>
+  <div id="emailVerificationSection">
+    <p th:if="${user.userEmailVerified}">Your email is verified.</p>
+    <p th:unless="${user.userEmailVerified}">
+      Your email is not verified. <button id="verifyEmailButton">Verify Email</button>
+    </p>
+  </div>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  document.getElementById('verifyEmailButton').addEventListener('click', function() {
+    fetch('/settings/security/verify-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // CSRF 토큰을 헤더에 포함시켜야 합니다. 여기서는 생략되었습니다.
+      },
+      body: JSON.stringify({ /* 필요한 데이터 */ })
+    }).then(function(response) {
+      if (response.ok) {
+        alert('Verification email sent. Please check your inbox.');
+      } else {
+        alert('There was an error sending the verification email.');
+      }
+    });
+  });
+  /*]]>*/
+</script>
 </body>
 </html>

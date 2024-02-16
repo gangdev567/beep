@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="/css/login.css">
-
+    <script th:src="@{/js/findUsername.js}"></script>
 </head>
 
 <body>
@@ -31,8 +31,17 @@
                 <input type="submit" value="Login" />
                 <a th:href="@{/user/signup}">Sign Up</a>
             </div>
+
+            <!-- '아이디 찾기' 링크는 아이디 찾기 페이지로 리디렉트합니다 -->
+            <a href="/user/find-username-page">아이디 찾기</a>
+
             <p>
+<<<<<<< HEAD
                 Forget Password? <a th:href="@{/user/recovery}">Click Here</a>
+=======
+                <!-- TODO: 비밀번호 찾기  -->
+                <a href="#">비밀번호 찾기</a>
+>>>>>>> c84259d2ccc11c01272bb66cd3d4ba4b5eb320a0
             </p>
             <div class="inputBox">
                 <div class="error-message" th:if="${param.error}">아이디와 비밀번호를 확인하세요.</div>

@@ -22,6 +22,7 @@ import com.itwill.beep.dto.UserSecurityDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -180,6 +181,41 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             log.error("Error validating streaming key: {}", streamingKey, e);
             throw e; // 예외 다시 던지기
+        }
+    }
+
+    @Transactional
+    public void updateProfile(String username, String nickname, String selfIntroduction) {
+        // 사용자 정보 업데이트 로직 구현
+        UserAccountEntity user = userAccountRepository.findByUserName(username);
+        if (user == null) {
+            throw new IllegalArgumentException("해당 사용자가 존재하지 않습니다. username=" + username);
+        }
+        user.updateUserNickname(nickname);
+        user.updateUserSelfIntroduction(selfIntroduction);
+    }
+
+    public boolean checkIfUserEmailVerified(String username) {
+        UserAccountEntity user = userAccountRepository.findByUserName(username);
+        return user.isUserEmailVerified();
+    }
+
+    public void updateUsername(String currentUsername, String newUsername) {
+        UserAccountEntity user = userAccountRepository.findByUserName(currentUsername);
+        if (user != null && user.isUserEmailVerified()) {
+            user.updateUserName(newUsername);
+            userAccountRepository.save(user);
+        }
+    }
+
+    // 이메일을 통해 사용자 아이디(이름)을 찾는 기능
+    public String findUserNameByEmail(String email) {
+        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email);
+        if (userAccount != null) {
+            return userAccount.getUserName();
+        } else {
+            // 사용자가 없을 경우 적절한 예외 처리 또는 메시지 반환
+            throw new UsernameNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다.");
         }
     }
 }

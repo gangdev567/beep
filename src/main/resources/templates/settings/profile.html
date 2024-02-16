@@ -2,10 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>프로필 설정</title>
-  <link rel="stylesheet" href="/css/settingNavigation.css"> <!-- CSS 파일을 포함합니다. -->
+  <link rel="stylesheet" href="/css/settingNavigation.css">
 </head>
 <body>
-<div th:replace="layout/settingsNavigation :: settingsNavigation('profile')"></div>
-<!-- 프로필 설정과 관련된 나머지 내용 -->
+
+<div th:replace="layout/settingsNavigation :: settingsNavigation(${active})"></div>
+
+<form action="/settings/profile/updateUsername" method="post">
+  새 아이디: <input type="text" name="newUsername" required/>
+  <button type="submit">아이디 변경</button>
+</form>
+
+<form action="/settings/profile" method="post">
+  <!-- 실제로 서버로 전송될 hidden 필드를 추가합니다. -->
+  <input type="hidden" name="username" th:value="${user.userName}"/>
+
+  닉네임: <input type="text" name="nickname" th:value="${user.userNickname}"/>
+  <br/>
+
+  자기 소개: <textarea name="selfIntroduction" th:text="${user.userSelfIntroduction}"></textarea>
+  <br/>
+  <button type="submit">변경 내용 저장</button>
+</form>
+
 </body>
 </html>

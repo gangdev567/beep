@@ -48,9 +48,9 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     private Long userId; // 원래 id -> userId 변경
 
     @EqualsAndHashCode.Include // username 필드 만으로 equals 비교를 하기 위해서.
-    @NaturalId // unique
+    @NaturalId(mutable = true) // 여기서 mutable=true를 추가하여 변경 가능하게 설정
     @Basic(optional = false)
-    @Column(name = "user_name", updatable = false) // set절에서 제외
+    @Column(name = "user_name") // set절에서 제외
     // 원래 user_id -> user_name 변경
     private String userName; // username -> userName 변경(security의 username과 구분하기 위함)
 
@@ -71,7 +71,18 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     private String userStreamingKey;
 
     @Column(name = "user_profile_image_url")
+<<<<<<< HEAD
     private String userImageUrl;
+=======
+    private String userProfileImageUrl;
+
+    @Column(length = 300, name = "user_self_introduction")
+    private String userSelfIntroduction; // 자기 소개
+
+    @Column(name = "user_email_verified")
+    private boolean userEmailVerified = false;
+
+>>>>>>> c84259d2ccc11c01272bb66cd3d4ba4b5eb320a0
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
     // 방지하기 위해 비어있는 Set<>을 생성하는 에너테이션
@@ -95,6 +106,9 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
         return this;
     }
 
+    public void updateUserName(String newUserName){
+        this.userName = newUserName;
+    }
     public void updateUserStreamingKey(String newUserStreamingKey) {
         this.userStreamingKey = newUserStreamingKey;
     }
@@ -109,5 +123,18 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     }
     
  
+
+    public void updateUserNickname(String newUserNickname){
+        this.userNickname = newUserNickname;
+    }
+
+    public void updateUserSelfIntroduction(String newUserSelfIntroduction){
+        this.userSelfIntroduction = newUserSelfIntroduction;
+    }
+
+    // 이메일 인증 여부를 설정하는 메소드
+    public void updateEmailVerified(boolean NewEmailVerified) {
+        this.userEmailVerified = NewEmailVerified;
+    }
 
 }

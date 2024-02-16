@@ -15,18 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/settings")
 public class SettingController {
 
-    @GetMapping("/profile")
-    public String profileSettings(Authentication authentication, Model model) {
-        model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
-        return "settings/profile";
-    }
-
-    @GetMapping("/security")
-    public String securitySettings(Authentication authentication, Model model) {
-        model.addAttribute("active", "sercurity");
-        return "settings/security";
-    }
-
     @GetMapping("/notifications")
     public String notificationSettings(Authentication authentication, Model model) {
         model.addAttribute("active", "notifications");

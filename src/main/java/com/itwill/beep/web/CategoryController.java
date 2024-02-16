@@ -38,7 +38,17 @@ public class CategoryController {
         List<CategoryEntity> mostViewers = categoryService.findByTotalViewers();
 
         model.addAttribute("mostViewers", mostViewers);
+
+        // fragments 에 필요한 모델
         model.addAttribute("userAccount", loginUser);
+
+        // myModal에 필요한 모델
+        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+        model.addAttribute("channel", forModal);
+        if (forModal != null) {
+            String status = forModal.getStreamingStateSet().toString();
+            model.addAttribute("status", status);
+        }
 
         return "categories";
     }
@@ -55,8 +65,17 @@ public class CategoryController {
 
         model.addAttribute("categoryDetails", categoryEntityDetails);
         model.addAttribute("categoryChannelList", categoryChannelList);
+
+        // fragments 에 필요한 모델
         model.addAttribute("userAccount", loginUser);
 
+        // myModal에 필요한 모델
+        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+        model.addAttribute("channel", forModal);
+        if (forModal != null) {
+            String status = forModal.getStreamingStateSet().toString();
+            model.addAttribute("status", status);
+        }
         return "categories-channellist";
     }
 

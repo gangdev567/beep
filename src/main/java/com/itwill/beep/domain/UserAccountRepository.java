@@ -34,5 +34,10 @@ public interface UserAccountRepository extends JpaRepository<UserAccountEntity, 
     
    
 
+<<<<<<< HEAD
     
+=======
+    UserAccountEntity findByUserEmail(String email);
+
+>>>>>>> c84259d2ccc11c01272bb66cd3d4ba4b5eb320a0
 }

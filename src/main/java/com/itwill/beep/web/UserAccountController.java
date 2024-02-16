@@ -43,6 +43,14 @@ public class UserAccountController {
         // 회원가입 이후 로그인 페이지로
         return "redirect:/user/login";
     }
+
+    // 아이디 찾기 페이지로 이동하는 메서드
+    @GetMapping("/find-username-page")
+    public String showFindUsernamePage() {
+        return "user/findUsernamePage";
+    }
+
+
     
     /**
      * 회원가입 유효성 검사
