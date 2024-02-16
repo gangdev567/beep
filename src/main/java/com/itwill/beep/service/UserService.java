@@ -14,6 +14,18 @@ import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.domain.UserAccountEntity;
+<<<<<<< HEAD
+=======
+import com.itwill.beep.domain.UserRoleType;
+import com.itwill.beep.domain.VerificationToken;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+>>>>>>> 0a440303639b10499450f68ff0ffeb56ba16dd5e
 import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.dto.SignupRequestDto;
@@ -32,6 +44,7 @@ public class UserService implements UserDetailsService {
     private final UserAccountRepository userAccountRepository;
     private final ChannelRepository channelRepository; // ChannelEntity를 저장하기 위한 Repository
     private final CategoryRepository categoryRepository;
+<<<<<<< HEAD
     
     /**
      * Spring Security의 UserDetailsService를 구현한 메소드.
@@ -41,6 +54,10 @@ public class UserService implements UserDetailsService {
      * @return UserDetails로 변환된 사용자 정보
      * @throws UsernameNotFoundException 사용자를 찾을 수 없는 경우 발생하는 예외
      */
+=======
+    private final VerificationTokenService verificationTokenService;
+
+>>>>>>> 0a440303639b10499450f68ff0ffeb56ba16dd5e
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         log.info("username = {}", userName);
@@ -217,6 +234,26 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다.");
         }
     }
+
+    // 토큰을 검증하고 새 비밀번호로 업데이트하는 로직
+    public void resetPassword(String token, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        VerificationToken verificationToken = verificationTokenService.findByToken(token);
+        if (verificationToken == null || verificationToken.isExpired()) {
+            throw new RuntimeException("토큰이 유효하지 않거나 만료되었습니다.");
+        }
+
+        UserAccountEntity user = verificationToken.getVerifiTokenUserAccount();
+        user.updateUserPassword(passwordEncoder.encode(password));
+        userAccountRepository.save(user);
+        verificationTokenService.invalidateToken(verificationToken);
+
+        log.info("Password reset successfully for user: {}", user.getUserName());
+    }
+
 }
 
   

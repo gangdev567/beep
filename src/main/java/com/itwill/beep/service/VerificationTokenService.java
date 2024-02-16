@@ -26,5 +26,19 @@ public class VerificationTokenService {
         return tokenRepository.findByVerifiTokenValue(VerificationToken);
     }
 
+    // 토큰으로 검색
+    public VerificationToken findByToken(String token) {
+        return tokenRepository.findByVerifiTokenValue(token);
+    }
+
+    // 토큰 무효화
+    public void invalidateToken(VerificationToken token) {
+        tokenRepository.delete(token);
+    }
+
+    // 만료된 토큰 정리 - 배치 작업이나 스케줄러에 의해 주기적으로 호출될 수 있음
+    public void cleanExpiredTokens() {
+        // 만료된 토큰을 찾아 삭제하는 로직 구현
+    }
     // ... 이메일 전송 및 토큰 검증 로직 ...
 }
