@@ -17,7 +17,7 @@ public class SecurityConfig {
     // 비밀번호를 암호화하지 않으면 HTTP 403(access denied, 접근 거부) 또는
     // HTTP 500 (내부 서버 오류, internal server error) 에러가 발생함.
     // 비밀번호 암호화를 할 수 있는 객체를 스프링 컨테이너가 bean으로 관리해야 함.
-    public PasswordEncoder passwordEncodeer() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
         // 암호화 메서드
     }
@@ -28,19 +28,14 @@ public class SecurityConfig {
     // 페이지 접근 권한, 인증 설정.(로그인 없이 접근 가능한 페이지/로그인해야만 접근 가능한 페이지)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        
-    	// CSRF 기능을 활성화한 경우,
-        // Ajax POST/PUT/DELETE 요청에서 csrf 토큰을 서버로 전송하지 않으면 HTTP 403 에러가 발생.
-        // -> CSRF(Cross Site Request Forgery) 비활성화
-        http.csrf((csrf) -> csrf.disable());
-        
-        // 로그인 페이지 설정
-        http.formLogin((login) -> login.loginPage("/user/login"));
-        
-        // 로그아웃 이후에 이동할 페이지 설정 - 홈 페이지(/)
-        http.logout((logout) -> logout.logoutSuccessUrl("/"));
-        
-        return http.build();
+        return http
+            .csrf(csrf -> csrf.disable())
+            .formLogin(login -> login.loginPage("/user/login"))
+            .logout(logout -> logout.logoutSuccessUrl("/"))
+            .sessionManagement(management -> management
+                .maximumSessions(1) /* session 허용 갯수 */
+                .expiredUrl("/user/login") /* session 만료시 이동 페이지*/
+                .maxSessionsPreventsLogin(false) /* 동일한 사용자 로그인시 x, false 일 경우 기존 사용자 session 종료*/)
+            .build();
     }
-    
 }

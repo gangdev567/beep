@@ -2,6 +2,7 @@ package com.itwill.beep.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,9 +69,6 @@ public class UserAccountController {
                 : ResponseEntity.ok("N"); // 아이디가 존재하지 않는 경우
     }
     
-    @GetMapping("/recovery")
-    public void userRecovery() {
-    	log.info("userRecovery()");
-    }
+
     
 }

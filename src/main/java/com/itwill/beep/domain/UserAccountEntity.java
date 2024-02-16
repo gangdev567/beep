@@ -3,7 +3,10 @@ package com.itwill.beep.domain;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.itwill.beep.dto.UserSecurityDto;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CollectionTable;
@@ -36,7 +39,8 @@ import lombok.ToString;
 @Table(name = "user_accounts") // 원래 users -> user_accounts로 변경
 public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 변경
 	
-	PasswordEncoder passwordEncoder;
+	
+	
 
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 열시퀸스
@@ -66,7 +70,7 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     @Column(name = "user_streaming_key")
     private String userStreamingKey;
 
-    @Column(name = "user_image_url")
+    @Column(name = "user_profile_image_url")
     private String userImageUrl;
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
@@ -93,6 +97,15 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
 
     public void updateUserStreamingKey(String newUserStreamingKey) {
         this.userStreamingKey = newUserStreamingKey;
+    }
+    
+    
+    // 비밀번호 변경
+    public void updateUserPassword(String newpassword, PasswordEncoder passwordEncoder) {
+    this.userPassword = passwordEncoder.encode(newpassword);
+
+       
+        
     }
     
  

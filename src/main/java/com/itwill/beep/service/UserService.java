@@ -1,24 +1,21 @@
 package com.itwill.beep.service;
 
-import com.itwill.beep.domain.CategoryEntity;
-import com.itwill.beep.domain.CategoryRepository;
-import com.itwill.beep.domain.ChannelEntity;
-import com.itwill.beep.domain.ChannelRepository;
-import com.itwill.beep.domain.UserAccountEntity;
-import com.itwill.beep.domain.UserRoleType;
 import java.time.LocalDateTime;
-<<<<<<< HEAD
-import java.util.Optional;
-
-=======
 import java.util.UUID;
->>>>>>> dffc02f6f6ca62ab79cdbcc0ff339a805d1b0ac6
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.itwill.beep.domain.CategoryEntity;
+import com.itwill.beep.domain.CategoryRepository;
+import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.ChannelRepository;
+import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserAccountRepository;
+import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
 
@@ -135,19 +132,24 @@ public class UserService implements UserDetailsService {
         return userAccountRepository.existsByUserName(userName);
     }
     
-   
-
-    // 비밀번호 변경 메소드
     @Transactional
-    public void changePasswordByUsername(String username, String newPassword) {
-        int updatedRows = userAccountRepository.changePasswordByUsername(username, passwordEncoder.encode(newPassword));
+    public void updateUserPassword(String username, String newPassword) {
+        // 사용자 아이디로 사용자를 찾음
+        UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(username);
 
-        if (updatedRows > 0) {
-            log.info("비밀번호가 성공적으로 변경되었습니다. 사용자: {}", username);
+        if (userAccountEntity != null) {
+            // 새로운 비밀번호로 업데이트
+            userAccountEntity.updateUserPassword(newPassword, passwordEncoder);
+            // 변경된 정보를 저장
+            userAccountRepository.save(userAccountEntity);
         } else {
-            throw new UsernameNotFoundException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다.");
+            throw new IllegalArgumentException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다.");
         }
     }
+    
+   
+
+  
 
     public String generateStreamingKey() {
         // 단순히 UUID를 기반으로 streamingKey 생성
