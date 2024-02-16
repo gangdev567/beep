@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.dto.ChatRoom;
+import com.itwill.beep.service.BannedUserService;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 import com.itwill.beep.service.FollowService;
@@ -30,6 +31,7 @@ public class ChannelController {
     private final ChatService chatSvc;
     private final ChannelService channelSvc;
     private final FollowService followSvc;
+    private final BannedUserService banSvc;
 
     @GetMapping("/channel/{id}")
     public String channel(@PathVariable(name = "id") String id, Model model) {
@@ -57,6 +59,8 @@ public class ChannelController {
             
             if(user.getUserId() == streamer.getUserId()){
                 model.addAttribute("userState", "STREAMER");
+            } else if(followCheck == true) {
+                model.addAttribute("userState", "FOLLOW");
             } else if(followCheck == true) {
                 model.addAttribute("userState", "FOLLOW");
             } else if(followCheck == false){
