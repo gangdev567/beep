@@ -5,6 +5,7 @@ import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.domain.VerificationToken;
 import com.itwill.beep.service.EmailService;
 import com.itwill.beep.service.VerificationTokenService;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,8 +54,8 @@ public class UserSecurityRestController {
             return ResponseEntity.badRequest().body("Invalid token.");
         }
 
-        Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getVerifiTokenExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+        LocalDateTime now = LocalDateTime.now();
+        if (verificationToken.getVerifiTokenExpiryDate().isBefore(now)) {
             return ResponseEntity.badRequest().body("Token expired.");
         }
 
