@@ -40,6 +40,12 @@ public class UserAccountController {
         return "redirect:/user/login";
     }
 
+    // 아이디 찾기 페이지로 이동하는 메서드
+    @GetMapping("/find-username-page")
+    public String showFindUsernamePage() {
+        return "user/findUsernamePage";
+    }
+
 
     
 }   
