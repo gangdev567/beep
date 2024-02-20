@@ -38,6 +38,10 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
     void update(@Param("channelId") Long channelId, @Param("title") String title,
             @Param("content") String content, @Param("categoryId") Long categoryId);
 
+    @Query("select c.channelUserAccountEntity from ChannelEntity c"
+            + " where c.channelId = :channelId")
+    UserAccountEntity findChannelUserAccountEntityByChannelId(@Param("channelId") Long channelId);
+
     /* 카테고리 아이디로 채널 검색하기 */
     List<ChannelEntity> findByCategoryEntityOfChannelCategoryId(Long categoryId);
 
@@ -49,14 +53,9 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
     /* 채널에 카테고리가 연결되어있는지 확인 */
     List<ChannelEntity> findByCategoryEntityOfChannelIsNotNull();
 
-<<<<<<< HEAD
     /* 채널에 연결되어있는 카테고리 수 */
     int countByCategoryEntityOfChannel(CategoryEntity categoryEntity);
-=======
-    @Query("select c.channelUserAccountEntity from ChannelEntity c"
-            + " where c.channelId = :channelId")
-    UserAccountEntity findChannelUserAccountEntityByChannelId(@Param("channelId") Long channelId);
->>>>>>> 7a89925086f864530bd028f0d4807d602a5916b9
+
 
 
 }

@@ -88,6 +88,14 @@ public class ChannelService {
 
     }
 
+    @Transactional
+    public UserAccountEntity findUserByChannelId(Long channelId) {
+
+        UserAccountEntity streamer = channelDao.findChannelUserAccountEntityByChannelId(channelId);
+
+        return streamer;
+    }
+
     /* 카테고리 아이디로 채널 검색하기 */
     public List<ChannelEntity> findByCategoryCategoryId(Long categoryId) {
         log.info("findByCategoryCategoryId(categoryId={})", categoryId);
@@ -97,8 +105,7 @@ public class ChannelService {
         return list;
     }
 
-<<<<<<< HEAD
-    /* 채널 리스트 불러오기 */
+    /* 팔로우 채널 불러오기(시청자 수 높은순) */
     public List<ChannelRequestDto> getChannelListForFollowings(UserAccountEntity followerEntity) {
         log.info("getChannelListForFollowings(followerEntity={})", followerEntity);
 
@@ -120,12 +127,15 @@ public class ChannelService {
                     .channelViewerCount(channelEntity.getChannelViewerCount())
                     .streamingState(channelEntity.getStreamingStateSet().toString()).build();
             data.add(channelRequestDto);
+
         }
+        data.sort(Comparator.comparingLong(ChannelRequestDto::getChannelViewerCount));
+        Collections.reverse(data);
 
         return data;
     }
 
-    /* 추천 채널 불러오기 */
+    /* 추천 채널 불러오기(시청자 수 높은 순) */
     public List<ChannelRequestDto> getPopularChannelList() {
         log.info("getPopularChannelList()");
 
@@ -158,13 +168,4 @@ public class ChannelService {
         return data;
     }
 
-=======
-    @Transactional
-    public UserAccountEntity findUserByChannelId(Long channelId) {
-        
-        UserAccountEntity streamer = channelDao.findChannelUserAccountEntityByChannelId(channelId);
-        
-        return streamer;
-    }
->>>>>>> 7a89925086f864530bd028f0d4807d602a5916b9
 }

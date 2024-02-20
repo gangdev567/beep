@@ -55,15 +55,7 @@ public class ChannelController {
             UserAccountEntity streamer = userSvc.findUserByUserNickname(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
-<<<<<<< HEAD
 
-            // user의 follow 여부를 체크한다.
-            boolean followCheck = followSvc.isFollowing(user, streamer);
-
-            if (user.getUserId() == streamer.getUserId()) {
-                model.addAttribute("userState", "STREAMER");
-            } else if (followCheck == true) {
-=======
             
             // streamer정보로 channel정보를 불러온다.
             ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
@@ -86,7 +78,6 @@ public class ChannelController {
             } else if(banCheck == true) {
                 model.addAttribute("userState", "BAN");
             } else if(followCheck == true) {
->>>>>>> 7a89925086f864530bd028f0d4807d602a5916b9
                 model.addAttribute("userState", "FOLLOW");
             } else if (followCheck == false) {
                 model.addAttribute("userState", "NON_FOLLOW");
@@ -94,18 +85,7 @@ public class ChannelController {
             // model에 user를 보낸다.
             log.info("user = {}", user);
             model.addAttribute("userAccount", user);
-<<<<<<< HEAD
 
-
-
-            // streamer정보로 channel정보를 불러온다.
-            ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
-            log.info("channel = {}", channel);
-            Long channelId = channel.getChannelId();
-
-=======
-            
->>>>>>> 7a89925086f864530bd028f0d4807d602a5916b9
             // 채팅창 정보를 보낸다.
             String chatState = channel.getChatStateSet().toString();
             model.addAttribute("chatState", chatState);
