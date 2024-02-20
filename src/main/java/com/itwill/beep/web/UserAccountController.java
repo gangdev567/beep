@@ -1,17 +1,11 @@
 package com.itwill.beep.web;
 
-<<<<<<< HEAD
-import org.springframework.http.ResponseEntity;
-=======
-import com.itwill.beep.domain.VerificationToken;
-import com.itwill.beep.service.EmailService;
-import com.itwill.beep.service.VerificationTokenService;
 import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
->>>>>>> 0a440303639b10499450f68ff0ffeb56ba16dd5e
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwill.beep.domain.VerificationToken;
 import com.itwill.beep.dto.SignupRequestDto;
+import com.itwill.beep.service.EmailService;
 import com.itwill.beep.service.UserService;
+import com.itwill.beep.service.VerificationTokenService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j

@@ -1,6 +1,7 @@
 package com.itwill.beep.domain;
 
 import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

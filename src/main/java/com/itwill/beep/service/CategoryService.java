@@ -5,8 +5,10 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import com.api.igdb.apicalypse.APICalypse;
 import com.api.igdb.apicalypse.Sort;
 import com.api.igdb.exceptions.RequestException;
@@ -18,6 +20,7 @@ import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

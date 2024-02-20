@@ -1,13 +1,13 @@
 package com.itwill.beep.initailization;
 
 
-import com.itwill.beep.domain.ChannelEntity;
 import java.util.List;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 

@@ -1,7 +1,5 @@
 package com.itwill.beep;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +10,6 @@ import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

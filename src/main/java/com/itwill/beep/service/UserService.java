@@ -1,6 +1,7 @@
 package com.itwill.beep.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,20 +15,9 @@ import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.domain.UserAccountEntity;
-<<<<<<< HEAD
-=======
-import com.itwill.beep.domain.UserRoleType;
-import com.itwill.beep.domain.VerificationToken;
-import java.time.LocalDateTime;
-import java.util.UUID;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
->>>>>>> 0a440303639b10499450f68ff0ffeb56ba16dd5e
 import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.domain.UserRoleType;
+import com.itwill.beep.domain.VerificationToken;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
 
@@ -44,7 +34,6 @@ public class UserService implements UserDetailsService {
     private final UserAccountRepository userAccountRepository;
     private final ChannelRepository channelRepository; // ChannelEntity를 저장하기 위한 Repository
     private final CategoryRepository categoryRepository;
-<<<<<<< HEAD
     
     /**
      * Spring Security의 UserDetailsService를 구현한 메소드.
@@ -54,10 +43,8 @@ public class UserService implements UserDetailsService {
      * @return UserDetails로 변환된 사용자 정보
      * @throws UsernameNotFoundException 사용자를 찾을 수 없는 경우 발생하는 예외
      */
-=======
     private final VerificationTokenService verificationTokenService;
 
->>>>>>> 0a440303639b10499450f68ff0ffeb56ba16dd5e
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         log.info("username = {}", userName);
@@ -164,6 +151,10 @@ public class UserService implements UserDetailsService {
         }
     }
     
+    public Optional<UserAccountEntity> findByUserEmail(String email){
+    	return userAccountRepository.findByUserEmail(email);
+    }
+    
    
 
   
@@ -226,7 +217,7 @@ public class UserService implements UserDetailsService {
 
     // 이메일을 통해 사용자 아이디(이름)을 찾는 기능
     public String findUserNameByEmail(String email) {
-        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email);
+        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email).orElseThrow();
         if (userAccount != null) {
             return userAccount.getUserName();
         } else {

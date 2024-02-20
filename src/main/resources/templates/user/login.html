@@ -34,16 +34,15 @@
 
             <!-- '아이디 찾기' 링크는 아이디 찾기 페이지로 리디렉트합니다 -->
             <a href="/user/find-username-page">아이디 찾기</a>
+            <a href="/oauth2/authorization/google">
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google 로그인">
+        Google 로그인
+    </a>
 
-<<<<<<< HEAD
             <p>
                 <!-- TODO: 비밀번호 찾기  -->
-                Forget Password? <a href="#">Click Here</a>
-                <a href="#">비밀번호 찾기</a>
+                Forget Password? <a href="/user/find-password-page">Click Here</a>
             </p>
-=======
-            <a href="/user/find-password-page">비밀번호 찾기</a>
->>>>>>> 0a440303639b10499450f68ff0ffeb56ba16dd5e
             <div class="inputBox">
                 <div class="error-message" th:if="${param.error}">아이디와 비밀번호를 확인하세요.</div>
             </div>

@@ -2,11 +2,9 @@ package com.itwill.beep.domain;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.hibernate.annotations.NaturalId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.itwill.beep.dto.UserSecurityDto;
+import org.hibernate.annotations.NaturalId;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CollectionTable;
@@ -37,7 +35,7 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "user_accounts") // 원래 users -> user_accounts로 변경
-public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 변경
+public class UserAccountEntity{ // -> 원래 Account -> UserAccountEntity 로 변경
 	
 	
 	
@@ -78,6 +76,10 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
 
     @Column(name = "user_email_verified")
     private boolean userEmailVerified = false;
+    
+
+    
+    
 
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을

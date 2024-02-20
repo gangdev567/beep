@@ -2,11 +2,15 @@ package com.itwill.beep;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import com.api.igdb.request.TwitchAuthenticator;
 import com.api.igdb.utils.TwitchToken;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

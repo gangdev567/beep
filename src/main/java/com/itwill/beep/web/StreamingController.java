@@ -1,9 +1,5 @@
 package com.itwill.beep.web;
 
-import com.itwill.beep.domain.ChannelEntity;
-import com.itwill.beep.domain.StreamingState;
-import com.itwill.beep.domain.UserAccountEntity;
-
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -16,11 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.StreamingState;
+import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.dto.StreamingOnDto;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 import com.itwill.beep.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

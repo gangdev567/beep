@@ -1,19 +1,20 @@
 package com.itwill.beep.service;
 
-import com.itwill.beep.domain.UserAccountEntity;
-import com.itwill.beep.domain.UserAccountRepository;
-import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.mail.MailSendException;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.mail.javamail.JavaMailSender;
+
+import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.UserAccountRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -54,7 +55,7 @@ public class EmailService {
     }
 
     public void sendPasswordResetEmail(String email) {
-        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email);
+        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email).orElseThrow();
         if (userAccount == null) {
             log.error("No user found with email: {}", email);
             throw new UsernameNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다.");

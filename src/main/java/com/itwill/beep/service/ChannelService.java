@@ -1,12 +1,15 @@
 package com.itwill.beep.service;
 
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.StreamingOnDto;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

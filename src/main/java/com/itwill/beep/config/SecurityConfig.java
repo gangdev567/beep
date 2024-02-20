@@ -1,19 +1,32 @@
 package com.itwill.beep.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.itwill.beep.domain.CustomOAuth2UserService;
 
 @Configuration // 설정파일임을 스프링컨테이너에게 알려주는 애너테이션
 @EnableMethodSecurity // -> 스프링 세큐리티 메서드 활성화
 @EnableWebSecurity
 public class SecurityConfig {
+	
+	
+	 private final CustomOAuth2UserService customOAuth2UserService;
+
+	    @Autowired
+	    public SecurityConfig(@Lazy CustomOAuth2UserService customOAuth2UserService) {
+	        this.customOAuth2UserService = customOAuth2UserService;
+	    }
+
+	 
 	
 	
 		
@@ -32,16 +45,29 @@ public class SecurityConfig {
     // 로그인/로그아웃 관련 설정.
     // 로그인 페이지(뷰), 로그아웃 페이지(뷰) 설정.
     // 페이지 접근 권한, 인증 설정.(로그인 없이 접근 가능한 페이지/로그인해야만 접근 가능한 페이지)
-    @Bean
+	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-            .csrf(csrf -> csrf.disable())
-            .formLogin(login -> login.loginPage("/user/login"))
-            .logout(logout -> logout.logoutSuccessUrl("/"))
-            .sessionManagement(management -> management
-             .maximumSessions(1) /* session 허용 갯수 */
-             .expiredUrl("/user/login") /* session 만료시 이동 페이지*/
-             .maxSessionsPreventsLogin(false) /* 동일한 사용자 로그인시 x, false 일 경우 기존 사용자 session 종료*/)
-            .build();
+    	
+    	  // CSRF 보호 비활성화
+        http.csrf(csrf -> csrf.disable())
+            // 폼 로그인 설정
+            .formLogin(login -> login
+                .loginPage("/user/login")
+            )
+            // 로그아웃 설정 및 로그아웃 성공 시 리다이렉트 URL을 "/"로 지정
+            .logout(logout -> logout
+                .logoutSuccessUrl("/")
+            )
+            // OAuth2 로그인 설정
+            .oauth2Login(oauth2Login -> oauth2Login
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(customOAuth2UserService)
+                    
+                )
+            );
+        
+    	return http.build();
+    	
+       
     }
 }
