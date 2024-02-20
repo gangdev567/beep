@@ -48,5 +48,9 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 
     List<ChannelEntity> findByCategoryEntityOfChannelIsNotNull();
 
+    @Query("select c.channelUserAccountEntity from ChannelEntity c"
+            + " where c.channelId = :channelId")
+    UserAccountEntity findChannelUserAccountEntityByChannelId(@Param("channelId") Long channelId);
+
 
 }

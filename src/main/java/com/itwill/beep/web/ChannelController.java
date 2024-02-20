@@ -18,6 +18,7 @@ import com.itwill.beep.service.BannedUserService;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 import com.itwill.beep.service.FollowService;
+import com.itwill.beep.service.ManagerService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class ChannelController {
     private final ChannelService channelSvc;
     private final FollowService followSvc;
     private final BannedUserService banSvc;
+    private final ManagerService managerSvc;
 
     @GetMapping("/channel/{id}")
     public String channel(@PathVariable(name = "id") String id, Model model) {
@@ -54,13 +56,26 @@ public class ChannelController {
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
             
+            // streamer정보로 channel정보를 불러온다.
+            ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
+            log.info("channel = {}", channel);
+            Long channelId = channel.getChannelId();
+            
             // user의 follow 여부를 체크한다. 
             boolean followCheck = followSvc.isFollowing(user, streamer);
             
-            if(user.getUserId() == streamer.getUserId()){
+            // user의 밴 여부를 체크한다.
+            boolean banCheck = banSvc.isBan(user, channel);
+            
+            // user의 매너저 여부를 체크한다.
+            boolean managerCheck = managerSvc.isManager(user, channel);
+            
+            if (user.getUserId() == streamer.getUserId()){
                 model.addAttribute("userState", "STREAMER");
-            } else if(followCheck == true) {
-                model.addAttribute("userState", "FOLLOW");
+            } else if(managerCheck == true) {
+                model.addAttribute("userState", "MANAGER");
+            } else if(banCheck == true) {
+                model.addAttribute("userState", "BAN");
             } else if(followCheck == true) {
                 model.addAttribute("userState", "FOLLOW");
             } else if(followCheck == false){
@@ -69,13 +84,6 @@ public class ChannelController {
             // model에 user를 보낸다.
             log.info("user = {}", user);
             model.addAttribute("userAccount", user);
-            
-
-
-            // streamer정보로 channel정보를 불러온다.
-            ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
-            log.info("channel = {}", channel);
-            Long channelId = channel.getChannelId();
             
             // 채팅창 정보를 보낸다.
             String chatState = channel.getChatStateSet().toString();

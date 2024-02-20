@@ -88,4 +88,12 @@ public class ChannelService {
 
         return list;
     }
+
+    @Transactional
+    public UserAccountEntity findUserByChannelId(Long channelId) {
+        
+        UserAccountEntity streamer = channelDao.findChannelUserAccountEntityByChannelId(channelId);
+        
+        return streamer;
+    }
 }

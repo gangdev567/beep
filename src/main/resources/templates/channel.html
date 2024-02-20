@@ -67,7 +67,7 @@
 <body>
 <div th:replace="~{/layout/fragments :: myheader}"></div>
 <div class="void" >
-    <input class="dummy"d-none th:value="${channel.channelId}" font-data="medium">
+    <input class="dummy"d-none th:value="${channel.channelId}" font-data="medium" auth-data="">
 </div>
 <main class="cnter">
   <div class="cnter-item">
@@ -248,7 +248,26 @@
 <script src="/js/switch.js"></script>
 <script th:inline="javascript">
     
-    const chatState = document.querySelector('.chatState').value;
+    window.addEventListener("DOMContentLoaded", loadUserAuth());
+
+    function loadUserAuth() {
+        
+        let userNickname = [[${userAccount.userNickname}]]; 
+        let channelId = [[${channel.channelId}]];
+        
+        axios.get('/api/user/auth', { params: { channelId: channelId } })
+                    .then((response) => {
+                        let data = response.data;
+                        
+                        const element = document.querySelector('.dummy');
+                        
+                        element.setAttribute('auth-data', data);
+                        
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+    }
     
     const channelId = document.querySelector('.dummy').value;
     
@@ -363,6 +382,15 @@
         //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함
         let message = JSON.parse(e.data);
         
+        if(message.sender === [[${streamer.userNickname}]] && message.msg === [[${userAccount.userNickname}]] + '님이 매니저로 임명되었습니다.') {
+            loadUserAuth();
+        } else if (message.sender === [[${streamer.userNickname}]] && message.msg === [[${userAccount.userNickname}]] + '님이 매니저에서 해임되었습니다.') {
+            loadUserAuth();
+        }
+        
+        let elemental = document.querySelector('.dummy');
+        let userAuth = elemental.getAttribute('auth-data');
+        
         let sender = `
         <div class="dropdown">
             <span data-bs-toggle="dropdown" aria-expanded="false" class="chat btn btn-link" 
@@ -374,60 +402,133 @@
                     <span class="dropdown-item chat ban" data-id="${message.sender}" id=${chatNo}>
                         너 밴
                     </span>
-                </li>
-                <li>
+                </li>`;
+        if([[${userAccount.userNickname}]] === [[${streamer.userNickname}]] && message.userType === 'MANAGER') {
+            sender += 
+                `<li>
+                    <span class="dropdown-item chat managerRevoke" data-id="${message.sender}" id=${chatNo}>
+                        매니저 권한 취소
+                    </span>
+                </li>`;
+        }
+        if([[${userAccount.userNickname}]] === [[${streamer.userNickname}]] && message.userType !== 'MANAGER') {
+            sender += 
+                `<li>
                     <span class="dropdown-item chat manager" data-id="${message.sender}" id=${chatNo}>
                         너 매니저
                     </span>
-                </li>
-            </ul>             
+                </li>`;
+        }
+        sender += 
+        `   </ul>             
         </div>`;
         
         // sender가 해당 채널의 스트리머일 경우 강조해서 표시
         if(message.sender === [[${streamer.userNickname}]]) {
             newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.msg + '</strong>';        
+        } else if (message.userType === "MANAGER") {
+            
+            if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]]) {
+                newMsg.innerHTML = '⚔' + sender + ':' + message.msg;                
+            } else {
+                newMsg.innerHTML = '⚔' + message.sender + ':' + message.msg;
+            }
+            
         } else if(message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
-            newMsg.innerHTML = '👍︎' + sender + ':' + message.msg;
-        } else if(message.userType === "NON_FOLLOW" || message.userType === "ANONYMOUS") {
-            newMsg.innerHTML = message.sender + ':' + message.msg;
+        
+            if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]] || userAuth === 'MANAGER') {
+                newMsg.innerHTML = '👍︎' + sender + ':' + message.msg;                
+            } else {
+                newMsg.innerHTML = '👍︎' + message.sender + ':' + message.msg;
+            }
+            
+        } else if(message.userType === "NON_FOLLOW") {
+            
+            if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]] || userAuth === 'MANAGER') {
+                newMsg.innerHTML = sender + ':' + message.msg;                
+            } else {
+                newMsg.innerHTML = message.sender + ':' + message.msg;
+            }
+             
+        } else if(message.userType === "ANONYMOUS") {
+            newMsg.innerHTML = message.sender + ':' + message.msg;  
         }
+        
         if(message.type === 'TALK') {
           msgArea.append(newMsg);
         }
 
         updateScroll();
         
-        let banUser = document.querySelector(`span.ban[id="${chatNo}"]`)
-        banUser.addEventListener('click', function() {
-            let userNickname = banUser.getAttribute('data-id');
-            
-            const data = { userNickname, channelId };
-            
-            axios.post('/api/user/ban', data)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
+        let banUser = document.querySelector(`span.ban[id="${chatNo}"]`);
+        if (banUser !== null) {            
+            banUser.addEventListener('click', function ban() {
+                let auth = elemental.getAttribute('auth-data');
+                
+                if(auth === 'MANAGER' || [[${streamer.userNickname}]] === [[${userAccount.userNickname}]]) {
+                    
+                    let userNickname = banUser.getAttribute('data-id');
+                    
+                    const data = { userNickname, channelId };
+                    
+                    axios.post('/api/user/ban', data)
+                    .then((response) => {
+                        console.log(response);
+                        let userNickname = banUser.getAttribute('data-id');
+                        document.querySelector('.content').value = userNickname + '님이 밴 되었습니다.';
+                        sendMsg();
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                    
+                }
+                
+                
             });
-            
-        });
+        }
         
         let manager = document.querySelector(`span.manager[id="${chatNo}"]`)
-        manager.addEventListener('click', function() {
-            let userNickname = manager.getAttribute('data-id');
-            
-            const uri = '/api/user/manager/' + userNickname;
-            console.log(uri, { params: { ChannelId: channelId } });
-            axios.post('api/user/manager', channelId)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
+        if (manager !== null) {            
+            manager.addEventListener('click', function() {
+                let userNickname = manager.getAttribute('data-id');
+                
+                const data = { userNickname, channelId };
+               
+                axios.post('/api/user/manager', data)
+                .then((response) => {
+                    console.log(response);
+                    let userNickname = manager.getAttribute('data-id');
+                    document.querySelector('.content').value = userNickname + '님이 매니저로 임명되었습니다.';
+                    sendMsg();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+                
             });
-            
-        });
+        }
+        
+        let managerRevoke = document.querySelector(`span.managerRevoke[id="${chatNo}"]`)
+        if (managerRevoke !== null) {            
+            managerRevoke.addEventListener('click', function() {
+                let userNickname = managerRevoke.getAttribute('data-id');
+                
+                const data = { userNickname, channelId };
+               
+                axios.post('/api/user/managerRevoke', data)
+                .then((response) => {
+                    console.log(response);
+                    let userNickname = managerRevoke.getAttribute('data-id');
+                    document.querySelector('.content').value = userNickname + '님이 매니저에서 해임되었습니다.';
+                    sendMsg();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+                
+            });
+        }
         
     }
     
@@ -445,34 +546,43 @@
         if(content === '') {
             return;
         }
-        let userId = [[${userAccount.userNickname}]];
-        let userType = [[${userState}]];
-     
-        if([[${userAccount.userNickname}]] === 'anonymousUser' && chatState !== '[ANONYMOUS]'){
-            document.querySelector('.content').value = '채팅은 로그인 이후 이용하실 수 있습니다.';
-            document.querySelector('.content').setAttribute('readonly', 'true');
-            return;
-        } else if(userType === 'NON_FOLLOW' && chatState === '[FOLLOW]') {
-            document.querySelector('.content').value = '현재 채팅방에 팔로우챗이 적용되고 있습니다.';
-            document.querySelector('.content').setAttribute('readonly', 'true');
-            return;
-        } else if(userType !== 'STREAMER' && chatState === '[STREAMER_ONLY]') {
-            document.querySelector('.content').value = '현재 채팅방에 스트리머챗이 적용되고 있습니다.';
-            document.querySelector('.content').setAttribute('readonly', 'true');
-            return;
-        } 
-    
-        var talkMsg = {
-                "type" : "TALK",
-                "userType" : userType,
-                "roomId":[[${room.roomId}]],
-                "sender": userId,
-                "msg":content};
-    //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
-        socket.send(JSON.stringify(talkMsg));
-    
-        document.querySelector('.content').value = '';
-
+        
+        const uri = '/api/chat/chatState/' + channelId;
+        
+        axios.get(uri)
+        .then((response) => {
+            let data = response.data;
+            let userId = [[${userAccount.userNickname}]];
+            let userType = data.userType;
+         
+            if (userType === 'BAN') {
+                document.querySelector('.content').value = '해당 방송에서 채팅 권한을 박달당하셨습니다. ㅠㅠ';
+                return;
+            } else if([[${userAccount.userNickname}]] === 'anonymousUser' && data.chatState !== '[ANONYMOUS]'){
+                document.querySelector('.content').value = '채팅은 로그인 이후 이용하실 수 있습니다.';
+                return;
+            } else if(userType === 'NON_FOLLOW' && data.chatState === '[FOLLOW]') {
+                document.querySelector('.content').value = '현재 채팅방에 팔로우챗이 적용되고 있습니다.';
+                return;
+            } else if(userType !== 'STREAMER' && data.chatState === '[STREAMER_ONLY]') {
+                document.querySelector('.content').value = '현재 채팅방에 스트리머챗이 적용되고 있습니다.';
+                return;
+            }
+        
+            var talkMsg = {
+                    "type" : "TALK",
+                    "userType" : userType,
+                    "roomId":[[${room.roomId}]],
+                    "sender": userId,
+                    "msg":content};
+            //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
+            socket.send(JSON.stringify(talkMsg));
+        
+            document.querySelector('.content').value = '';
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
     window.addEventListener('beforeunload', handlePageUnload);
