@@ -1,18 +1,18 @@
 package com.itwill.beep.web;
 
-import com.itwill.beep.domain.ChannelEntity;
-import com.itwill.beep.domain.StreamingState;
-import com.itwill.beep.domain.UserAccountEntity;
-
-import java.util.Set;
-
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserRoleType;
+import com.itwill.beep.dto.ChannelRequestDto;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.BannedUserService;
 import com.itwill.beep.service.ChannelService;
@@ -55,6 +55,7 @@ public class ChannelController {
             UserAccountEntity streamer = userSvc.findUserByUserNickname(id);
             log.info("streamer = {}", streamer);
             model.addAttribute("streamer", streamer);
+
             
             // streamer정보로 channel정보를 불러온다.
             ChannelEntity channel = channelSvc.findChannelByUserAccount(streamer);
@@ -78,18 +79,18 @@ public class ChannelController {
                 model.addAttribute("userState", "BAN");
             } else if(followCheck == true) {
                 model.addAttribute("userState", "FOLLOW");
-            } else if(followCheck == false){
+            } else if (followCheck == false) {
                 model.addAttribute("userState", "NON_FOLLOW");
             }
             // model에 user를 보낸다.
             log.info("user = {}", user);
             model.addAttribute("userAccount", user);
-            
+
             // 채팅창 정보를 보낸다.
             String chatState = channel.getChatStateSet().toString();
             model.addAttribute("chatState", chatState);
-            
-            //시청자 수 증가
+
+            // 시청자 수 증가
             channelSvc.increaseViewers(channelId);
             model.addAttribute("channel", channel);
 
@@ -100,13 +101,17 @@ public class ChannelController {
 
             // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
             String streamingKey = streamer.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
-            String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
+            String streamingUrl =
+                    String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍
+                                                                                                // URL
+                                                                                                // 동적
+                                                                                                // 생성
             model.addAttribute("streamingUrl", streamingUrl);
 
-            
+
 
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
-            // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다. 
+            // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
             // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다. (해결법은 찾았지만 결국엔 이게 정답이었다.)
             ChannelEntity myChannel = channelSvc.findChannelByUserAccount(user);
             String status = myChannel.getStreamingStateSet().toString();
@@ -115,7 +120,8 @@ public class ChannelController {
         } else if (SecurityContextHolder.getContext().getAuthentication()
                 .getName() == "anonymousUser") {
             // 비로그인 시청자가 방송을 시청하려고 하는 경우
-            UserAccountEntity user = UserAccountEntity.builder().userNickname("anonymousUser").build();
+            UserAccountEntity user =
+                    UserAccountEntity.builder().userNickname("anonymousUser").build();
             user.addUserRole(UserRoleType.USER);
 
             UserAccountEntity streamer = userSvc.findUserByUserNickname(id);
@@ -132,12 +138,12 @@ public class ChannelController {
             log.info("channel = {}", channel);
             model.addAttribute("channel", channel);
             Long channelId = channel.getChannelId();
-            
+
             // 채팅창 정보를 보낸다.
             String chatState = channel.getChatStateSet().toString();
             model.addAttribute("chatState", chatState);
-            
-            //시청자 수 증가
+
+            // 시청자 수 증가
             channelSvc.increaseViewers(channelId);
             model.addAttribute("channel", channel);
 
@@ -156,5 +162,15 @@ public class ChannelController {
         return "/channel";
 
     }
-    
+
+    @ResponseBody
+    @GetMapping("/api/channel/popular")
+    public ResponseEntity<List<ChannelRequestDto>> popularChannel() {
+        log.info("popularChannel()");
+
+        List<ChannelRequestDto> data = channelSvc.getPopularChannelList();
+
+        return ResponseEntity.ok(data);
+    }
+
 }

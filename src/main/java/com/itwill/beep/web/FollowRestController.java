@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.dto.ChannelRequestDto;
+import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FollowRestController {
     private final FollowService followService;
     private final UserService userService;
+    private final ChannelService channelService;
 
     @PostMapping("/add/{following}")
     public ResponseEntity<Boolean> follow(@PathVariable("following") Long following) {
@@ -73,20 +76,19 @@ public class FollowRestController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/followlist/{follower}")
-    public ResponseEntity<Map<String, Object>> getFollowerList(
-            @PathVariable("follower") Long follower) {
-        log.info("getFollowerList(follower: {})", follower);
+    @GetMapping("/followlist")
+    public ResponseEntity<Map<String, Object>> getFollowerList() {
+        log.info("getFollowerList()");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserAccountEntity followerEntity = userService.findUserByUserName(authentication.getName());
         Long countByfollower = followService.countFollowings(followerEntity);
-        List<FollowEntity> followList = followService.getFollowings(followerEntity);
+        List<ChannelRequestDto> channelList =
+                channelService.getChannelListForFollowings(followerEntity);
 
         Map<String, Object> response = new HashMap<>();
         response.put("countByFollow", countByfollower);
-        response.put("followList", followList);
-
+        response.put("channelList", channelList);
         log.info("response: {}", response);
 
         return ResponseEntity.ok(response);
