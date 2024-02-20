@@ -4,10 +4,13 @@ import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
+import com.itwill.beep.domain.ChatState;
+import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.domain.VerificationToken;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -71,7 +74,9 @@ public class UserService implements UserDetailsService {
             .channelTitle(signupRequestDto.getUserName() + "'s Channel") // 채널 제목
             .channelViewerCount(0L) // 초기 시청자 수
             .build();
-
+        channelEntity.setStreamingState(StreamingState.OFF);
+        channelEntity.setChatState(ChatState.DEFAULT);
+        
         // 채널 저장
         channelRepository.save(channelEntity);
 

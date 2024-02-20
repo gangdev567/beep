@@ -3,7 +3,8 @@ package com.itwill.beep.domain;
 public enum UserRoleType {
     USER("ROLE_USER"),
     STREAMER("ROLE_STREAMER"),
-    ADMIN("ROLE_ADMIN");
+    ADMIN("ROLE_ADMIN"),
+    SOCIAL("ROLE_SOCIAL");
     
     private String authority;
     

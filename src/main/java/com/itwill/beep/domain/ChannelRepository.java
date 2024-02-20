@@ -49,8 +49,14 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
     /* 채널에 카테고리가 연결되어있는지 확인 */
     List<ChannelEntity> findByCategoryEntityOfChannelIsNotNull();
 
+<<<<<<< HEAD
     /* 채널에 연결되어있는 카테고리 수 */
     int countByCategoryEntityOfChannel(CategoryEntity categoryEntity);
+=======
+    @Query("select c.channelUserAccountEntity from ChannelEntity c"
+            + " where c.channelId = :channelId")
+    UserAccountEntity findChannelUserAccountEntityByChannelId(@Param("channelId") Long channelId);
+>>>>>>> 7a89925086f864530bd028f0d4807d602a5916b9
 
 
 }

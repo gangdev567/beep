@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const anonymousChatSwitch = document.getElementById('switch2');
     const streamerChatSwitch = document.getElementById('switch3');
     
-    const channelId = document.querySelector('.jjindda').value;
+    const channelId = document.querySelector('.dummy').value;
     const chatState = document.querySelector('.chatState').value;
     
     // 채팅창의 현재 설정에 따라 스위치 상태 변경
-    
+
     if(chatState == '[FOLLOW]') {
         followChatSwitch.checked = true;
     } else if(chatState == '[ANONYMOUS]') {
@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (this.checked) {
 
             const uri = '/api/chat/follow/' + channelId;
-            console.log(uri);
             axios.post(uri)
             .then((response) => {
                 console.log(response);
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             
             const uri = '/api/chat/default/' + channelId;
-            console.log(uri);
             axios.post(uri)
             .then((response) => {
                 console.log(response);
@@ -66,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (this.checked) {
             const uri = '/api/chat/anonymous/' + channelId;
-            console.log(uri);
             axios.post(uri)
             .then((response) => {
                 console.log(response);
@@ -83,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             
             const uri = '/api/chat/default/' + channelId;
-            console.log(uri);
             axios.post(uri)
             .then((response) => {
                 console.log(response);

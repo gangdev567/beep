@@ -97,6 +97,7 @@ public class ChannelService {
         return list;
     }
 
+<<<<<<< HEAD
     /* 채널 리스트 불러오기 */
     public List<ChannelRequestDto> getChannelListForFollowings(UserAccountEntity followerEntity) {
         log.info("getChannelListForFollowings(followerEntity={})", followerEntity);
@@ -157,4 +158,13 @@ public class ChannelService {
         return data;
     }
 
+=======
+    @Transactional
+    public UserAccountEntity findUserByChannelId(Long channelId) {
+        
+        UserAccountEntity streamer = channelDao.findChannelUserAccountEntityByChannelId(channelId);
+        
+        return streamer;
+    }
+>>>>>>> 7a89925086f864530bd028f0d4807d602a5916b9
 }
