@@ -1,6 +1,7 @@
 package com.itwill.beep.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -42,9 +43,9 @@ public class CategoryService {
     private String clientSecret;
 
     /**
-     * TotalView 컬럼의 값의 내림차순으로 카테고리를 정렬한 값을 리스트에 저장합니다.
+     * 시청자 수가 높은 순서대로 카테고리를 조회하여 반환하는 메서드입니다.
      * 
-     * @return 시청자 로그인 수로 정렬한 카테고리 목록
+     * @return 시청자 수가 높은 순서대로 정렬된 카테고리 목록
      */
     public List<CategoryEntity> findByTotalViewers() {
         log.info("findByTotalViewers()");
@@ -52,7 +53,7 @@ public class CategoryService {
         // 중복된 카테고리를 제거하기 위해 Set을 사용
         Set<CategoryEntity> categoriesWithTotalViewers = new HashSet<>();
 
-        // 카테고리의 시청자 수가 있는 채널을 조회하여 가져옴
+        // 채널을 조회하여 가져옴
         List<ChannelEntity> channels = channelRepository.findByCategoryEntityOfChannelIsNotNull();
 
         // 각 채널의 카테고리를 가져와서 시청자 수를 업데이트하고,
@@ -80,8 +81,50 @@ public class CategoryService {
         return sortedCategories;
     }
 
+    /**
+     * 인기도가 높은 순서대로 카테고리를 조회하여 반환하는 메서드입니다.
+     * 
+     * @return 인기도가 높은 순서대로 정렬된 카테고리 목록
+     */
+    public List<CategoryEntity> findByPopulars() {
+        log.info("findByChannelCountSortedByTotalViewers()");
+
+        // 중복된 카테고리를 제거하기 위해 Set을 사용
+        Set<CategoryEntity> categoriesWithTotalViewers = new HashSet<>();
+
+        // 채널을 조회하여 가져옴
+        List<ChannelEntity> channels = channelRepository.findByCategoryEntityOfChannelIsNotNull();
+
+        // 각 채널의 카테고리를 가져와서 시청자 수를 업데이트하고,
+        // 시청자 수가 있는 카테고리만 Set에 추가
+        for (ChannelEntity channel : channels) {
+            CategoryEntity category = channel.getCategoryEntityOfChannel();
+            Long totalViewerCount =
+                    channelRepository.getTotalViewerCountByCategoryId(category.getCategoryId());
+            if (totalViewerCount != null
+                    && channel.getStreamingStateSet().toString().contains("ON")) {
+                // totalViewerCount가 null 아닐 때, 방송 중일때만 불러오기
+                category.updateCategoryTotalView(totalViewerCount);
+                categoriesWithTotalViewers.add(category);
+            }
+        }
+
+        // Set을 List로 변환하여 정렬
+        List<CategoryEntity> sortedCategories = new ArrayList<>(categoriesWithTotalViewers);
+        sortedCategories.sort(Comparator.comparingInt(
+                category -> channelRepository.countByCategoryEntityOfChannel(category)));
+
+        // 역순으로 정렬
+        Collections.reverse(sortedCategories);
+
+        return sortedCategories;
+    }
+
+
+
     public CategoryEntity findByCategoryIdIs(Long categoryId) {
         log.info("findByCategoryId(categoryId={})", categoryId);
+
         CategoryEntity category = categoryRepository.findByCategoryId(categoryId);
         category.updateCategoryTotalView(
                 channelRepository.getTotalViewerCountByCategoryId(categoryId));
@@ -93,6 +136,7 @@ public class CategoryService {
     @Transactional
     public List<CategoryEntity> findAllAndSaveCategories() {
         log.info("findAllAndSaveCategories()");
+
         List<CategoryEntity> savedCategories = new ArrayList<>();
 
         // Twitch API 토큰 요청
@@ -140,6 +184,7 @@ public class CategoryService {
     @Transactional
     public List<CategoryEntity> searchGames(String keyword) {
         log.info("searchGames(keyword={})", keyword);
+
         List<CategoryEntity> foundGames = new ArrayList<>();
 
         // Twitch API 토큰 요청

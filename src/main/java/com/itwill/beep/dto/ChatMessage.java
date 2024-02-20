@@ -11,7 +11,7 @@ public class ChatMessage {
         ENTER, TALK, QUIT
     }
     public enum UserType {
-        STREAMER, FOLLOW, NON_FOLLOW, ANONYMOUS, BAN
+        STREAMER, FOLLOW, NON_FOLLOW, ANONYMOUS, BAN, MANAGER
     }
     
     private MessageType type; // 메시지 타입

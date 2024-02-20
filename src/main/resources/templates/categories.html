@@ -20,6 +20,9 @@
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="mostViewers-tab" data-bs-toggle="tab" href="#mostViewers" role="tab" aria-controls="mostViewers" aria-selected="true">시청 순</a>
         </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="popular-tab" data-bs-toggle="tab" href="#popular" role="tab" aria-controls="popular" aria-selected="false">추천 순</a>
+        </li>
     </ul>
 
     <!-- 검색 입력 폼과 검색 결과 표시 컨테이너 -->
@@ -35,6 +38,7 @@
 
     <!-- 카테고리 탭 내용 -->
     <div class="tab-content">
+    
         <div class="tab-pane fade show active" id="mostViewers" role="tabpanel">
             <div class="row">
                 <div th:each="mostViewers, iterStat : ${mostViewers}" class="col-lg-2 col-md-4 mb-4">
@@ -50,7 +54,26 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="tab-pane fade" id="popular" role="tabpanel">
+            <div class="row">
+                <div th:each="populars, iterStat : ${populars}" class="col-lg-2 col-md-4 mb-4">
+                    <div class="card category-card">
+                        <a th:href="@{/categories/{categoryId}(categoryId=${populars.categoryId})}" class="card-link text-decoration-none text-white">
+                            <img th:src="${populars.categoryImageUrl}" class="card-img-top img-fluid" alt="Category Image">
+                            <div class="card-body">
+                                <h5 class="card-title category-title text-left text-black text-truncate fs-5" th:text="${populars.categoryName}">Category Name</h5>
+                                <h5 class="card-title category-title text-left text-black text-truncate fs-6" th:text="${populars.categoryTotalView != null ? '시청자 ' + populars.categoryTotalView + '명' : '시청자 0명'}"></h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
+    
 </div>
 <footer th:replace="layout/fragments :: myfooter"></footer>
 </section>

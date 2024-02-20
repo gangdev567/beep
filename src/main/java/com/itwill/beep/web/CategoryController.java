@@ -35,12 +35,15 @@ public class CategoryController {
     @GetMapping
     public String showCategories(Model model) {
         log.info("showCategories()");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
 
         List<CategoryEntity> mostViewers = categoryService.findByTotalViewers();
+        List<CategoryEntity> populars = categoryService.findByPopulars();
 
         model.addAttribute("mostViewers", mostViewers);
+        model.addAttribute("populars", populars);
 
         // fragments 에 필요한 모델
         model.addAttribute("userAccount", loginUser);
@@ -59,6 +62,7 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     public String categoriesChannelList(@PathVariable("categoryId") Long categoryId, Model model) {
         log.info("categoriesChannelList");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
 
