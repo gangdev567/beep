@@ -8,6 +8,7 @@ import com.itwill.beep.domain.ChatState;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserRoleType;
+import com.itwill.beep.domain.VerificationToken;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -32,6 +33,8 @@ public class UserService implements UserDetailsService {
     private final UserAccountRepository userAccountRepository;
     private final ChannelRepository channelRepository; // ChannelEntity를 저장하기 위한 Repository
     private final CategoryRepository categoryRepository;
+    private final VerificationTokenService verificationTokenService;
+
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         log.info("username = {}", userName);
@@ -157,6 +160,36 @@ public class UserService implements UserDetailsService {
             user.updateUserName(newUsername);
             userAccountRepository.save(user);
         }
+    }
+
+    // 이메일을 통해 사용자 아이디(이름)을 찾는 기능
+    public String findUserNameByEmail(String email) {
+        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email);
+        if (userAccount != null) {
+            return userAccount.getUserName();
+        } else {
+            // 사용자가 없을 경우 적절한 예외 처리 또는 메시지 반환
+            throw new UsernameNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    // 토큰을 검증하고 새 비밀번호로 업데이트하는 로직
+    public void resetPassword(String token, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        VerificationToken verificationToken = verificationTokenService.findByToken(token);
+        if (verificationToken == null || verificationToken.isExpired()) {
+            throw new RuntimeException("토큰이 유효하지 않거나 만료되었습니다.");
+        }
+
+        UserAccountEntity user = verificationToken.getVerifiTokenUserAccount();
+        user.updateUserPassword(passwordEncoder.encode(password));
+        userAccountRepository.save(user);
+        verificationTokenService.invalidateToken(verificationToken);
+
+        log.info("Password reset successfully for user: {}", user.getUserName());
     }
 
 }
