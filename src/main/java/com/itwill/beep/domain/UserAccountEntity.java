@@ -97,6 +97,10 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     public void updateUserName(String newUserName){
         this.userName = newUserName;
     }
+
+    public void updateUserPassword(String newUserPassword){
+        this.userPassword = newUserPassword;
+    }
     public void updateUserStreamingKey(String newUserStreamingKey) {
         this.userStreamingKey = newUserStreamingKey;
     }

@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -42,7 +44,7 @@ public class VerificationToken {
     private UserAccountEntity verifiTokenUserAccount;
 
     @Column(name="verifi_token_expiry_date")
-    private Date verifiTokenExpiryDate;
+    private LocalDateTime verifiTokenExpiryDate;
 
     public VerificationToken() {
         super();
@@ -55,11 +57,18 @@ public class VerificationToken {
         this.verifiTokenExpiryDate = calculateExpiryDate(EXPIRATION);
     }
 
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(new Date().getTime());
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(verifiTokenExpiryDate);
+    }
+
+    private LocalDateTime calculateExpiryDate(int expiryTimeInMinutes) {
+        return LocalDateTime.now().plus(expiryTimeInMinutes, ChronoUnit.MINUTES);
+    }
+
+    // 토큰 만료 시간 설정 (예: 24시간 후 만료)
+    public void updateExpiryDate(int hours) {
+        LocalDateTime now = LocalDateTime.now();
+        this.verifiTokenExpiryDate = now.plusHours(hours);
     }
 
     // 표준 게터/세터/생성자 ...
