@@ -46,7 +46,11 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
             + "WHERE c.categoryEntityOfChannel.categoryId = :categoryId")
     Long getTotalViewerCountByCategoryId(@Param("categoryId") Long categoryId);
 
+    /* 채널에 카테고리가 연결되어있는지 확인 */
     List<ChannelEntity> findByCategoryEntityOfChannelIsNotNull();
+
+    /* 채널에 연결되어있는 카테고리 수 */
+    int countByCategoryEntityOfChannel(CategoryEntity categoryEntity);
 
 
 }

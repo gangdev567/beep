@@ -246,6 +246,12 @@ body.sidebar li a:hover .text {
 	display: flex; /* 플렉스 컨테이너로 설정하여 자식 요소들을 행으로 배치 */
 	flex-direction: column; /* 플렉스 컨테이너의 방향을 열로 설정 */
 	justify-content: space-between; /* 메뉴 바의 내용을 상단 및 하단으로 배치하여 여백 생성 */
+	overflow-y: hidden; /* 수직 스크롤바 활성화 */
+    overflow-x: hidden; /* 수평 스크롤바 숨김 */ 
+}
+
+.sidebar .menu-bar:hover {
+    overflow-y: auto; /* 마우스를 가져다 대면 스크롤 활성화 */
 }
 
 /* 다크 모드 전환 버튼 스타일 설정 */
