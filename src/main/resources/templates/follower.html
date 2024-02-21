@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{layout/fragments :: myhead}"></head>
+
+<body>
+
+<header th:replace="~{layout/fragments :: myheader}"></header>
+
+<nav th:replace="~{layout/fragments :: mysidebar}"></nav>
+<section class="home">
+<div class="container mt-5">
+    <div>
+        <h1>팔로워</h1>    
+        <div>
+            <span th:text="|내 채널 팔로워 수 / |"></span>
+            <span class="fw-bold fs-4" th:text="${followersCount}"></span>
+            <span th:text="| 명|" class="fs-4"></span>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <form class="input-group" method="get" th:action="@{/dashboard/u/{username}/search(username=${userAccount.userNickname})}">
+                    <input id="followersKeyword" class="form-control" name="keyword" placeholder="닉네임을 검색하세요."/>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-primary">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>닉네임</th>
+                    <th>팔로우 등록일</th>
+                    <th>기간</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="followersList, iterStat : ${followersList}" th:object="${followersList}">
+                    <td>
+                        <img th:src="*{followerUserAcoountUserProfileImageUrl}" th:alt="img" style="width: 50px; height: 50px;"/>
+                        <span th:text="*{followerUserAccountUserNickname}"></span>
+                    </td>
+                    <td th:text="*{#temporals.format(createdTime, 'YYYY년 MM월 dd일 HH:mm:ss')}"></td>
+                    <td th:text="|${followersList.betweenCreatedTimeToNow} 일 동안 팔로우|"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"
+                    th:classappend="${!followersList.hasPrevious} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/dashboard/u/{username}/follower(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${followersList.number - 1})}">&lt;</a>
+                </li>
+                <li class="page-item"
+                    th:each="pageNo : ${#numbers.sequence(0, followersList.totalPages - 1)}"
+                    th:if="${pageNo > followersList.number - 5 && pageNo <= followersList.number + 5}"
+                    th:classappend="${pageNo == followersList.number} ? 'active'">
+                    <a class="page-link"
+                        th:href="@{/dashboard/u/{username}/follower(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${pageNo})}"
+                        th:text="${pageNo + 1}"></a>
+                </li>
+                <li class="page-item"
+                    th:classappend="${!followersList.hasNext} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/dashboard/u/{username}/follower(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${followersList.number + 1})}">&gt;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<footer th:replace="layout/fragments :: myfooter"></footer>
+</section>
+
+<div th:replace="~{layout/fragments :: myModal}"></div>
+
+<script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+<script th:replace="~{layout/fragments :: sidebar_js}"></script>
+<script src="/js/broadcast.js"></script>
+<script src="/js/fragments-categories-search.js"></script>
+</body>
+
+</html>
