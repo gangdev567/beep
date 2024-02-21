@@ -3,6 +3,7 @@ package com.itwill.beep.web;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,8 +105,17 @@ public class UserViewAuthorityRestController {
         String userType = "";
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        String username = authentication.getName();
+        String username;
+
+        if (principal instanceof OAuth2User) {
+            // OAuth2 사용자의 경우
+            username = (String) ((OAuth2User) principal).getAttributes().get("name");
+        } else {
+            // 일반 사용자의 경우
+            username = authentication.getName();
+        }
         
         UserAccountEntity user = userService.findUserByUserName(username);
 
