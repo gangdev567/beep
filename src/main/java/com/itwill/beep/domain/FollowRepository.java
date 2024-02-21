@@ -1,7 +1,8 @@
 package com.itwill.beep.domain;
 
 import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
@@ -29,4 +30,6 @@ public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
     boolean existsByFollowerUserAccountAndFollowingUserAccount(
             UserAccountEntity followerUserAccount, UserAccountEntity followingUserAccount);
 
+    Page<FollowEntity> findByFollowingUserAccountUserNickname(
+            String followingUserAccountUserNickname, Pageable pageable);
 }
