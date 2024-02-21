@@ -1,5 +1,15 @@
 package com.itwill.beep.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
@@ -7,22 +17,15 @@ import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.domain.ChatState;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.domain.VerificationToken;
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.UUID;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -33,6 +36,15 @@ public class UserService implements UserDetailsService {
     private final UserAccountRepository userAccountRepository;
     private final ChannelRepository channelRepository; // ChannelEntity를 저장하기 위한 Repository
     private final CategoryRepository categoryRepository;
+    
+    /**
+     * Spring Security의 UserDetailsService를 구현한 메소드.
+     * 주어진 사용자 이름으로 사용자를 조회하고, 해당 사용자가 존재할 경우 UserDetails로 변환하여 반환한다.
+     *
+     * @param userName 조회할 사용자 이름
+     * @return UserDetails로 변환된 사용자 정보
+     * @throws UsernameNotFoundException 사용자를 찾을 수 없는 경우 발생하는 예외
+     */
     private final VerificationTokenService verificationTokenService;
 
     @Override
@@ -47,6 +59,11 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /**
+     * 회원 가입을 처리하는 메소드.
+     *
+     * @param signupRequestDto 회원 가입 정보를 담고 있는 DTO
+     */
     public void createUserAccount(SignupRequestDto signupRequestDto) {
         // DTO를 UserAccountEntity 객체로 변환
         UserAccountEntity userEntity = signupRequestDto.toEntity(passwordEncoder);
@@ -83,28 +100,68 @@ public class UserService implements UserDetailsService {
         log.info("Created user account with streaming key and channel for user: {}", signupRequestDto.getUserName());
     }
 
+    /**
+     * 사용자 이름으로 사용자를 조회하는 메소드.
+     *
+     * @param userName 조회할 사용자 이름
+     * @return 조회된 사용자 정보
+     */
     public UserAccountEntity findUserByUserName(String userName) {
-
-        // repository에서 쿼리를 실행
-        UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(userName);
-
-        return userAccountEntity;
+        return userAccountRepository.findByUserName(userName);
     }
-  
-    public UserAccountEntity findUserByUserNickname(String userNickname) {
 
-        UserAccountEntity userAccountEntity = userAccountRepository.findByUserNickname(userNickname);
-        
-        return userAccountEntity;
+    /**
+     * 사용자 닉네임으로 사용자를 조회하는 메소드.
+     *
+     * @param userNickname 조회할 사용자 닉네임
+     * @return 조회된 사용자 정보
+     */
+    public UserAccountEntity findUserByUserNickname(String userNickname) {
+        return userAccountRepository.findByUserNickname(userNickname);
+    }
+
+    /**
+     * 사용자 ID로 사용자를 조회하는 메소드.
+     *
+     * @param userId 조회할 사용자 ID
+     * @return 조회된 사용자 정보
+     */
+    public UserAccountEntity findByUserId(Long userId) {
+        return userAccountRepository.findByUserId(userId);
+    }
+
+    /**
+     * 사용자 이름이 존재하는지 여부를 확인하는 메소드.
+     *
+     * @param userName 확인할 사용자 이름
+     * @return 사용자 이름이 존재하면 true, 그렇지 않으면 false
+     */
+    public boolean isUserNameExists(String userName) {
+        return userAccountRepository.existsByUserName(userName);
     }
     
+    @Transactional
+    public void updateUserPassword(String username, String newPassword) {
+        // 사용자 아이디로 사용자를 찾음
+        UserAccountEntity userAccountEntity = userAccountRepository.findByUserName(username);
 
-    /* follow 기능에 필요한 메서드 */
-    public UserAccountEntity findByUserId(Long userId) {
-        UserAccountEntity userAccountEntity = userAccountRepository.findByUserId(userId);
-
-        return userAccountEntity;
+        if (userAccountEntity != null) {
+            // 새로운 비밀번호로 업데이트
+            userAccountEntity.updateUserPassword(newPassword, passwordEncoder);
+            // 변경된 정보를 저장
+            userAccountRepository.save(userAccountEntity);
+        } else {
+            throw new IllegalArgumentException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다.");
+        }
     }
+    
+    public Optional<UserAccountEntity> findByUserEmail(String email){
+    	return userAccountRepository.findByUserEmail(email);
+    }
+    
+   
+
+  
 
     public String generateStreamingKey() {
         // 단순히 UUID를 기반으로 streamingKey 생성
@@ -164,7 +221,7 @@ public class UserService implements UserDetailsService {
 
     // 이메일을 통해 사용자 아이디(이름)을 찾는 기능
     public String findUserNameByEmail(String email) {
-        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email);
+        UserAccountEntity userAccount = userAccountRepository.findByUserEmail(email).orElseThrow();
         if (userAccount != null) {
             return userAccount.getUserName();
         } else {
@@ -193,3 +250,7 @@ public class UserService implements UserDetailsService {
     }
 
 }
+
+  
+  
+

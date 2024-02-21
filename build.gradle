@@ -68,6 +68,11 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+	
+	 // OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	
+	
 
 	
 	// runtimeOnly 'com.mysql:mysql-connector-j'
@@ -82,4 +87,5 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
 

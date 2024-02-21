@@ -13,8 +13,9 @@
 <div class="container">
     <form method="post" class="form">
         <h2>Sign Up Form</h2>
+        <button type="button" id="checkUsernameButton" class="signupButton check" style="margin-left: 330px;">Check Username</button>
         <div class="inputBox">
-            <input type="text" name="userName" placeholder="Username" required />
+            <input type="text" id="usernameInput" name="userName" placeholder="Username" required />
         </div>
         <div class="inputBox">
             <input type="password" name="userPassword" placeholder="Password" required />
@@ -32,6 +33,9 @@
 </div>
 
 <script th:replace="~{./layout/fragments :: bootstrap_js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/checkUsername.js"></script>
 </body>
 
 </html>

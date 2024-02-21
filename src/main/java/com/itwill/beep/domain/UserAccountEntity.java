@@ -2,7 +2,10 @@ package com.itwill.beep.domain;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -32,7 +35,10 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "user_accounts") // 원래 users -> user_accounts로 변경
-public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 변경
+public class UserAccountEntity{ // -> 원래 Account -> UserAccountEntity 로 변경
+	
+	
+	
 
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 열시퀸스
@@ -70,6 +76,10 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
 
     @Column(name = "user_email_verified")
     private boolean userEmailVerified = false;
+    
+
+    
+    
 
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
@@ -104,6 +114,17 @@ public class UserAccountEntity { // -> 원래 Account -> UserAccountEntity 로 �
     public void updateUserStreamingKey(String newUserStreamingKey) {
         this.userStreamingKey = newUserStreamingKey;
     }
+    
+    
+    // 비밀번호 변경
+    public void updateUserPassword(String newpassword, PasswordEncoder passwordEncoder) {
+    this.userPassword = passwordEncoder.encode(newpassword);
+
+       
+        
+    }
+    
+ 
 
     public void updateUserNickname(String newUserNickname){
         this.userNickname = newUserNickname;

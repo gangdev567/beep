@@ -4,17 +4,26 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+<<<<<<< HEAD
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+=======
+
+>>>>>>> aabdec7b37f4368b6c0de5d7737ad9fa678d4c55
 import org.springframework.stereotype.Service;
+
 import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.FollowRepository;
 import com.itwill.beep.domain.UserAccountEntity;
+<<<<<<< HEAD
 import com.itwill.beep.dto.FollowerListRequestDto;
 import com.itwill.beep.dto.FollowerSearchRequestDto;
+=======
+
+>>>>>>> aabdec7b37f4368b6c0de5d7737ad9fa678d4c55
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
