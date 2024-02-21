@@ -111,7 +111,7 @@ body {
 
 /* 폼 설정 */
 .form {
-    position: absolute; /* 절대적 위치 설정 */
+    position: relative; /* 상대적 위치 설정 */
     width: 100%; /* 너비 100%로 설정 */
     height: 100%; /* 높이 100%로 설정 */
     padding: 40px; /* 안쪽 여백 40px로 설정 */
@@ -216,10 +216,26 @@ body {
 .form p {
     color: #eee; /* 글자색 회색으로 설정 */
     margin-top: 20px; /* 위쪽 여백 20px로 설정 */
+    text-align: center;/* 가운데 정렬*/
 }
 
 /* 폼 안내 문구 내 링크 설정 */
 .form p a {
     color: #fff; /* 글자색 흰색으로 설정 */
     text-decoration: none; /* 텍스트에 밑줄 없애기 */
+}
+
+/* 소셜 로그인 아이콘 스타일링 */
+.social {
+    text-align: center;
+}
+
+.social .social-button {
+    margin: 20px; /* 위아래 간격 벌리기 */
+}
+
+.social .social-button img {
+    width: 160px; /* 크기 더 키움 */
+    height: auto;
+    border-radius: 20px; /* 더 둥글게 */
 }

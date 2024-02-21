@@ -31,36 +31,48 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     /**
      * OAuth2 사용자 정보를 처리하는 메소드.
-     * 
+     *
      * @param userRequest OAuth2 사용자 정보 요청 객체
      * @return 처리된 OAuth2 사용자 객체
      * @throws OAuth2AuthenticationException OAuth2 인증 예외
      */
+    // OAuth2UserRequest 클래스는 스프링 시큐리티에서 OAuth 2.0 로그인 프로세스에서 사용되는 중요한 클래스.
+    // 이 클래스는 OAuth 2.0 공급자(예: Google, Facebook)로부터 사용자 정보를 요청하고 가져오기 위한 필수 정보들을 담고 있음.
+    // 간단히 말해서, 여러분이 소셜 미디어 계정으로 로그인하려고 할 때, 스프링 시큐리티는 이 클래스를 사용하여 해당 계정에서
+    // 사용자 정보를 가져오는데 필요한 정보들을 설정하고 전달. 이를 통해 사용자는 간편하게 소셜 미디어 계정으로 로그인할 수 있고,
+    // 애플리케이션은 필요한 사용자 정보를 쉽게 획득할 수 있음.
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        // 부모 클래스의 메소드를 호출하여 OAuth2 사용자 정보를 가져옴
         OAuth2User oauth2User = super.loadUser(userRequest);
 
+        // OAuth2 사용자 정보에서 속성들을 추출
         Map<String, Object> attributes = oauth2User.getAttributes();
-
-        String userEmail = (String) attributes.get("email");
         String userName = (String) attributes.get("name");
+        String userEmail = (String) attributes.get("email");
+        
 
+        // 소셜 정보 유효성 검사
         validateSocialInfo(userEmail, userName);
 
+     // 이메일을 기반으로 사용자 엔터티 조회. 존재하면 해당 엔터티를 반환하고, 없으면 새로운 엔터티를 생성.
         UserAccountEntity userEntity = userAccountRepository.findByUserEmail(userEmail)
                 .orElseGet(() -> createUserAndChannel(userEmail, userName));
 
+     // 5. OAuth2 사용자의 권한을 설정
         Set<GrantedAuthority> authorities = userEntity.getUserRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(Collectors.toSet());
 
-        // 사용자 정보 로깅
-        if (userEntity.getUserId() != null) {
-            log.info("소셜 로그인 사용자 생성 완료: {}", userEntity);
-        } else {
-            log.info("소셜 로그인 사용자 이미 존재: {}", userEntity);
-        }
+        // 6. OAuth2User 객체를 새로 생성하여 반환
+        // 'sub'은 OAuth2User의 Principal을 나타내는데, 일반적으로 사용자의 고유 식별자를 의미.
+        // 여기서는 사용자의 고유 식별자를 'sub'로 설정하여 DefaultOAuth2User를 생성.
+        // authorities: 사용자의 권한 정보
+        // attributes: OAuth2 사용자의 속성 정보
+
+        // 주의: 'sub'은 사용자의 고유 식별자로 사용되며, 일반적으로 OAuth2에서 제공하는 토큰에서 찾을 수 있음.
+        // 사용자를 식별하는데 사용되는 값이므로 변경하지 않도록 주의.
 
         return new DefaultOAuth2User(authorities, attributes, "sub");
     }
@@ -89,13 +101,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         UserAccountEntity newUserEntity = UserAccountEntity.builder()
                 .userEmail(userEmail)
                 .userName(userName)
-                .userNickname("google")  // 이 부분은 원하는 값으로 수정해주세요.
-                .userPassword(passwordEncoder.encode(UUID.randomUUID().toString()))  // 더미 패스워드
+                .userNickname("google")  
+                .userPassword(passwordEncoder.encode(UUID.randomUUID().toString()))
                 .build();
         newUserEntity.addUserRole(UserRoleType.SOCIAL);
 
-        // userId // 역할 설정
-        newUserEntity.addUserRole(UserRoleType.USER);
 
         // streamingKey 생성 및 설정
         String streamingKey = generateStreamingKey();
@@ -110,6 +120,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 채널 생성 및 사용자 계정과 연결
         ChannelEntity channelEntity = createChannel(newUserEntity, categoryEntity);
+        channelEntity.setStreamingState(StreamingState.OFF);
+        channelEntity.setChatState(ChatState.DEFAULT);
 
         // 채널 저장
         channelRepository.save(channelEntity);
@@ -133,10 +145,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .categoryEntityOfChannel(categoryEntity)
                 .channelContent("환영합니다! 새로운 채널입니다.")
                 .channelCreatedTime(LocalDateTime.now())
-                .channelProfileImg("default_profile.png")
+                .channelProfileImg("default_profile.png")  // 프로필 이미지 추가
                 .channelTitle(userEntity.getUserNickname() + "님의 채널")
                 .channelViewerCount(0L)
                 .build();
+     
     }
 
     /**

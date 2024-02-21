@@ -20,18 +20,6 @@ import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.domain.VerificationToken;
-<<<<<<< HEAD
-=======
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.UUID;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import com.itwill.beep.domain.UserAccountRepository;
->>>>>>> 5961feb6aae72ee2c896a725aaaf81fccb9276a7
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
 

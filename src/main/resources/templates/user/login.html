@@ -15,6 +15,8 @@
 
 <!-- 로고 이미지 자리 미정 -->
 <div class="logo">Your Logo</div>
+	
+	
 
 <div class="container">
 
@@ -33,22 +35,33 @@
             </div>
 
             <!-- '아이디 찾기' 링크는 아이디 찾기 페이지로 리디렉트합니다 -->
+            <div class="inputBox">
             <a href="/user/find-username-page">아이디 찾기</a>
-            <a href="/oauth2/authorization/google">
-        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google 로그인">
-        Google 로그인
-    </a>
+    		</div>
 
             <p>
                 <!-- TODO: 비밀번호 찾기  -->
-                Forget Password? <a href="/user/find-password-page">Click Here</a>
+                Forget Password?      <a href="/user/find-password-page">Click Here</a>
             </p>
+           <div class="social">
+			    <a href="/oauth2/authorization/google" class="social-button google">
+			        <img src="/images/google.png" alt="Google Login">
+			    </a>
+			    <a href="#" class="social-button kakao">
+			        <img src="/images/kakao.png" alt="Kakao Login">
+			    </a>
+			    <a href="#" class="social-button naver">
+			        <img src="/images/naver.png" alt="Naver Login">
+			    </a>
+			</div>
             <div class="inputBox">
                 <div class="error-message" th:if="${param.error}">아이디와 비밀번호를 확인하세요.</div>
             </div>
         </form>
     </div>
 </div>
+
+
 <script th:replace="~{./layout/fragments :: bootstrap_js}"></script>
 </body>
 

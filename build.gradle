@@ -69,8 +69,8 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 	
-	// OAuth2
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	 // OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	
 	
 

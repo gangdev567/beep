@@ -1,6 +1,5 @@
 package com.itwill.beep.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -21,7 +20,6 @@ public class SecurityConfig {
 	
 	 private final CustomOAuth2UserService customOAuth2UserService;
 
-	    @Autowired
 	    public SecurityConfig(@Lazy CustomOAuth2UserService customOAuth2UserService) {
 	        this.customOAuth2UserService = customOAuth2UserService;
 	    }
@@ -60,8 +58,16 @@ public class SecurityConfig {
             )
             // OAuth2 로그인 설정
             .oauth2Login(oauth2Login -> oauth2Login
-                .userInfoEndpoint(userInfo -> userInfo
-                    .userService(customOAuth2UserService)
+            		  // 5. 사용자 정보 엔드포인트 설정
+                    // userInfoEndpoint:
+                    //   - OAuth2 로그인 이후 사용자 정보 엔드포인트 설정
+                    //   - 사용자 정보를 가져오는데 사용되는 서비스를 등록.
+                    .userInfoEndpoint(userInfo -> userInfo
+                        // 6. 사용자 정보를 가져오는 서비스 설정
+                        // CustomOAuth2UserService:
+                        //   - OAuth2 로그인 이후 사용자 정보를 가져오기 위한 커스텀 서비스 클래스
+                        //   - loadUser 메서드를 오버라이드하여 사용자 정보를 처리하고 반환
+                        .userService(customOAuth2UserService)
                     
                 )
             );
