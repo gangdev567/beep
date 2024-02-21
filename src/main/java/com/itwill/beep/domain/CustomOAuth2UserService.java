@@ -2,6 +2,7 @@ package com.itwill.beep.domain;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -98,10 +99,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
      * @return 저장된 사용자 객체
      */
     private UserAccountEntity createUserAndChannel(String userEmail, String userName) {
+    	  // 유저 닉네임 생성
+        String userNickname = generateUserNickname();
         UserAccountEntity newUserEntity = UserAccountEntity.builder()
                 .userEmail(userEmail)
                 .userName(userName)
-                .userNickname("google")  
+                .userNickname(userNickname)  
                 .userPassword(passwordEncoder.encode(UUID.randomUUID().toString()))
                 .build();
         newUserEntity.addUserRole(UserRoleType.SOCIAL);
@@ -160,4 +163,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private String generateStreamingKey() {
         return UUID.randomUUID().toString();
     }
+    
+    public static String generateUserNickname() {
+        // "Google"와 랜덤한 숫자 조합
+        String prefix = "Google";
+        int randomNumber = generateRandomNumber();
+        String userNickname = prefix + randomNumber;
+
+        return userNickname;
+    }
+
+    private static int generateRandomNumber() {
+        // 1000부터 9999까지의 랜덤한 숫자 생성
+        Random random = new Random();
+        return random.nextInt(9000) + 1000;
+    }
+
 }
