@@ -1,9 +1,6 @@
 package com.itwill.beep.web;
 
-<<<<<<< HEAD
 import org.springframework.data.domain.Page;
-=======
->>>>>>> aabdec7b37f4368b6c0de5d7737ad9fa678d4c55
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,10 +19,6 @@ import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import com.itwill.beep.dto.UserSecurityDto;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

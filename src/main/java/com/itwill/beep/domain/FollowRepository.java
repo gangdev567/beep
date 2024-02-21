@@ -1,12 +1,8 @@
 package com.itwill.beep.domain;
 
 import java.util.List;
-<<<<<<< HEAD
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-=======
-
->>>>>>> aabdec7b37f4368b6c0de5d7737ad9fa678d4c55
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
