@@ -1,12 +1,15 @@
 package com.itwill.beep.service;
 
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.VerificationToken;
 import com.itwill.beep.domain.VerificationTokenRepository;
-import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service

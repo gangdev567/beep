@@ -2,10 +2,13 @@ package com.itwill.beep.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
+
 import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.FollowRepository;
 import com.itwill.beep.domain.UserAccountEntity;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

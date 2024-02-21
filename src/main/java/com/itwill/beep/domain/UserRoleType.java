@@ -4,7 +4,12 @@ public enum UserRoleType {
     USER("ROLE_USER"),
     STREAMER("ROLE_STREAMER"),
     ADMIN("ROLE_ADMIN"),
-    SOCIAL("ROLE_SOCIAL");
+	SOCIAL("ROLE_SOCIAL");
+
+
+
+
+
     
     private String authority;
     
