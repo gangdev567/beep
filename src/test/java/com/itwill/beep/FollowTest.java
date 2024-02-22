@@ -1,15 +1,16 @@
 package com.itwill.beep;
 
-import com.itwill.beep.domain.UserAccountEntity;
-import java.util.List;
-
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.itwill.beep.domain.FollowEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.service.FollowService;
+import com.itwill.beep.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
@@ -17,6 +18,26 @@ public class FollowTest {
 
     @Autowired
     private FollowService followService;
+    
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Test
+    public void testUpdateUserPassword() {
+        // 이미 존재하는 사용자 찾기
+        UserAccountEntity existingUser = userAccountRepository.findByUserId(10L);
+
+        // 비밀번호 변경
+        String newPassword = "1111";
+        userService.updateUserPassword(existingUser.getUserName(), newPassword);
+    }
 
     /**
      * 시작 조건: fromUser가 toUser를 팔로우하고 있지 않은 상태여야 합니다.

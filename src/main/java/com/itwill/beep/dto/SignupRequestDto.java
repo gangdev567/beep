@@ -1,11 +1,14 @@
 package com.itwill.beep.dto;
 
-import com.itwill.beep.domain.UserAccountEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import com.itwill.beep.domain.UserAccountEntity;
 
 import lombok.Data;
 
 @Data
+@Component
 public class SignupRequestDto {
     
     private String userName;

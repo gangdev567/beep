@@ -1,11 +1,20 @@
 package com.itwill.beep.service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.FollowRepository;
 import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.dto.FollowerListRequestDto;
+import com.itwill.beep.dto.FollowerSearchRequestDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,4 +115,63 @@ public class FollowService {
             return 0;
         }
     }
+
+    public Page<FollowerListRequestDto> followingList(String followingUserAccountUserNickname,
+            int page) {
+        log.info("followingList()");
+
+        Pageable pageable = PageRequest.of(page, 2, Sort.by("createdTime").descending());
+
+        Page<FollowEntity> followerPage = followRepository
+                .findByFollowingUserAccountUserNickname(followingUserAccountUserNickname, pageable);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<FollowerListRequestDto> result = new ArrayList<>();
+        for (FollowEntity entity : followerPage.getContent()) {
+            FollowerListRequestDto followerListRequestDto = FollowerListRequestDto.builder()
+                    .followerUserAccountUserNickname(
+                            entity.getFollowerUserAccount().getUserNickname())
+                    .followerUserAcoountUserProfileImageUrl(
+                            entity.getFollowerUserAccount().getUserProfileImageUrl())
+                    .createdTime(entity.getCreatedTime())
+                    .betweenCreatedTimeToNow(ChronoUnit.DAYS.between(entity.getCreatedTime(), now))
+                    .build();
+            result.add(followerListRequestDto);
+        }
+
+        return new PageImpl<>(result, pageable, followerPage.getTotalElements());
+    }
+
+    public Page<FollowerListRequestDto> search(FollowerSearchRequestDto dto) {
+        log.info("search(dto={})", dto);
+
+        Pageable pageable = PageRequest.of(dto.getP(), 2, Sort.by("createdTime").descending());
+
+        Page<FollowEntity> followerPage = followRepository.findByFollowingUserAccountUserNickname(
+                dto.getFollowingUserAccountUserNickname(), pageable);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<FollowerListRequestDto> result = new ArrayList<>();
+        for (FollowEntity entity : followerPage.getContent()) {
+            if (entity.getFollowerUserAccount().getUserNickname().toLowerCase()
+                    .contains(dto.getKeyword().toLowerCase())) {
+                FollowerListRequestDto followerListRequestDto =
+                        FollowerListRequestDto.builder()
+                                .followerUserAccountUserNickname(
+                                        entity.getFollowerUserAccount().getUserNickname())
+                                .followerUserAcoountUserProfileImageUrl(
+                                        entity.getFollowerUserAccount().getUserProfileImageUrl())
+                                .createdTime(entity.getCreatedTime())
+                                .betweenCreatedTimeToNow(
+                                        ChronoUnit.DAYS.between(entity.getCreatedTime(), now))
+                                .build();
+                result.add(followerListRequestDto);
+            }
+        }
+
+        return new PageImpl<>(result, pageable, followerPage.getTotalElements());
+    }
+
 }
