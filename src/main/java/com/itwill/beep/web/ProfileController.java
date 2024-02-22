@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,13 +32,28 @@ public class ProfileController {
     private final UserService userService;
     private final UserAccountRepository userAccountRepository;
 
+    
     @GetMapping("/profile")
     public String profileSettings(@AuthenticationPrincipal UserDetails currentUser, Model model) {
         // 사용자 정보 로드 로직 (인증 로직에 따라 달라질 수 있음)
-        UserAccountEntity user = userAccountRepository.findByUserName(currentUser.getUsername());
-        model.addAttribute("currentUsername", currentUser.getUsername());
-        model.addAttribute("user", user);
-        model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
+        if(currentUser == null) {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String oauth2name = (String) ((OAuth2User) principal).getAttributes().get("name");
+
+            UserAccountEntity user = userAccountRepository.findByUserName(oauth2name);
+            
+            model.addAttribute("user", user);
+            model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
+
+        } else {
+
+            UserAccountEntity user = userAccountRepository.findByUserName(currentUser.getUsername());
+        
+            model.addAttribute("user", user);
+            model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
+            
+        }
+        
         return "settings/profile";
     }
 
