@@ -1,26 +1,25 @@
 package com.itwill.beep.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.ChannelRequestDto;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,12 +37,21 @@ public class FollowRestController {
         log.info("follow(following: {})", following);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity followerEntity = userService.findUserByUserName(authentication.getName());
-        UserAccountEntity followingEntity = userService.findByUserId(following);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        followService.follow(followerEntity, followingEntity);
-        log.info("{} 님이 {} 님을 팔로우합니다.", followerEntity.getUserName(),
-                followingEntity.getUserName());
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            UserAccountEntity followerEntity = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            UserAccountEntity followingEntity = userService.findByUserId(following);
+            followService.follow(followerEntity, followingEntity);
+        } else if (authentication.isAuthenticated()) {
+            UserAccountEntity followerEntity =
+                    userService.findUserByUserName(authentication.getName());
+            UserAccountEntity followingEntity = userService.findByUserId(following);
+            followService.follow(followerEntity, followingEntity);
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
+        }
 
         return ResponseEntity.ok(true);
     }
@@ -53,11 +61,23 @@ public class FollowRestController {
         log.info("unfollow(following: {})", following);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity loggedInUser = userService.findUserByUserName(authentication.getName());
-        UserAccountEntity unfollowUser = userService.findByUserId(following);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        followService.unfollow(loggedInUser, unfollowUser);
-        log.info("{} 님이 언팔로우합니다.", loggedInUser.getUserName());
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            UserAccountEntity loggedInUser = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            UserAccountEntity unfollowUser = userService.findByUserId(following);
+            followService.unfollow(loggedInUser, unfollowUser);
+        } else if (authentication.isAuthenticated()) {
+            UserAccountEntity loggedInUser =
+                    userService.findUserByUserName(authentication.getName());
+            UserAccountEntity unfollowUser = userService.findByUserId(following);
+
+            followService.unfollow(loggedInUser, unfollowUser);
+            log.info("{} 님이 언팔로우합니다.", loggedInUser.getUserName());
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
+        }
 
         return ResponseEntity.ok(true);
     }
@@ -68,10 +88,22 @@ public class FollowRestController {
         log.info("getFollowStatus(following: {})", following);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity followerEntity = userService.findUserByUserName(authentication.getName());
-        UserAccountEntity followingEntity = userService.findByUserId(following);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        boolean isFollowing = followService.isFollowing(followerEntity, followingEntity);
+        boolean isFollowing = false;
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            UserAccountEntity followerEntity = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            UserAccountEntity followingEntity = userService.findByUserId(following);
+            isFollowing = followService.isFollowing(followerEntity, followingEntity);
+        } else if (authentication.isAuthenticated()) {
+            UserAccountEntity followerEntity =
+                    userService.findUserByUserName(authentication.getName());
+            UserAccountEntity followingEntity = userService.findByUserId(following);
+            isFollowing = followService.isFollowing(followerEntity, followingEntity);
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
+        }
 
         Map<String, Boolean> response = new HashMap<>();
         response.put("isFollowing", isFollowing);
@@ -84,10 +116,23 @@ public class FollowRestController {
         log.info("getFollowerList()");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity followerEntity = userService.findUserByUserName(authentication.getName());
-        Long countByfollower = followService.countFollowings(followerEntity);
-        List<ChannelRequestDto> channelList =
-                channelService.getChannelListForFollowings(followerEntity);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<ChannelRequestDto> channelList = new ArrayList<>();
+        Long countByfollower = 0L;
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            UserAccountEntity followerEntity = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            countByfollower = followService.countFollowings(followerEntity);
+            channelList = channelService.getChannelListForFollowings(followerEntity);
+        } else if (authentication.isAuthenticated()) {
+            UserAccountEntity followerEntity =
+                    userService.findUserByUserName(authentication.getName());
+            countByfollower = followService.countFollowings(followerEntity);
+            channelList = channelService.getChannelListForFollowings(followerEntity);
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("countByFollow", countByfollower);

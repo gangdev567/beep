@@ -26,28 +26,25 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     // 사용자를 팔로우하는 메서드
+    @Transactional
     public void follow(UserAccountEntity followerUserAccount,
             UserAccountEntity followingUserAccount) {
-        try {
-            // 이미 팔로우 중인지 확인
-            if (!followRepository.existsByFollowerUserAccountAndFollowingUserAccount(
-                    followerUserAccount, followingUserAccount)) {
-                // 팔로우 관계를 저장
-                FollowEntity followEntity =
-                        FollowEntity.builder().followerUserAccount(followerUserAccount)
-                                .followingUserAccount(followingUserAccount)
-                                .createdTime(LocalDateTime.now()).build();
-                followRepository.save(followEntity);
-                log.info("User {} followed user {}", followerUserAccount.getUserName(),
-                        followingUserAccount.getUserName());
-            } else {
-                log.warn("User {} is already following user {}", followerUserAccount.getUserName(),
-                        followingUserAccount.getUserName());
-            }
-        } catch (Exception e) {
-            log.error("Error occurred while following user {}: {}",
-                    followingUserAccount.getUserName(), e.getMessage());
+        // 이미 팔로우 중인지 확인
+        if (!followRepository.existsByFollowerUserAccountAndFollowingUserAccount(
+                followerUserAccount, followingUserAccount)) {
+            // 팔로우 관계를 저장
+            FollowEntity followEntity =
+                    FollowEntity.builder().followerUserAccount(followerUserAccount)
+                            .followingUserAccount(followingUserAccount)
+                            .createdTime(LocalDateTime.now()).build();
+            followRepository.save(followEntity);
+            log.info("User {} followed user {}", followerUserAccount.getUserName(),
+                    followingUserAccount.getUserName());
+        } else {
+            log.warn("User {} is already following user {}", followerUserAccount.getUserName(),
+                    followingUserAccount.getUserName());
         }
+
     }
 
     // 사용자의 팔로우를 취소하는 메서드
@@ -120,7 +117,7 @@ public class FollowService {
             int page) {
         log.info("followingList()");
 
-        Pageable pageable = PageRequest.of(page, 2, Sort.by("createdTime").descending());
+        Pageable pageable = PageRequest.of(page, 3, Sort.by("createdTime").descending());
 
         Page<FollowEntity> followerPage = followRepository
                 .findByFollowingUserAccountUserNickname(followingUserAccountUserNickname, pageable);
@@ -146,15 +143,12 @@ public class FollowService {
     public Page<FollowerListRequestDto> search(FollowerSearchRequestDto dto) {
         log.info("search(dto={})", dto);
 
-        Pageable pageable = PageRequest.of(dto.getP(), 2, Sort.by("createdTime").descending());
-
-        Page<FollowEntity> followerPage = followRepository.findByFollowingUserAccountUserNickname(
-                dto.getFollowingUserAccountUserNickname(), pageable);
-
+        List<FollowEntity> followerSearchResult = followRepository
+                .findByFollowingUserAccountUserNickname(dto.getFollowingUserAccountUserNickname());
         LocalDateTime now = LocalDateTime.now();
 
         List<FollowerListRequestDto> result = new ArrayList<>();
-        for (FollowEntity entity : followerPage.getContent()) {
+        for (FollowEntity entity : followerSearchResult) {
             if (entity.getFollowerUserAccount().getUserNickname().toLowerCase()
                     .contains(dto.getKeyword().toLowerCase())) {
                 FollowerListRequestDto followerListRequestDto =
@@ -170,8 +164,9 @@ public class FollowService {
                 result.add(followerListRequestDto);
             }
         }
+        Pageable pageable = PageRequest.of(dto.getP(), 3, Sort.by("createdTime").descending());
 
-        return new PageImpl<>(result, pageable, followerPage.getTotalElements());
+        return new PageImpl<>(result, pageable, result.size());
     }
 
 }
