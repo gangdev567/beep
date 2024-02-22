@@ -39,9 +39,10 @@ public class StreamingController {
     @PostMapping("/on")
     public String StreamingOn(Model model, StreamingOnDto streamingOnDto) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof OAuth2User) {
+        if (authentication.getPrincipal() instanceof OAuth2User) {
             // OAuth2 사용자의 정보
             String oauth2name = (String) ((OAuth2User) principal).getAttributes().get("name");
             log.info("oauth2name = {}", oauth2name);
@@ -84,7 +85,6 @@ public class StreamingController {
             return "/channel";
         } else if (!"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
             // 로그인한 사용자
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             log.info("username = {}", username);
 
