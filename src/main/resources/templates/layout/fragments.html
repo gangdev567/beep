@@ -256,7 +256,7 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" th:href="@{/dashboard/u/{username}/home(username=${#authentication.name})}">
+                                <a class="dropdown-item" th:href="@{/dashboard/u/{username}/home(username=${userAccount.userName})}">
                                     <i class="fas fa-tachometer-alt me-2"></i> 대시보드
                                 </a>
                             </li>
@@ -268,7 +268,7 @@
                             <li sec:authorize="isAuthenticated()"><a
                                     class="dropdown-item" th:href="@{/logout}"> <i
                                     class="fas fa-sign-out-alt me-2"></i> <span
-                                    th:text="${#authentication.name}"></span> 로그아웃
+                                    th:text="${userAccount.userNickname}"></span> 로그아웃
                             </a></li>
                             <li sec:authorize="!isAuthenticated()"><a
                                     class="dropdown-item" th:href="@{/user/login}"> <i

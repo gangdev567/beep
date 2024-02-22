@@ -13,67 +13,67 @@
   <!-- 기타 대시보드 정보들 -->
 </div>
 <div>
-  <a th:href="@{/dashboard/u/{username}/home(username=${user.username})}">홈</a>
+  <a th:href="@{/dashboard/u/{username}/home(username=${user.userName})}">홈</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/stream-manager(username=${user.username})}">방송 관리자</a>
+  <a th:href="@{/dashboard/u/{username}/stream-manager(username=${user.userName})}">방송 관리자</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/stream-alerts(username=${user.username})}">알림</a>
-  <br/>
-
-  <a th:href="@{/dashboard/u/{username}/analytics(username=${user.username})}">분석-한눈에 보기</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/analytics/research(username=${user.username})}">분석-보세요</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/analytics/achievements(username=${user.username})}">분석-업적</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/analytics/stream-summary(username=${user.username})}">분석-방송 요약</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/analytics/viewer-discovery(username=${user.username})}">분석-시청자수-찾기</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/analytics/viewer-engagement(username=${user.username})}">분석-시청자수-참여</a>
+  <a th:href="@{/dashboard/u/{username}/stream-alerts(username=${user.userName})}">알림</a>
   <br/>
 
-  <a th:href="@{/dashboard/u/{username}/community/roles(username=${user.username})}">커뮤니티-역할 관리자</a>
+  <a th:href="@{/dashboard/u/{username}/analytics(username=${user.userName})}">분석-한눈에 보기</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/community/activity(username=${user.username})}">커뮤니티-활동</a>
+  <a th:href="@{/dashboard/u/{username}/analytics/research(username=${user.userName})}">분석-보세요</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/community/followers-list(username=${user.username})}">커뮤니티-팔로워 목록</a>
+  <a th:href="@{/dashboard/u/{username}/analytics/achievements(username=${user.userName})}">분석-업적</a>
   <br/>
-
-  <a th:href="@{/dashboard/u/{username}/content/video-producer(username=${user.username})}">콘텐츠-비디오 프로듀서</a>
+  <a th:href="@{/dashboard/u/{username}/analytics/stream-summary(username=${user.userName})}">분석-방송 요약</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/content/collections(username=${user.username})}">콘텐츠-컬렉션</a>
+  <a th:href="@{/dashboard/u/{username}/analytics/viewer-discovery(username=${user.userName})}">분석-시청자수-찾기</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/content/clips/channel(username=${user.username})}">콘텐츠-클립</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/content/claims(username=${user.username})}">콘텐츠-저작권 침해 신고 관리자</a>
+  <a th:href="@{/dashboard/u/{username}/analytics/viewer-engagement(username=${user.userName})}">분석-시청자수-참여</a>
   <br/>
 
-  <a th:href="@{/dashboard/u/{username}/settings/stream(username=${user.username})}">설정-방송</a>
+  <a th:href="@{/dashboard/u/{username}/community/roles(username=${user.userName})}">커뮤니티-역할 관리자</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/settings/channel(username=${user.username})}">설정-채널-정보</a>
+  <a th:href="@{/dashboard/u/{username}/community/activity(username=${user.userName})}">커뮤니티-활동</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/settings/channel/brand(username=${user.username})}">설정-채널-브랜드</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/settings/channel/featured-content(username=${user.username})}">설정-채널-일정</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/settings/channel/schedule(username=${user.username})}">설정-채널-추천 콘텐츠</a>
-  <br/>
-  <a th:href="@{/dashboard/u/{username}/settings/moderation(username=${user.username})}">설정-검토</a>
+  <a th:href="@{/dashboard/u/{username}/community/followers-list(username=${user.userName})}">커뮤니티-팔로워 목록</a>
   <br/>
 
-  <a th:href="@{/dashboard/u/{username}/viewer-rewards/drops(username=${user.username})}">시청자 보상-드롭스</a>
+  <a th:href="@{/dashboard/u/{username}/content/video-producer(username=${user.userName})}">콘텐츠-비디오 프로듀서</a>
   <br/>
-  <a th:href="@{/dashboard/u/{username}/viewer-rewards/reward-campaigns(username=${user.username})}">시청자 보상-보상</a>
+  <a th:href="@{/dashboard/u/{username}/content/collections(username=${user.userName})}">콘텐츠-컬렉션</a>
   <br/>
-
-  <a th:href="@{/dashboard/u/{username}/guest-star(username=${user.username})}">함께 방송</a>
+  <a th:href="@{/dashboard/u/{username}/content/clips/channel(username=${user.userName})}">콘텐츠-클립</a>
   <br/>
-
-  <a th:href="@{/dashboard/u/{username}/broadcast(username=${user.username})}">방송 도구</a>
+  <a th:href="@{/dashboard/u/{username}/content/claims(username=${user.userName})}">콘텐츠-저작권 침해 신고 관리자</a>
   <br/>
 
-  <a th:href="@{/dashboard/u/{username}/extensions(username=${user.username})}">확장 프로그램</a>
+  <a th:href="@{/dashboard/u/{username}/settings/stream(username=${user.userName})}">설정-방송</a>
+  <br/>
+  <a th:href="@{/dashboard/u/{username}/settings/channel(username=${user.userName})}">설정-채널-정보</a>
+  <br/>
+  <a th:href="@{/dashboard/u/{username}/settings/channel/brand(username=${user.userName})}">설정-채널-브랜드</a>
+  <br/>
+  <a th:href="@{/dashboard/u/{username}/settings/channel/featured-content(username=${user.userName})}">설정-채널-일정</a>
+  <br/>
+  <a th:href="@{/dashboard/u/{username}/settings/channel/schedule(username=${user.userName})}">설정-채널-추천 콘텐츠</a>
+  <br/>
+  <a th:href="@{/dashboard/u/{username}/settings/moderation(username=${user.userName})}">설정-검토</a>
+  <br/>
+
+  <a th:href="@{/dashboard/u/{username}/viewer-rewards/drops(username=${user.userName})}">시청자 보상-드롭스</a>
+  <br/>
+  <a th:href="@{/dashboard/u/{username}/viewer-rewards/reward-campaigns(username=${user.userName})}">시청자 보상-보상</a>
+  <br/>
+
+  <a th:href="@{/dashboard/u/{username}/guest-star(username=${user.userName})}">함께 방송</a>
+  <br/>
+
+  <a th:href="@{/dashboard/u/{username}/broadcast(username=${user.userName})}">방송 도구</a>
+  <br/>
+
+  <a th:href="@{/dashboard/u/{username}/extensions(username=${user.userName})}">확장 프로그램</a>
   <br/>
 
   <a th:href="@{/streaming/re-generate-streaming-key}">스트리밍 키 재발급</a>
