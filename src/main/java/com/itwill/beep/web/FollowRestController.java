@@ -87,12 +87,10 @@ public class FollowRestController {
             @PathVariable("following") Long following) {
         log.info("getFollowStatus(following: {})", following);
 
-        Map<String, Boolean> response = new HashMap<>();
-        boolean isFollowing = false;
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        boolean isFollowing = false;
         if (authentication.getPrincipal() instanceof OAuth2User) {
             UserAccountEntity followerEntity = userService.findUserByUserName(
                     (String) ((OAuth2User) principal).getAttributes().get("name"));
@@ -107,6 +105,7 @@ public class FollowRestController {
             log.info("로그인되지 않은 사용자입니다.");
         }
 
+        Map<String, Boolean> response = new HashMap<>();
         response.put("isFollowing", isFollowing);
 
         return ResponseEntity.ok(response);
@@ -116,13 +115,11 @@ public class FollowRestController {
     public ResponseEntity<Map<String, Object>> getFollowerList() {
         log.info("getFollowerList()");
 
-        List<ChannelRequestDto> channelList = new ArrayList<>();
-        Map<String, Object> response = new HashMap<>();
-        Long countByfollower = 0L;
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        List<ChannelRequestDto> channelList = new ArrayList<>();
+        Long countByfollower = 0L;
         if (authentication.getPrincipal() instanceof OAuth2User) {
             UserAccountEntity followerEntity = userService.findUserByUserName(
                     (String) ((OAuth2User) principal).getAttributes().get("name"));
@@ -137,6 +134,7 @@ public class FollowRestController {
             log.info("로그인되지 않은 사용자입니다.");
         }
 
+        Map<String, Object> response = new HashMap<>();
         response.put("countByFollow", countByfollower);
         response.put("channelList", channelList);
         log.info("response: {}", response);
@@ -149,12 +147,11 @@ public class FollowRestController {
             @PathVariable("following") Long following) {
         log.info("getFollowingCount(following: {})", following);
 
-        Map<String, Object> response = new HashMap<>();
-
         UserAccountEntity followingEntity = userService.findByUserId(following);
         Long countFollowerByfollowing = followService.countFollowers(followingEntity);
         List<FollowEntity> followerList = followService.getFollowers(followingEntity);
 
+        Map<String, Object> response = new HashMap<>();
         response.put("countByFollower", countFollowerByfollowing);
         response.put("followerList", followerList);
 

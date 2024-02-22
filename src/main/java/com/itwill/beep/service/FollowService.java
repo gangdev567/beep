@@ -117,7 +117,7 @@ public class FollowService {
             int page) {
         log.info("followingList()");
 
-        Pageable pageable = PageRequest.of(page, 2, Sort.by("createdTime").descending());
+        Pageable pageable = PageRequest.of(page, 3, Sort.by("createdTime").descending());
 
         Page<FollowEntity> followerPage = followRepository
                 .findByFollowingUserAccountUserNickname(followingUserAccountUserNickname, pageable);
@@ -164,7 +164,7 @@ public class FollowService {
                 result.add(followerListRequestDto);
             }
         }
-        Pageable pageable = PageRequest.of(dto.getP(), 2, Sort.by("createdTime").descending());
+        Pageable pageable = PageRequest.of(dto.getP(), 3, Sort.by("createdTime").descending());
 
         return new PageImpl<>(result, pageable, result.size());
     }
