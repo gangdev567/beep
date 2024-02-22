@@ -33,16 +33,12 @@ public class DashboardController {
 
 
     // 공통 모델 설정 메소드
-    private String commonModelSetup(String username, Authentication authentication, Model model,
+    private String commonModelSetup(String userName, Authentication authentication, Model model,
             String viewName) {
-        UserSecurityDto userDetails = (UserSecurityDto) authentication.getPrincipal();
-        if (!userDetails.getUsername().equals(username)) {
-            // 사용자 이름이 일치하지 않을 경우 경고 로그를 출력하고, 홈으로 리다이렉트합니다.
-            log.warn("Attempted access with mismatched username: {} (auth: {})", username,
-                    userDetails.getUsername());
-            return "redirect:/";
-        }
-        model.addAttribute("user", userDetails);
+        
+        UserAccountEntity user = userService.findUserByUserName(userName);
+        
+        model.addAttribute("user", user);
 
         // viewName을 기반으로 경로 접두사를 결정합니다.
         String pathPrefix = determinePathPrefix(viewName);
@@ -178,95 +174,95 @@ public class DashboardController {
 
     // 대시보드 홈
     @GetMapping("/home")
-    public String userDashboardHome(@PathVariable String username, Authentication authentication,
+    public String userDashboardHome(@PathVariable("username") String userName, Authentication authentication,
             Model model) {
-        log.info("Accessing dashboard home for user: {}", username);
-        return commonModelSetup(username, authentication, model, "dashboardHome");
+        log.info("Accessing dashboard home for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "dashboardHome");
     }
 
     // 방송 관리자
     @GetMapping("/stream-manager")
-    public String streamManager(@PathVariable String username, Authentication authentication,
+    public String streamManager(@PathVariable("username") String userName, Authentication authentication,
             Model model) {
-        log.info("Accessing stream manager for user: {}", username);
-        return commonModelSetup(username, authentication, model, "streamManager");
+        log.info("Accessing stream manager for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "streamManager");
     }
 
     // 알림
     @GetMapping("/stream-alerts")
-    public String streamAlerts(@PathVariable String username, Authentication authentication,
+    public String streamAlerts(@PathVariable("username") String userName, Authentication authentication,
             Model model) {
-        log.info("Accessing stream alerts for user: {}", username);
-        return commonModelSetup(username, authentication, model, "streamAlerts");
+        log.info("Accessing stream alerts for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "streamAlerts");
     }
 
     // 분석 - 한눈에 보기
     @GetMapping("/analytics")
-    public String analyticsOverview(@PathVariable String username, Authentication authentication,
+    public String analyticsOverview(@PathVariable("username") String userName, Authentication authentication,
             Model model) {
-        log.info("Accessing analytics overview for user: {}", username);
-        return commonModelSetup(username, authentication, model, "analyticsOverview");
+        log.info("Accessing analytics overview for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "analyticsOverview");
     }
 
     // 분석 - 연구
     @GetMapping("/analytics/research")
-    public String analyticsResearch(@PathVariable String username, Authentication authentication,
+    public String analyticsResearch(@PathVariable("username") String userName, Authentication authentication,
             Model model) {
-        log.info("Accessing analytics research for user: {}", username);
-        return commonModelSetup(username, authentication, model, "analyticsResearch");
+        log.info("Accessing analytics research for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "analyticsResearch");
     }
 
     // 분석 - 업적
     @GetMapping("/analytics/achievements")
-    public String analyticsAchievements(@PathVariable String username,
+    public String analyticsAchievements(@PathVariable("username") String userName,
             Authentication authentication, Model model) {
-        log.info("Accessing analytics achievements for user: {}", username);
-        return commonModelSetup(username, authentication, model, "analyticsAchievements");
+        log.info("Accessing analytics achievements for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "analyticsAchievements");
     }
 
     // 분석 - 방송 요약
     @GetMapping("/analytics/stream-summary")
-    public String analyticsStreamSummary(@PathVariable String username,
+    public String analyticsStreamSummary(@PathVariable("username") String userName,
             Authentication authentication, Model model) {
-        log.info("Accessing stream summary for user: {}", username);
-        return commonModelSetup(username, authentication, model, "analyticsStreamSummary");
+        log.info("Accessing stream summary for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "analyticsStreamSummary");
     }
 
     // 분석 - 시청자 발견
     @GetMapping("/analytics/viewer-discovery")
-    public String analyticsViewerDiscovery(@PathVariable String username,
+    public String analyticsViewerDiscovery(@PathVariable("username") String userName,
             Authentication authentication, Model model) {
-        log.info("Accessing viewer discovery for user: {}", username);
-        return commonModelSetup(username, authentication, model, "analyticsViewerDiscovery");
+        log.info("Accessing viewer discovery for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "analyticsViewerDiscovery");
     }
 
     // 분석 - 시청자 참여
     @GetMapping("/analytics/viewer-engagement")
-    public String analyticsViewerEngagement(@PathVariable String username,
+    public String analyticsViewerEngagement(@PathVariable("username") String userName,
             Authentication authentication, Model model) {
-        log.info("Accessing viewer engagement for user: {}", username);
-        return commonModelSetup(username, authentication, model, "analyticsViewerEngagement");
+        log.info("Accessing viewer engagement for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "analyticsViewerEngagement");
     }
 
     // 커뮤니티 - 역할 관리자
     @GetMapping("/community/roles")
-    public String communityRoles(@PathVariable String username, Authentication authentication,
+    public String communityRoles(@PathVariable("username") String userName, Authentication authentication,
             Model model) {
-        log.info("Accessing community roles for user: {}", username);
-        return commonModelSetup(username, authentication, model, "communityRoles");
+        log.info("Accessing community roles for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "communityRoles");
     }
 
     // 커뮤니티 - 활동
     @GetMapping("/community/activity")
-    public String communityActivity(@PathVariable String username, Authentication authentication,
+    public String communityActivity(@PathVariable("username") String userName, Authentication authentication,
             Model model) {
-        log.info("Accessing community activity for user: {}", username);
-        return commonModelSetup(username, authentication, model, "communityActivity");
+        log.info("Accessing community activity for user: {}", userName);
+        return commonModelSetup(userName, authentication, model, "communityActivity");
     }
 
     // 커뮤니티 - 팔로워 목록
     @GetMapping("/community/followers-list")
-    public String communityFollowersList(@PathVariable String username,
+    public String communityFollowersList(@PathVariable("username") String username,
             Authentication authentication, Model model) {
         log.info("Accessing followers list for user: {}", username);
         return commonModelSetup(username, authentication, model, "communityFollowersList");
@@ -274,7 +270,7 @@ public class DashboardController {
 
     // 콘텐츠 - 비디오 프로듀서
     @GetMapping("/content/video-producer")
-    public String contentVideoProducer(@PathVariable String username, Authentication authentication,
+    public String contentVideoProducer(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing video producer for user: {}", username);
         return commonModelSetup(username, authentication, model, "contentVideoProducer");
@@ -282,7 +278,7 @@ public class DashboardController {
 
     // 콘텐츠 - 컬렉션
     @GetMapping("/content/collections")
-    public String contentCollections(@PathVariable String username, Authentication authentication,
+    public String contentCollections(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing collections for user: {}", username);
         return commonModelSetup(username, authentication, model, "contentCollections");
@@ -290,7 +286,7 @@ public class DashboardController {
 
     // 콘텐츠 - 클립
     @GetMapping("/content/clips/channel")
-    public String contentClips(@PathVariable String username, Authentication authentication,
+    public String contentClips(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing clips for user: {}", username);
         return commonModelSetup(username, authentication, model, "contentClipsChannel");
@@ -298,7 +294,7 @@ public class DashboardController {
 
     // 콘텐츠 - 저작권 침해 신고 관리자
     @GetMapping("/content/claims")
-    public String contentClaims(@PathVariable String username, Authentication authentication,
+    public String contentClaims(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing content claims for user: {}", username);
         return commonModelSetup(username, authentication, model, "contentClaims");
@@ -306,7 +302,7 @@ public class DashboardController {
 
     // 설정 - 방송
     @GetMapping("/settings/stream")
-    public String settingsStream(@PathVariable String username, Authentication authentication,
+    public String settingsStream(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing stream settings for user: {}", username);
         return commonModelSetup(username, authentication, model, "settingsStream");
@@ -314,7 +310,7 @@ public class DashboardController {
 
     // 설정 - 채널 정보
     @GetMapping("/settings/channel")
-    public String settingsChannelInfo(@PathVariable String username, Authentication authentication,
+    public String settingsChannelInfo(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing channel info settings for user: {}", username);
         return commonModelSetup(username, authentication, model, "settingsChannelInfo");
@@ -322,7 +318,7 @@ public class DashboardController {
 
     // 설정 - 채널 브랜드
     @GetMapping("/settings/channel/brand")
-    public String settingsChannelBrand(@PathVariable String username, Authentication authentication,
+    public String settingsChannelBrand(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing channel brand settings for user: {}", username);
         return commonModelSetup(username, authentication, model, "settingsChannelBrand");
@@ -330,7 +326,7 @@ public class DashboardController {
 
     // 설정 - 채널 추천 콘텐츠
     @GetMapping("/settings/channel/featured-content")
-    public String settingsChannelFeaturedContent(@PathVariable String username,
+    public String settingsChannelFeaturedContent(@PathVariable("username") String username,
             Authentication authentication, Model model) {
         log.info("Accessing channel featured content settings for user: {}", username);
         return commonModelSetup(username, authentication, model, "settingsChannelFeaturedContent");
@@ -338,7 +334,7 @@ public class DashboardController {
 
     // 설정 - 채널 일정
     @GetMapping("/settings/channel/schedule")
-    public String settingsChannelSchedule(@PathVariable String username,
+    public String settingsChannelSchedule(@PathVariable("username") String username,
             Authentication authentication, Model model) {
         log.info("Accessing channel schedule settings for user: {}", username);
         return commonModelSetup(username, authentication, model, "settingsChannelSchedule");
@@ -346,7 +342,7 @@ public class DashboardController {
 
     // 설정 - 검토
     @GetMapping("/settings/moderation")
-    public String settingsModeration(@PathVariable String username, Authentication authentication,
+    public String settingsModeration(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing moderation settings for user: {}", username);
         return commonModelSetup(username, authentication, model, "settingsModeration");
@@ -354,7 +350,7 @@ public class DashboardController {
 
     // 시청자 보상 - 드롭스
     @GetMapping("/viewer-rewards/drops")
-    public String viewerRewardsDrops(@PathVariable String username, Authentication authentication,
+    public String viewerRewardsDrops(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing viewer rewards drops for user: {}", username);
         return commonModelSetup(username, authentication, model, "viewerRewardsDrops");
@@ -362,7 +358,7 @@ public class DashboardController {
 
     // 시청자 보상 - 보상
     @GetMapping("/viewer-rewards/reward-campaigns")
-    public String viewerRewardsRewardCampaigns(@PathVariable String username,
+    public String viewerRewardsRewardCampaigns(@PathVariable("username") String username,
             Authentication authentication, Model model) {
         log.info("Accessing viewer rewards campaigns for user: {}", username);
         return commonModelSetup(username, authentication, model, "viewerRewardsRewardCampaigns");
@@ -370,7 +366,7 @@ public class DashboardController {
 
     // 함께 방송
     @GetMapping("/guest-star")
-    public String guestStar(@PathVariable String username, Authentication authentication,
+    public String guestStar(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing guest star for user: {}", username);
         return commonModelSetup(username, authentication, model, "guestStar");
@@ -378,7 +374,7 @@ public class DashboardController {
 
     // 방송 도구
     @GetMapping("/broadcast")
-    public String broadcastTools(@PathVariable String username, Authentication authentication,
+    public String broadcastTools(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing broadcast tools for user: {}", username);
         return commonModelSetup(username, authentication, model, "broadcastTools");
@@ -386,7 +382,7 @@ public class DashboardController {
 
     // 확장 프로그램
     @GetMapping("/extensions")
-    public String extensions(@PathVariable String username, Authentication authentication,
+    public String extensions(@PathVariable("username") String username, Authentication authentication,
             Model model) {
         log.info("Accessing extensions for user: {}", username);
         return commonModelSetup(username, authentication, model, "extensions");
