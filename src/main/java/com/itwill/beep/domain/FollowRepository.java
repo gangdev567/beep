@@ -32,4 +32,7 @@ public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
 
     Page<FollowEntity> findByFollowingUserAccountUserNickname(
             String followingUserAccountUserNickname, Pageable pageable);
+
+    List<FollowEntity> findByFollowingUserAccountUserNickname(String keyword);
+
 }

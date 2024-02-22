@@ -143,15 +143,12 @@ public class FollowService {
     public Page<FollowerListRequestDto> search(FollowerSearchRequestDto dto) {
         log.info("search(dto={})", dto);
 
-        Pageable pageable = PageRequest.of(dto.getP(), 2, Sort.by("createdTime").descending());
-
-        Page<FollowEntity> followerPage = followRepository.findByFollowingUserAccountUserNickname(
-                dto.getFollowingUserAccountUserNickname(), pageable);
-
+        List<FollowEntity> followerSearchResult = followRepository
+                .findByFollowingUserAccountUserNickname(dto.getFollowingUserAccountUserNickname());
         LocalDateTime now = LocalDateTime.now();
 
         List<FollowerListRequestDto> result = new ArrayList<>();
-        for (FollowEntity entity : followerPage.getContent()) {
+        for (FollowEntity entity : followerSearchResult) {
             if (entity.getFollowerUserAccount().getUserNickname().toLowerCase()
                     .contains(dto.getKeyword().toLowerCase())) {
                 FollowerListRequestDto followerListRequestDto =
@@ -167,8 +164,9 @@ public class FollowService {
                 result.add(followerListRequestDto);
             }
         }
+        Pageable pageable = PageRequest.of(dto.getP(), 2, Sort.by("createdTime").descending());
 
-        return new PageImpl<>(result, pageable, followerPage.getTotalElements());
+        return new PageImpl<>(result, pageable, result.size());
     }
 
 }

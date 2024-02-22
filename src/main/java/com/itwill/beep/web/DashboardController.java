@@ -3,6 +3,7 @@ package com.itwill.beep.web;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,15 +91,28 @@ public class DashboardController {
 
     @GetMapping("/follower")
     public String followerPage(@RequestParam(name = "p", defaultValue = "0") int p, Model model) {
-        log.info("followerPage()");
+        log.info("followerPage(p={})", p);
+
+        Page<FollowerListRequestDto> followersList = null;
+        Long followersCount = 0L;
+        UserAccountEntity loginUser = null;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
-        Long followersCount = followService.countFollowers(loginUser);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Page<FollowerListRequestDto> followersList =
-                followService.followingList(authentication.getName(), p);
-
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            loginUser = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            followersCount = followService.countFollowers(loginUser);
+            followersList = followService.followingList(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"), p);
+        } else if (authentication.isAuthenticated()) {
+            loginUser = userService.findUserByUserName(authentication.getName());
+            followersCount = followService.countFollowers(loginUser);
+            followersList = followService.followingList(authentication.getName(), p);
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
+        }
         model.addAttribute("followersCount", followersCount);
         model.addAttribute("followersList", followersList);
 
@@ -119,12 +133,32 @@ public class DashboardController {
     @GetMapping("/search")
     public String followerSearch(@ModelAttribute FollowerSearchRequestDto dto, Model model) {
         log.info("followerSearch(dto={})", dto);
+
+        Page<FollowerListRequestDto> searchResult = null;
+        Long followersCount = 0L;
+        UserAccountEntity loginUser = null;
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAccountEntity loginUser = userService.findUserByUserName(authentication.getName());
-        Long followersCount = followService.countFollowers(loginUser);
-        dto.setFollowingUserAccountUserNickname(authentication.getName());
-        Page<FollowerListRequestDto> searchResult = followService.search(dto);
-        log.info("searchResult={}", searchResult);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            loginUser = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            followersCount = followService.countFollowers(loginUser);
+            dto.setFollowingUserAccountUserNickname(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            searchResult = followService.search(dto);
+            log.info("searchResult={}", searchResult);
+        } else if (authentication.isAuthenticated()) {
+            loginUser = userService.findUserByUserName(authentication.getName());
+            followersCount = followService.countFollowers(loginUser);
+            dto.setFollowingUserAccountUserNickname(authentication.getName());
+            searchResult = followService.search(dto);
+            log.info("searchResult={}", searchResult);
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
+        }
+
         model.addAttribute("followersCount", followersCount);
         model.addAttribute("followersList", searchResult);
 
