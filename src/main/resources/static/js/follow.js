@@ -22,6 +22,7 @@ async function updateButtonVisibility() {
 
         if (response.ok) {
             const data = await response.json();
+            console.log(data);
             const isFollowing = data.isFollowing;
 
             // 팔로우 상태에 따라 버튼 초기 설정
@@ -84,12 +85,10 @@ async function followOrUnfollow(isFollow) {
             if (isFollow) {
                 followBtn.classList.add('d-none');
                 unfollowBtn.classList.remove('d-none');
-                fetchFollowList();
                 fetchFollowerList();
             } else {
                 followBtn.classList.remove('d-none');
                 unfollowBtn.classList.add('d-none');
-                fetchFollowList();
                 fetchFollowerList();
             }
         } else {

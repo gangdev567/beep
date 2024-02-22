@@ -26,28 +26,25 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     // 사용자를 팔로우하는 메서드
+    @Transactional
     public void follow(UserAccountEntity followerUserAccount,
             UserAccountEntity followingUserAccount) {
-        try {
-            // 이미 팔로우 중인지 확인
-            if (!followRepository.existsByFollowerUserAccountAndFollowingUserAccount(
-                    followerUserAccount, followingUserAccount)) {
-                // 팔로우 관계를 저장
-                FollowEntity followEntity =
-                        FollowEntity.builder().followerUserAccount(followerUserAccount)
-                                .followingUserAccount(followingUserAccount)
-                                .createdTime(LocalDateTime.now()).build();
-                followRepository.save(followEntity);
-                log.info("User {} followed user {}", followerUserAccount.getUserName(),
-                        followingUserAccount.getUserName());
-            } else {
-                log.warn("User {} is already following user {}", followerUserAccount.getUserName(),
-                        followingUserAccount.getUserName());
-            }
-        } catch (Exception e) {
-            log.error("Error occurred while following user {}: {}",
-                    followingUserAccount.getUserName(), e.getMessage());
+        // 이미 팔로우 중인지 확인
+        if (!followRepository.existsByFollowerUserAccountAndFollowingUserAccount(
+                followerUserAccount, followingUserAccount)) {
+            // 팔로우 관계를 저장
+            FollowEntity followEntity =
+                    FollowEntity.builder().followerUserAccount(followerUserAccount)
+                            .followingUserAccount(followingUserAccount)
+                            .createdTime(LocalDateTime.now()).build();
+            followRepository.save(followEntity);
+            log.info("User {} followed user {}", followerUserAccount.getUserName(),
+                    followingUserAccount.getUserName());
+        } else {
+            log.warn("User {} is already following user {}", followerUserAccount.getUserName(),
+                    followingUserAccount.getUserName());
         }
+
     }
 
     // 사용자의 팔로우를 취소하는 메서드
