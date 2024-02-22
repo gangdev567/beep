@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{layout/fragments :: myhead}"></head>
+
+<body>
+
+<header th:replace="~{layout/fragments :: myheader}"></header>
+
+<nav th:replace="~{layout/fragments :: mysidebar}"></nav>
+
+<section th:replace="~{layout/fragments :: myhome}"></section>
+
+<div th:replace="~{layout/fragments :: myModal}"></div>
+
+<script th:replace="~{layout/fragments :: sidebar_js}"></script>
+<script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+<script src="/js/broadcast.js"></script>
+<script src="/js/fragments-categories-search.js"></script>
+</body>
+
+</html>
