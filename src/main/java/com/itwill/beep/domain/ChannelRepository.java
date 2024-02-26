@@ -57,6 +57,10 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
     /* 채널에 연결되어있는 카테고리 수 */
     int countByCategoryEntityOfChannel(CategoryEntity categoryEntity);
 
+    @Modifying
+    @Query("UPDATE ChannelEntity c SET c.channelViewerCount = :viewers WHERE c.channelId = :channelId")
+    void updateViewers(@Param("channelId") Long channelId,@Param("viewers") Long viewers);
+
 
 
 }

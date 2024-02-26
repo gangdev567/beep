@@ -9,7 +9,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.itwill.beep.dto.ChatMessage;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.ChannelService;
@@ -42,15 +44,39 @@ public class WebSockChatHandler extends TextWebSocketHandler {
             //사용자가 방에 입장하면  Enter메세지를 보내도록 해놓음.  이건 새로운사용자가 socket 연결한 것이랑은 다름.
             //socket연결은 이 메세지 보내기전에 이미 되어있는 상태
             sessions.add(session);
+            Long viewers = (long) sessions.size();
+            chatMessage.setViewers(viewers);
+            
+            log.info("{}", chatMessage);
+            
+            TextMessage newMessage = new TextMessage(chatMessage.toString());
+            
+            sendToEachSocket(sessions, newMessage);
+            
+            Long channelId = room.getRoomId();
+            channelService.setViewers(channelId, viewers);
             
         }else if (chatMessage.getType().equals(ChatMessage.MessageType.QUIT)) {
-            Long channelId = room.getRoomId();
-            channelService.decreaseViewers(channelId);
             sessions.remove(session);
+            Long viewers = (long) sessions.size();
             
+            chatMessage.setViewers(viewers);
+            
+            TextMessage newMessage = new TextMessage(chatMessage.toString());
+            
+            sendToEachSocket(sessions, newMessage);
+            
+            Long channelId = room.getRoomId();
+            channelService.setViewers(channelId, viewers);
             
         }else {
-            sendToEachSocket(sessions,message ); //입장,퇴장 아닐 때는 클라이언트로부터 온 메세지 그대로 전달.
+            Long viewers = (long) sessions.size();
+            
+            chatMessage.setViewers(viewers);
+            
+            TextMessage newMessage = new TextMessage(chatMessage.toString());
+            
+            sendToEachSocket(sessions, newMessage); //입장,퇴장 아닐 때는 클라이언트로부터 온 메세지 그대로 전달.
         }
     }
     private  void sendToEachSocket(Set<WebSocketSession> sessions, TextMessage message){
@@ -62,7 +88,6 @@ public class WebSockChatHandler extends TextWebSocketHandler {
             }
         });
     }
-
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
