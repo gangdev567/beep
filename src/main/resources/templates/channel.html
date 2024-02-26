@@ -314,7 +314,12 @@
     });
     
     function enterRoom(socket){
-        var enterMsg={"type" : "ENTER", "userType" : [[${userState}]], "roomId":[[${room.roomId}]],"sender":[[${userAccount.userNickname}]],"msg":""};
+        var enterMsg={"type" : "ENTER", 
+                    "userType" : [[${userState}]],
+                    "veiwers" : 0, 
+                    "roomId":[[${room.roomId}]], 
+                    "sender":[[${userAccount.userNickname}]],
+                    "message":""};
         console.log(enterMsg);
         socket.send(JSON.stringify(enterMsg));
         let user = [[${userAccount.userNickname}]];
@@ -381,9 +386,9 @@
         //JSON.parse()는 JSON 문자열을 javascript 리터럴 객체 혹은 배열로 변환함
         let message = JSON.parse(e.data);
         
-        if(message.sender === [[${streamer.userNickname}]] && message.msg === [[${userAccount.userNickname}]] + '님이 매니저로 임명되었습니다.') {
+        if(message.sender === [[${streamer.userNickname}]] && message.message === [[${userAccount.userNickname}]] + '님이 매니저로 임명되었습니다.') {
             loadUserAuth();
-        } else if (message.sender === [[${streamer.userNickname}]] && message.msg === [[${userAccount.userNickname}]] + '님이 매니저에서 해임되었습니다.') {
+        } else if (message.sender === [[${streamer.userNickname}]] && message.message === [[${userAccount.userNickname}]] + '님이 매니저에서 해임되었습니다.') {
             loadUserAuth();
         }
         
@@ -424,33 +429,33 @@
         
         // sender가 해당 채널의 스트리머일 경우 강조해서 표시
         if(message.sender === [[${streamer.userNickname}]]) {
-            newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.msg + '</strong>';        
+            newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.message + '</strong>';        
         } else if (message.userType === "MANAGER") {
             
             if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]]) {
-                newMsg.innerHTML = '⚔' + sender + ':' + message.msg;                
+                newMsg.innerHTML = '⚔' + sender + ':' + message.message;                
             } else {
-                newMsg.innerHTML = '⚔' + message.sender + ':' + message.msg;
+                newMsg.innerHTML = '⚔' + message.sender + ':' + message.message;
             }
             
         } else if(message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
         
             if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]] || userAuth === 'MANAGER') {
-                newMsg.innerHTML = '👍︎' + sender + ':' + message.msg;                
+                newMsg.innerHTML = '👍︎' + sender + ':' + message.message;                
             } else {
-                newMsg.innerHTML = '👍︎' + message.sender + ':' + message.msg;
+                newMsg.innerHTML = '👍︎' + message.sender + ':' + message.message;
             }
             
         } else if(message.userType === "NON_FOLLOW") {
             
             if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]] || userAuth === 'MANAGER') {
-                newMsg.innerHTML = sender + ':' + message.msg;                
+                newMsg.innerHTML = sender + ':' + message.message;                
             } else {
-                newMsg.innerHTML = message.sender + ':' + message.msg;
+                newMsg.innerHTML = message.sender + ':' + message.message;
             }
              
         } else if(message.userType === "ANONYMOUS") {
-            newMsg.innerHTML = message.sender + ':' + message.msg;  
+            newMsg.innerHTML = message.sender + ':' + message.message;  
         }
         
         if(message.type === 'TALK') {
@@ -573,7 +578,7 @@
                     "userType" : userType,
                     "roomId":[[${room.roomId}]],
                     "sender": userId,
-                    "msg":content};
+                    "message":content};
             //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
             socket.send(JSON.stringify(talkMsg));
         
@@ -587,7 +592,11 @@
     window.addEventListener('beforeunload', handlePageUnload);
 
     function quit(){
-        var quitMsg={"type" : "QUIT", "userType" : [[${userState}]], "roomId":[[${room.roomId}]] ,"sender":[[${userAccount.userNickname}]],"msg":""};
+        var quitMsg={"type" : "QUIT", 
+                    "userType" : [[${userState}]], 
+                    "roomId":[[${room.roomId}]] ,
+                    "sender":[[${userAccount.userNickname}]],
+                    "message":""};
         //JSON.stringify(quitMsg) -> json 형식으로 데이터를 전송하기 위해서 문자열로 변환하는 메서드.
         socket.send(JSON.stringify(quitMsg));
         socket.close();
