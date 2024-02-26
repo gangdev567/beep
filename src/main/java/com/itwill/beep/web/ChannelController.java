@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.beep.domain.ChannelEntity;
@@ -116,8 +117,7 @@ public class ChannelController {
             String chatState = channel.getChatStateSet().toString();
             model.addAttribute("chatState", chatState);
             log.info("OAuth2 chatState={}", chatState);
-            // 시청자 수 증가
-            channelSvc.increaseViewers(channelId);
+            
             model.addAttribute("channel", channel);
 
             // channelId로 room 정보를 찾는다.
@@ -163,8 +163,6 @@ public class ChannelController {
             String chatState = channel.getChatStateSet().toString();
             model.addAttribute("chatState", chatState);
 
-            // 시청자 수 증가
-            channelSvc.increaseViewers(channelId);
             model.addAttribute("channel", channel);
 
             // channelId로 room 정보를 찾는다.
@@ -226,8 +224,6 @@ public class ChannelController {
             String chatState = channel.getChatStateSet().toString();
             model.addAttribute("chatState", chatState);
 
-            // 시청자 수 증가
-            channelSvc.increaseViewers(channelId);
             model.addAttribute("channel", channel);
 
             // channelId로 room 정보를 찾는다.
@@ -257,6 +253,8 @@ public class ChannelController {
 
 
     }
+    
+    
     @ResponseBody
     @GetMapping("/api/channel/popular")
     public ResponseEntity<List<ChannelRequestDto>> popularChannel() {

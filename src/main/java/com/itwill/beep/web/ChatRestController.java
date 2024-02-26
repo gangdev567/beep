@@ -95,7 +95,7 @@ public class ChatRestController {
     	 Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	 
     	  // 타입으로 조건식 깔끔하고 보기좋은듯 나중에다시 리팩토링 중복코드너무많음
-        if (principal instanceof UserDetails) { 
+        if (principal instanceof UserDetails) {
             
             String userType = "";
             
