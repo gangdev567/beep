@@ -16,7 +16,18 @@ public class ChatMessage {
     
     private MessageType type; // 메시지 타입
     private UserType userType; // 유저 타입
+    private Long viewers; // 시청자 수
     private Long roomId; // 방번호
     private String sender; // 메시지 보낸사람
     private String message; // 메시지
+    
+    @Override
+    public String toString() {
+        return "{\"type\":\"" + type + "\","
+            + "\"userType\":\"" + userType + "\","
+            + "\"roomId\":" + roomId + ","
+            + "\"sender\":\"" + sender + "\","
+            + "\"message\":\"" + message + "\","
+            + "\"viewers\":\"" + viewers + "\"}";
+    }
 }

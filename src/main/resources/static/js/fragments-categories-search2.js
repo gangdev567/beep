@@ -1,16 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const categoryInput = document.getElementById('categoryInput');
-    const categoryList = document.getElementById('categoryList');
+    const categoryInput = document.getElementById('categoryInput2');
+    console.log(categoryInput);
+    const categoryList = document.getElementById('categoryList2');
+    console.log(categoryList);
     
     categoryInput.addEventListener('input', function() {
         const keyword = categoryInput.value;
         console.log(keyword);
-    
+        
         const requestURL = 'http://localhost:8081/' + 'categories/api/search' + '?keyword=' + keyword;
         
         const xhr = new XMLHttpRequest();
         xhr.open('GET', requestURL, true);
-
+    
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
