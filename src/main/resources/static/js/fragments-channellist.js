@@ -1,6 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
-    fetchFollowList();
-    fetchPopularChannels();
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchPopularChannels();
 
     toggle.addEventListener('click', () => {
         detectSidebarState();
@@ -347,7 +346,7 @@ async function fetchPopularChannels() {
                 }
 
             }
-
+            await fetchFollowList();
         } else {
             console.error('인기 있는 채널을 불러오는 중 에러 발생:', response.status);
         }

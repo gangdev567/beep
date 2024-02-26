@@ -283,8 +283,9 @@
 
 </header>
 
-<nav th:fragment="mysidebar" class="sidebar close">
+<nav th:fragment="mysidebar" class="sidebar">
     <header>
+    <!-- 
         <div class="image-text">
             <a href="/">
                 <span class="image">
@@ -297,21 +298,23 @@
                 <span class="profession">Streaming Site</span>
             </div>
         </div>
+     -->
 
-        <i class='bx bx-chevron-right toggle'></i>
+        <i class='my-4 bx bx-chevron-right toggle'></i>
     </header>
     
 
     <div class="menu-bar">
         <div class="menu">
         
-<div id="followList"></div>
-<div id="popularList"></div>
+<div class="my-1" id="followList"></div>
+<div class="my-1" id="popularList"></div>
 <script th:inline="javascript">
   const authentication = /*[[${#authentication.name}]]*/ null;
 </script>
 <script src="/js/fragments-channellist.js"></script>
-
+            
+            <!-- 
             <ul class="menu-links">
                 <li class="nav-link">
                     <a href="/">
@@ -365,6 +368,7 @@
                     </a>
                 </li>
             </ul>
+             -->
             
 
 

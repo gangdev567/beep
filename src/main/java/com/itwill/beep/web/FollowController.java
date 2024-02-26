@@ -41,7 +41,6 @@ public class FollowController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-
         if (authentication.getPrincipal() instanceof OAuth2User) {
             loginUser = userService.findUserByUserName(
                     (String) ((OAuth2User) principal).getAttributes().get("name"));
