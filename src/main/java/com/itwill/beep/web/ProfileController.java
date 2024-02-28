@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.dto.ChannelImageRequestDto;
+import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ImageService;
 import com.itwill.beep.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,9 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/settings")
 public class ProfileController {
 
-    private final UserService userService;
     private final UserAccountRepository userAccountRepository;
+    private final UserService userService;
     private final ImageService imageService;
+    private final ChannelService channelService;
 
 
     @GetMapping("/profile")
@@ -44,20 +47,48 @@ public class ProfileController {
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String oauth2name = (String) ((OAuth2User) principal).getAttributes().get("name");
 
-            UserAccountEntity user = userAccountRepository.findByUserName(oauth2name);
+            UserAccountEntity loginUser = userAccountRepository.findByUserName(oauth2name);
 
-            model.addAttribute("user", user);
             model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
+
+            ChannelEntity channelEntity = channelService.findChannelByUserAccount(loginUser);
+
+            model.addAttribute("channel", channelEntity);
+            // fragments 에 필요한 모델
+            model.addAttribute("userAccount", loginUser);
+
+            // myModal에 필요한 모델
+            ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+            model.addAttribute("channel", forModal);
+            if (forModal != null) {
+                String status = forModal.getStreamingStateSet().toString();
+                model.addAttribute("status", status);
+            }
 
         } else {
 
-            UserAccountEntity user =
+            UserAccountEntity loginUser =
                     userAccountRepository.findByUserName(currentUser.getUsername());
 
-            model.addAttribute("user", user);
             model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
 
+            ChannelEntity channelEntity = channelService.findChannelByUserAccount(loginUser);
+
+            model.addAttribute("channel", channelEntity);
+            // fragments 에 필요한 모델
+            model.addAttribute("userAccount", loginUser);
+
+            // myModal에 필요한 모델
+            ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+            model.addAttribute("channel", forModal);
+            if (forModal != null) {
+                String status = forModal.getStreamingStateSet().toString();
+                model.addAttribute("status", status);
+            }
+
         }
+
+
 
         return "settings/profile";
     }

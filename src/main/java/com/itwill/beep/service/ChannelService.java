@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
 import com.itwill.beep.domain.FollowEntity;
@@ -15,7 +13,6 @@ import com.itwill.beep.domain.FollowRepository;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.ChannelRequestDto;
 import com.itwill.beep.dto.StreamingOnDto;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -150,9 +147,21 @@ public class ChannelService {
 
     @Transactional
     public void setViewers(Long channelId, Long viewers) {
-        
+
         channelDao.updateViewers(channelId, viewers);
-        
+
+    }
+
+    /* 채널 제목으로 찾기 */
+    public List<ChannelEntity> findChannelByChannelTitle(String keyword) {
+
+        return channelDao.findByChannelTitleContainingIgnoreCase(keyword);
+    }
+
+    /* 채널을 통해서 유저 검색하기(채널의 데이터를 얻기 위해) */
+    public List<ChannelEntity> findChannelBychannelUserAccountEntity(String keyword) {
+
+        return channelDao.findByChannelUserAccountEntityUserNicknameContainingIgnoreCase(keyword);
     }
 
 }

@@ -231,6 +231,11 @@ public class CategoryService {
         return foundGames;
     }
 
+    public List<CategoryEntity> findCategoryByCategoryName(String keyword) {
+
+        return categoryRepository.findByCategoryNameContainingIgnoreCase(keyword);
+    }
+
     /**
      * 게임 ID에 해당하는 커버 정보를 IGDB API에서 가져옵니다.
      *
@@ -256,5 +261,6 @@ public class CategoryService {
         IGDBWrapper.INSTANCE.setCredentials(clientId, twitchToken.getAccess_token());
 
     }
+
 
 }

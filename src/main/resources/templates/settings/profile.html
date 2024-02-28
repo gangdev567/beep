@@ -1,36 +1,140 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-  <title>프로필 설정</title>
-  <link rel="stylesheet" href="/css/settingNavigation.css">
+<head th:replace="~{layout/fragments :: myhead}"></head>
 </head>
 <body>
 
-<div th:replace="layout/settingsNavigation :: settingsNavigation(${active})"></div>
+<header th:replace="layout/fragments :: myheader"></header>
+<nav th:replace="layout/fragments :: mysidebar"></nav>
 
-<form action="/settings/profile/updateUsername" method="post">
-  새 아이디: <input type="text" name="newUsername" required/>
-  <button type="submit">아이디 변경</button>
-</form>
+<section class="home">
 
-<form action="/settings/profile" method="post">
-  <!-- 실제로 서버로 전송될 hidden 필드를 추가합니다. -->
-  <input type="hidden" name="username" th:value="${user.userName}"/>
 
-  닉네임: <input type="text" name="nickname" th:value="${user.userNickname}"/>
-  <br/>
+<div class="container mt-5">
+    <!-- 아이디 변경 폼 -->
+    <div class="row mb-3">
+        <div class="col">
+            <form action="/settings/profile/updateUsername" method="post" class="text-white">
+                <div class="mb-3">
+                    <label for="newUsername" class="form-label">새 아이디:</label>
+                    <input type="text" id="newUsername" name="newUsername" class="form-control" required/>
+                </div>
+                <button type="submit" class="btn btn-primary">아이디 변경</button>
+            </form>
+        </div>
+    </div>
 
-  자기 소개: <textarea name="selfIntroduction" th:text="${user.userSelfIntroduction}"></textarea>
-  <br/>
-  <button type="submit">변경 내용 저장</button>
-</form>
+    <!-- 닉네임 및 자기 소개 변경 폼 -->
+    <div class="row mb-3">
+        <div class="col">
+            <form action="/settings/profile" method="post" class="text-white">
+                <input type="hidden" name="username" th:value="${userAccount.userName}"/>
 
-<form action="/settings/channelupdate" method="post" enctype="multipart/form-data">
-    <input type="text" id="channelId" name="channelId" required/>
-    <label for="channelProfileImg">채널 프로필 업로드</label>
-    <input type="file" id="channelProfileImg" name="imgFile" accept=".jpg, .png"/>
-    <button type="submit">업로드</button>
-</form>
+                <div class="mb-3">
+                    <label for="nickname" class="form-label">닉네임:</label>
+                    <input type="text" id="nickname" name="nickname" class="form-control" th:value="${userAccount.userNickname}"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="selfIntroduction" class="form-label">자기 소개:</label>
+                    <textarea id="selfIntroduction" name="selfIntroduction" class="form-control" rows="3" th:text="${userAccount.userSelfIntroduction}"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">변경 내용 저장</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 채널 프로필 업로드 및 미리보기 폼 -->
+    <div class="row mb-3">
+        <div class="col">
+            <form id="uploadForm" action="/settings/channelupdate" method="post" enctype="multipart/form-data" class="text-white">
+                <input id="channelId" name="channelId" th:value="${channel.channelId}" type="hidden"/>
+
+                <div class="mb-3">
+                    <label for="channelProfileImg" class="form-label">채널 프로필 업로드:</label>
+                    <input type="file" id="channelProfileImg" name="imgFile" accept=".jpg, .png" class="form-control"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary">업로드</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 채널 프로필 이미지 미리보기 및 삭제 버튼 -->
+    <div class="row mb-3">
+        <div class="col">
+            <div id="imageContainer">
+                <img id="channelImage" th:src="${channel.channelProfileImg}" style="width:50px; height:50px; display: block;" class="img-thumbnail"/>
+                <img id="uploadedImage" style="width: 50px; height: 50px; display: none;" class="img-thumbnail"/>
+                <button type="button" id="removePreviewButton" style="display: none;" class="btn btn-danger">미리보기 삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const imgFileInput = document.querySelector('#channelProfileImg');
+    const imagePreview = document.querySelector('#uploadedImage');
+    const removePreviewButton = document.querySelector('#removePreviewButton');
+    const channelImage = document.querySelector('#channelImage');
+
+    imgFileInput.addEventListener('change', previewImage);
+
+    function previewImage() {
+        const file = imgFileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function() {
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+                removePreviewButton.style.display = 'block';
+                channelImage.style.display = 'none';
+            }
+
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = '';
+            imagePreview.style.display = 'none';
+            removePreviewButton.style.display = 'none';
+            channelImage.style.display = 'block';
+        }
+    }
+
+    removePreviewButton.addEventListener('click', removePreview);
+
+    function removePreview() {
+        imgFileInput.value = '';
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+        removePreviewButton.style.display = 'none';
+        channelImage.style.display = 'block';
+    }
+
+});
+</script>
+
+<footer th:replace="layout/fragments :: myfooter"></footer>
+</section>
+
+<!-- 방송하기/방송종료 -->
+<div th:replace="layout/fragments :: myModal"></div>
+<script src="/js/broadcast.js"></script>
+
+<script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+<script th:replace="~{layout/fragments :: sidebar_js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/categories-search.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
 
 </body>
 </html>
