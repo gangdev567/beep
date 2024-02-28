@@ -36,7 +36,7 @@ public class HomeController {
     @GetMapping("/")
     @PreAuthorize("permitAll")
     public String home(Model model) {
-        // (2) 현재 로그인한 사용자 정보를 가져옵니다.
+        // (2) 현재 로그인한 사용자 정보를 가져옴.
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("--- home() principal={}", principal);
 
@@ -46,7 +46,7 @@ public class HomeController {
         } else if (principal instanceof UserDetails) {
             handleUserDetails((UserDetails) principal, model);
         } else {
-            log.info("---> ?");
+            log.info("---> 누구세요..?");
         }
 
         // (7) 현재 진행 중인 방송의 리스트를 홈으로 보냅니다.
