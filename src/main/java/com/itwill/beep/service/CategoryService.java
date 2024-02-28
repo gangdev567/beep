@@ -6,10 +6,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.api.igdb.apicalypse.APICalypse;
 import com.api.igdb.apicalypse.Sort;
 import com.api.igdb.exceptions.RequestException;
@@ -21,7 +19,6 @@ import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,7 +106,6 @@ public class CategoryService {
             }
         }
 
-        // Set을 List로 변환하여 정렬
         List<CategoryEntity> sortedCategories = new ArrayList<>(categoriesWithTotalViewers);
         sortedCategories.sort(Comparator.comparingInt(
                 category -> channelRepository.countByCategoryEntityOfChannel(category)));
@@ -235,6 +231,11 @@ public class CategoryService {
         return foundGames;
     }
 
+    public List<CategoryEntity> findCategoryByCategoryName(String keyword) {
+
+        return categoryRepository.findByCategoryNameContainingIgnoreCase(keyword);
+    }
+
     /**
      * 게임 ID에 해당하는 커버 정보를 IGDB API에서 가져옵니다.
      *
@@ -260,5 +261,6 @@ public class CategoryService {
         IGDBWrapper.INSTANCE.setCredentials(clientId, twitchToken.getAccess_token());
 
     }
+
 
 }
