@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{layout/fragments :: myhead}"></head>
+
+<body>
+
+<header th:replace="~{layout/fragments :: myheader}"></header>
+
+<nav th:replace="~{layout/fragments :: mysidebar}"></nav>
+
+<section class="home">
+<div class="container mt-5 text-white">
+
+    <div class="container mt-5">
+        <h5>닉네임 검색 결과</h5>
+        
+        <div class="row" th:if="${channelUserAccountEntitySearchResult}" th:each="user : ${channelUserAccountEntitySearchResult}">
+            <div class="col">
+                <a th:href="@{/channel/{userNickname}(userNickname=${user.channelUserAccountEntity.userNickname})}">
+                    <div>
+                        <strong>
+                            <span>
+                                <span th:text="${user.channelUserAccountEntity.userNickname}"></span>
+                            </span>
+                        </strong>
+                        <img th:src="${user.channelProfileImg}" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr class="text-white"/>
+    
+    <div class="row">
+        <h5>채널 제목 검색 결과</h5>
+        <div th:if="${channelSearchResult}" th:each="channel : ${channelSearchResult}">
+            <span>TODO: 얘는 생방송만 나타내고, 메인화면의 카드처럼 나타내기</span>
+            <p th:text="'닉네임: ' + ${channel.channelUserAccountEntity.userNickname}"></p>
+            <p th:text="'방송 제목: ' + ${channel.channelTitle}"></p>
+            <img class="img-fluid" th:src="${channel.channelProfileImg}" style="width: 50px; height: 50px;" />
+        </div>
+    </div>
+    <hr class="text-white"/>
+    
+    <div class="row">
+    <h5>카테고리 검색 결과</h5>
+        <div th:if="${categorySearchResult}" th:each="category : ${categorySearchResult}" class="col-lg-2 col-md-4 mb-4">
+            <div class="card category-card">
+                <a th:href="@{/categories/{categoryId}(categoryId=${category.categoryId})}" class="card-link text-decoration-none">
+                    <img th:src="${category.categoryImageUrl}" class="card-img-top img-fluid" alt="Category Image">
+                    <div class="card-body">
+                        <h5 class="card-title category-title text-left text-black text-truncate fs-5" th:text="${category.categoryName}">Category Name</h5>
+                        <h5 class="card-title category-title text-left text-black text-truncate fs-6" th:text="${category.categoryTotalView != null ? '시청자 ' + category.categoryTotalView + '명' : '시청자 0명'}"></h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr class="text-white"/>
+    
+</div>
+
+<footer th:replace="layout/fragments :: myfooter"></footer>
+</section>
+
+
+
+<div th:replace="~{layout/fragments :: myModal}"></div>
+
+<script th:replace="~{layout/fragments :: sidebar_js}"></script>
+<script th:replace="~{layout/fragments :: bootstrap_js}"></script>
+<script src="/js/broadcast.js"></script>
+<script src="/js/fragments-categories-search.js"></script>
+</body>
+
+</html>

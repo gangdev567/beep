@@ -6,11 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.itwill.beep.dto.StreamingOnDto;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,11 +34,11 @@ public class SettingController {
         model.addAttribute("active", "recommendations");
         return "settings/recommendations";
     }
-    
+
     @PostMapping
     public void settingChannel(StreamingOnDto dto) {
-        
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
     }
 }
