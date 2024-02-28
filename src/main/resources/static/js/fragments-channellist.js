@@ -142,7 +142,7 @@ async function fetchFollowList() {
                     a.appendChild(div); // <div>를 <a> 태그 내에 추가
 
                     const img = document.createElement('img');
-                    img.src = '/images/default.png'; // TODO: ${channel.channelProfileImg}
+                    img.src = `${channel.channelProfileImg}`; // TODO: ${channel.channelProfileImg}
                     img.alt = '프로필 이미지';
                     img.style.width = '50px';
                     img.style.height = '50px';
@@ -302,7 +302,7 @@ async function fetchPopularChannels() {
                     a.appendChild(div); // <div>를 <a> 태그 내에 추가
 
                     const img = document.createElement('img');
-                    img.src = '/images/default.png';
+                    img.src = `${channel.channelProfileImg}`;
                     img.alt = '프로필 이미지';
                     img.style.width = '50px';
                     img.style.height = '50px';

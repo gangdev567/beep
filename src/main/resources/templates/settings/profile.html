@@ -25,5 +25,12 @@
   <button type="submit">변경 내용 저장</button>
 </form>
 
+<form action="/settings/channelupdate" method="post" enctype="multipart/form-data">
+    <input type="text" id="channelId" name="channelId" required/>
+    <label for="channelProfileImg">채널 프로필 업로드</label>
+    <input type="file" id="channelProfileImg" name="imgFile" accept=".jpg, .png"/>
+    <button type="submit">업로드</button>
+</form>
+
 </body>
 </html>
