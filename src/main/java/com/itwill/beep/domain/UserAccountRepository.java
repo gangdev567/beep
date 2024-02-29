@@ -26,6 +26,9 @@ public interface UserAccountRepository extends JpaRepository<UserAccountEntity, 
     
     // 해당 사용자 닉네임이 존재하는지 확인.
     boolean existsByUserNickname(String userNickname);
+    
+    // 해당 사용자 이메일이 존재하는지 확인.
+    boolean existsByUserEmail(String userEmail);
 
     @EntityGraph(attributePaths = "userRoles")
     Optional<UserAccountEntity> findByUserEmail(String email);
