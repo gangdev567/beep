@@ -167,19 +167,19 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <form class="d-flex my-2 my-lg-0 ms-auto align-items-center">
+                <form class="d-flex my-2 my-lg-0 ms-auto align-items-center" action="/search" method="post">
                     <!-- align-items-center 추가 -->
-                    <input class="form-control search me-2 mb-2 mb-lg-0" type="search"
-                                 placeholder="스트리머, 게임, 영상 검색" aria-label="Search">
+                    <input class="form-control search me-2 mb-2 mb-lg-0" type="search" name="keyword"
+                           placeholder="스트리머, 게임, 영상 검색" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
+                             xmlns="http://www.w3.org/2000/svg">
                             <g opacity="0.9">
                                 <path d="M15.8999 14.5L19.0862 17.7187"
-                                            stroke="white" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
+                                      stroke="white" stroke-width="1.8" stroke-linecap="round"
+                                      stroke-linejoin="round"></path>
                                 <circle cx="11.4302" cy="10.4819"
-                                                r="5.35" stroke="white" stroke-width="1.8"></circle>
+                                        r="5.35" stroke="white" stroke-width="1.8"></circle>
                             </g>
                         </svg>
                         <span class="blind">검색</span>
@@ -283,8 +283,9 @@
 
 </header>
 
-<nav th:fragment="mysidebar" class="sidebar close">
+<nav th:fragment="mysidebar" class="sidebar">
     <header>
+    <!-- 
         <div class="image-text">
             <a href="/">
                 <span class="image">
@@ -297,21 +298,23 @@
                 <span class="profession">Streaming Site</span>
             </div>
         </div>
+     -->
 
-        <i class='bx bx-chevron-right toggle'></i>
+        <i class='my-4 bx bx-chevron-right toggle'></i>
     </header>
     
 
     <div class="menu-bar">
         <div class="menu">
         
-<div id="followList"></div>
-<div id="popularList"></div>
+<div class="my-1" id="followList"></div>
+<div class="my-1" id="popularList"></div>
 <script th:inline="javascript">
   const authentication = /*[[${#authentication.name}]]*/ null;
 </script>
 <script src="/js/fragments-channellist.js"></script>
-
+            
+            <!-- 
             <ul class="menu-links">
                 <li class="nav-link">
                     <a href="/">
@@ -365,6 +368,7 @@
                     </a>
                 </li>
             </ul>
+             -->
             
 
 

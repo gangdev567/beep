@@ -1,7 +1,6 @@
 package com.itwill.beep.domain;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -59,8 +58,12 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 
     @Modifying
     @Query("UPDATE ChannelEntity c SET c.channelViewerCount = :viewers WHERE c.channelId = :channelId")
-    void updateViewers(@Param("channelId") Long channelId,@Param("viewers") Long viewers);
+    void updateViewers(@Param("channelId") Long channelId, @Param("viewers") Long viewers);
 
+    /* 채널 제목으로 찾기 */
+    List<ChannelEntity> findByChannelTitleContainingIgnoreCase(String keyword);
 
+    List<ChannelEntity> findByChannelUserAccountEntityUserNicknameContainingIgnoreCase(
+            String keyword);
 
 }

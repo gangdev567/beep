@@ -3,13 +3,11 @@ package com.itwill.beep.service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
@@ -22,7 +20,6 @@ import com.itwill.beep.domain.UserRoleType;
 import com.itwill.beep.domain.VerificationToken;
 import com.itwill.beep.dto.SignupRequestDto;
 import com.itwill.beep.dto.UserSecurityDto;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +33,10 @@ public class UserService implements UserDetailsService {
     private final UserAccountRepository userAccountRepository;
     private final ChannelRepository channelRepository; // ChannelEntity를 저장하기 위한 Repository
     private final CategoryRepository categoryRepository;
-    
+
     /**
-     * Spring Security의 UserDetailsService를 구현한 메소드.
-     * 주어진 사용자 이름으로 사용자를 조회하고, 해당 사용자가 존재할 경우 UserDetails로 변환하여 반환한다.
+     * Spring Security의 UserDetailsService를 구현한 메소드. 주어진 사용자 이름으로 사용자를 조회하고, 해당 사용자가 존재할 경우
+     * UserDetails로 변환하여 반환한다.
      *
      * @param userName 조회할 사용자 이름
      * @return UserDetails로 변환된 사용자 정보
@@ -80,24 +77,25 @@ public class UserService implements UserDetailsService {
 
         // 새 채널을 위한 카테고리 조회 또는 생성
         CategoryEntity categoryEntity = categoryRepository.findById(115L) // 예시: ID가 1인 카테고리 조회
-            .orElseThrow(() -> new RuntimeException("Category not found")); // 카테고리를 찾지 못한 경우 예외 처리
+                .orElseThrow(() -> new RuntimeException("Category not found")); // 카테고리를 찾지 못한 경우 예외
+                                                                                // 처리
         // 채널 생성 및 사용자 계정과 연결
-        ChannelEntity channelEntity = ChannelEntity.builder()
-            .channelUserAccountEntity(userEntity)
-            .categoryEntityOfChannel(categoryEntity) // 예시 카테고리
-            .channelContent("Welcome to your new channel!") // 채널 설명 또는 초기 콘텐츠
-            .channelCreatedTime(LocalDateTime.now()) // 생성 시간
-            .channelProfileImg("default_profile.png") // 기본 프로필 이미지 경로
-            .channelTitle(signupRequestDto.getUserName() + "'s Channel") // 채널 제목
-            .channelViewerCount(0L) // 초기 시청자 수
-            .build();
+        ChannelEntity channelEntity = ChannelEntity.builder().channelUserAccountEntity(userEntity)
+                .categoryEntityOfChannel(categoryEntity) // 예시 카테고리
+                .channelContent("Welcome to your new channel!") // 채널 설명 또는 초기 콘텐츠
+                .channelCreatedTime(LocalDateTime.now()) // 생성 시간
+                .channelProfileImg("default_profile.png") // 기본 프로필 이미지 경로
+                .channelTitle(signupRequestDto.getUserName() + "'s Channel") // 채널 제목
+                .channelViewerCount(0L) // 초기 시청자 수
+                .build();
         channelEntity.setStreamingState(StreamingState.OFF);
         channelEntity.setChatState(ChatState.DEFAULT);
-        
+
         // 채널 저장
         channelRepository.save(channelEntity);
 
-        log.info("Created user account with streaming key and channel for user: {}", signupRequestDto.getUserName());
+        log.info("Created user account with streaming key and channel for user: {}",
+                signupRequestDto.getUserName());
     }
 
     /**
@@ -140,6 +138,26 @@ public class UserService implements UserDetailsService {
         return userAccountRepository.existsByUserName(userName);
     }
     
+    /**
+     * 사용자 이름이 존재하는지 여부를 확인하는 메소드.
+     *
+     * @param userNickname 확인할 사용자 이름
+     * @return 사용자 이름이 존재하면 true, 그렇지 않으면 false
+     */
+    public boolean isUserNicknameExists(String userNickname) {
+    	return userAccountRepository.existsByUserNickname(userNickname);
+    }
+    
+    /**
+     * 사용자 이메일이 존재하는지 여부를 확인하는 메소드.
+     *
+     * @param userEmail 확인할 사용자 이름
+     * @return 사용자 이름이 존재하면 true, 그렇지 않으면 false
+     */
+    public boolean isUserEmailExists(String userEmail) {
+    	return userAccountRepository.existsByUserEmail(userEmail);
+    }
+
     @Transactional
     public void updateUserPassword(String username, String newPassword) {
         // 사용자 아이디로 사용자를 찾음
@@ -154,14 +172,12 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("해당 아이디에 해당하는 사용자를 찾을 수 없습니다.");
         }
     }
-    
-    public Optional<UserAccountEntity> findByUserEmail(String email){
-    	return userAccountRepository.findByUserEmail(email);
-    }
-    
-   
 
-  
+    public Optional<UserAccountEntity> findByUserEmail(String email) {
+        return userAccountRepository.findByUserEmail(email);
+    }
+
+
 
     public String generateStreamingKey() {
         // 단순히 UUID를 기반으로 streamingKey 생성
@@ -186,7 +202,8 @@ public class UserService implements UserDetailsService {
 
     public boolean validateStreamingKey(String streamingKey) {
         try {
-            boolean streamingKeyValid = (userAccountRepository.findByUserStreamingKey(streamingKey) !=null);
+            boolean streamingKeyValid =
+                    (userAccountRepository.findByUserStreamingKey(streamingKey) != null);
             log.info("Validating streaming key: {} - Result: {}", streamingKey, streamingKeyValid);
             return streamingKeyValid;
         } catch (Exception e) {
@@ -250,7 +267,3 @@ public class UserService implements UserDetailsService {
     }
 
 }
-
-  
-  
-
