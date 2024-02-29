@@ -125,7 +125,17 @@ public class HomeController {
     }
 
     @GetMapping("/search")
-    public String search() {
+    public String search(Model model) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof OAuth2User) {
+            handleOAuth2User((OAuth2User) principal, model);
+        } else if (principal instanceof UserDetails) {
+            handleUserDetails((UserDetails) principal, model);
+        } else {
+            log.info("---> ?");
+        }
 
         return "homesearch";
     }
@@ -164,4 +174,5 @@ public class HomeController {
 
         return "homesearch";
     }
+
 }
