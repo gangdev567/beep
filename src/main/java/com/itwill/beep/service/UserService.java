@@ -137,6 +137,16 @@ public class UserService implements UserDetailsService {
     public boolean isUserNameExists(String userName) {
         return userAccountRepository.existsByUserName(userName);
     }
+    
+    /**
+     * 사용자 이름이 존재하는지 여부를 확인하는 메소드.
+     *
+     * @param userNickname 확인할 사용자 이름
+     * @return 사용자 이름이 존재하면 true, 그렇지 않으면 false
+     */
+    public boolean isUserNicknameExists(String userNickname) {
+    	return userAccountRepository.existsByUserNickname(userNickname);
+    }
 
     @Transactional
     public void updateUserPassword(String username, String newPassword) {

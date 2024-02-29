@@ -105,6 +105,45 @@ document.addEventListener("DOMContentLoaded", function() {
 			});
 			return; // 함수 종료
 		}
+		
+		// 사용자 아이디 중복 여부를 확인하는 URI 생성
+		const nickNameUri = `/user/signup/checkUsernickname?userNickname=${userNickname}`;
+		console.log(nickNameUri);
+		
+		
+
+		// Axios를 사용하여 서버에 요청을 보냄
+		axios.get(nickNameUri)
+			.then(response => {
+				// 서버 응답에서 결과를 가져옴
+				const result = response.data;
+				console.log(result);
+
+				// 결과에 따라 처리
+				if (result === "Y") {
+					// 중복된 아이디인 경우 에러 메시지 표시
+					Swal.fire({
+						icon: "error",
+						title: "이미 존재하는 사용자 닉네임이거나 사용할 수 없는 닉네임입니다!",
+						text: "다른 닉네임 입력해주세요.",
+					});
+				} else if (result === "N") {
+					// 중복되지 않은 닉네임인 경우 성공 메시지 표시
+					isUsernameChecked = true; // 중복 체크 완료
+					Swal.fire({
+						icon: "success",
+						title: "사용 가능한 닉네임입니다!",
+						showConfirmButton: false,
+						timer: 1500
+					});
+				} else {
+					// 다른 예외 처리는 보류
+				}
+			})
+			.catch(error => {
+				// 에러가 발생한 경우 콘솔에 에러 출력
+				console.error("Error:", error);
+			});
 
 		// 정상적인 경우에만 회원가입 완료 처리
 
@@ -158,6 +197,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	checkUsernameButton.addEventListener("click", function() {
 		// 사용자가 입력한 아이디를 가져옴
 		const username = usernameInput.value;
+		const userNickname = nicknameInput.value;
 
 		// 만약 아이디가 비어있다면 경고 메시지를 표시하고 함수 종료
 		if (!username) {
@@ -170,11 +210,17 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 
 		// 사용자 아이디 중복 여부를 확인하는 URI 생성
-		const uri = `/user/signup/checkusername?username=${username}`;
-		console.log(uri);
+		const nameUri = `/user/signup/checkusername?username=${username}`;
+		console.log(nameUri);
+		
+		// 사용자 아이디 중복 여부를 확인하는 URI 생성
+		const nickNameUri = `/user/signup/checkUsernickname?userNickname=${userNickname}`;
+		console.log(nickNameUri);
+		
+		
 
 		// Axios를 사용하여 서버에 요청을 보냄
-		axios.get(uri)
+		axios.get(nameUri)
 			.then(response => {
 				// 서버 응답에서 결과를 가져옴
 				const result = response.data;
