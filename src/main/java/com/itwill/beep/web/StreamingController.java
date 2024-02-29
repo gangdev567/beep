@@ -102,7 +102,7 @@ public class StreamingController {
                                         .map(UserAccountEntity::getUserId)
                                         .collect(Collectors.toList());
             
-            int sival = sseService.notification(user.getUserNickname(), followersId);
+            sseService.notification(user, followersId);
             
             String status = channel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
@@ -161,7 +161,7 @@ public class StreamingController {
                                         .map(UserAccountEntity::getUserId)
                                         .collect(Collectors.toList());
             
-            int sival = sseService.notification(user.getUserNickname(), followersId);
+            sseService.notification(user, followersId);
             
             String status = channel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
