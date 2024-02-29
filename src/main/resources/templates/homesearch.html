@@ -30,11 +30,11 @@
                         </a>
                     </div>
                     <div class="d-flex">
-                        <input class="d-none data-channelUserNickname" id="channelUserNickname" th:value="${user.channelUserAccountEntity.userNickname}">
-                        <input class="d-none data-loginUserId" id="loginUserId" th:value="${userAccount} ? ${userAccount.userId} : 'anonymousUser'">
-                        <input class="d-none data-channelUserId" id="channelUserId" th:value="${user.channelUserAccountEntity.userId}">
-                        <button id="followBySearchResult" class="btn btn-outline-primary data-followBySearchResult d-none" type="button" onclick="follow()"><i class="fas fa-heart"></i></button>
-                        <button id="unfollowBySearchResult" class="btn btn-outline-danger data-unfollowBySearchResult d-none" type="button" onclick="unfollow()"><i class="fas fa-heart-broken"></i></button>
+                        <input class="d-none data-channelUserNickname" th:value="${user.channelUserAccountEntity.userNickname}">
+                        <input class="d-none data-loginUserId" th:value="${userAccount} ? ${userAccount.userId} : 'anonymousUser'">
+                        <input class="d-none data-channelUserId" th:value="${user.channelUserAccountEntity.userId}">
+                        <button class="btn btn-outline-primary data-followBySearchResult d-none" type="button" onclick="follow()"><i class="fas fa-heart"></i></button>
+                        <button class="btn btn-outline-danger data-unfollowBySearchResult d-none" type="button" onclick="unfollow()"><i class="fas fa-heart-broken"></i></button>
                     </div>
                 </div>
             </div>

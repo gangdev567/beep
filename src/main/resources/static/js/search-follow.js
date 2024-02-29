@@ -3,12 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function updateButtonVisibility() {
+    // 각 요소들을 가져와서 반복 처리
+    const loginUserIdElements = document.getElementsByClassName('data-loginUserId');
+    const channelUserIdElements = document.getElementsByClassName('data-channelUserId');
+    const followBtnElements = document.getElementsByClassName('data-followBySearchResult');
+    const unfollowBtnElements = document.getElementsByClassName('data-unfollowBySearchResult');
+    
     try {
-        // 각 요소들을 가져와서 반복 처리
-        const loginUserIdElements = document.getElementsByClassName('data-loginUserId');
-        const channelUserIdElements = document.getElementsByClassName('data-channelUserId');
-        const followBtnElements = document.getElementsByClassName('data-followBySearchResult');
-        const unfollowBtnElements = document.getElementsByClassName('data-unfollowBySearchResult');
 
         for (let i = 0; i < loginUserIdElements.length; i++) {
             const loginUserId = loginUserIdElements[i].value;
@@ -56,11 +57,13 @@ async function followOrUnfollow(isFollow, index) {
         return;
     }
 
+    const channelUserIdElement = document.getElementsByClassName('data-channelUserId')[index];
+    const channelUserId = channelUserIdElement.value;
+    console.log("channelUserId", channelUserId);
+    const channelUserNicknameElement = document.getElementsByClassName('data-channelUserNickname')[index];
+    const channelUserNickname = channelUserNicknameElement.value;
+    
     try {
-        const channelUserIdElement = document.getElementsByClassName('data-channelUserId')[index];
-        const channelUserId = channelUserIdElement.value;
-        const channelUserNicknameElement = document.getElementsByClassName('data-channelUserNickname')[index];
-        const channelUserNickname = channelUserNicknameElement.value;
 
         const method = isFollow ? 'POST' : 'DELETE';
         const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${channelUserId}`, {
