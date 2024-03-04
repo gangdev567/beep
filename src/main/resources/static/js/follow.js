@@ -85,11 +85,9 @@ async function followOrUnfollow(isFollow) {
             if (isFollow) {
                 followBtn.classList.add('d-none');
                 unfollowBtn.classList.remove('d-none');
-                fetchFollowerList();
             } else {
                 followBtn.classList.remove('d-none');
                 unfollowBtn.classList.add('d-none');
-                fetchFollowerList();
             }
         } else {
             console.error(response);

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class FollowerSearchRequestDto {
-    private String followingUserAccountUserNickname;
+    private String followingUserAccountUserName;
     private String keyword;
     private int p;
 }
