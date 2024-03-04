@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function updateButtonVisibility() {
     // 각 요소들을 가져와서 반복 처리
+    
+    try {
     const loginUserIdElements = document.getElementsByClassName('data-loginUserId');
     const channelUserIdElements = document.getElementsByClassName('data-channelUserId');
     const followBtnElements = document.getElementsByClassName('data-followBySearchResult');
     const unfollowBtnElements = document.getElementsByClassName('data-unfollowBySearchResult');
-    
-    try {
 
         for (let i = 0; i < loginUserIdElements.length; i++) {
             const loginUserId = loginUserIdElements[i].value;
@@ -57,23 +57,20 @@ async function followOrUnfollow(isFollow, index) {
         return;
     }
 
-    const channelUserIdElement = document.getElementsByClassName('data-channelUserId')[index];
-    const channelUserId = channelUserIdElement.value;
-    console.log("channelUserId", channelUserId);
-    const channelUserNicknameElement = document.getElementsByClassName('data-channelUserNickname')[index];
-    const channelUserNickname = channelUserNicknameElement.value;
     
     try {
+    const channelUserIdElement = document.getElementsByClassName('data-channelUserId')[index].value;
+    const channelUserNicknameElement = document.getElementsByClassName('data-channelUserNickname')[index].value;
 
         const method = isFollow ? 'POST' : 'DELETE';
-        const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${channelUserId}`, {
+        const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${channelUserIdElement}`, {
             method: method,
         });
 
         if (response.ok) {
             console.log(response);
             const action = isFollow ? '팔로우' : '언팔로우';
-            alert(`${channelUserNickname}님을 ${action} 하였습니다!`);
+            alert(`${channelUserNicknameElement}님을 ${action} 하였습니다!`);
 
             // 성공 시 버튼 클래스 조작
             const followBtn = document.getElementsByClassName('data-followBySearchResult')[index];
