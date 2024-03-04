@@ -160,8 +160,10 @@ public class StreamingController {
             List<Long> followersId = followUser.stream()
                                         .map(UserAccountEntity::getUserId)
                                         .collect(Collectors.toList());
+            new Thread(() -> {
+                sseService.notification(user, followersId);
+            }).start();
             
-            sseService.notification(user, followersId);
             
             String status = channel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
