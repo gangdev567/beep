@@ -2,7 +2,6 @@ package com.itwill.beep.web;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -114,6 +113,8 @@ public class DashboardController {
         } else {
             log.info("로그인되지 않은 사용자입니다.");
         }
+
+        log.info("followerList={}", followersList);
         model.addAttribute("followersCount", followersCount);
         model.addAttribute("followersList", followersList);
 
@@ -145,14 +146,14 @@ public class DashboardController {
             loginUser = userService.findUserByUserName(
                     (String) ((OAuth2User) principal).getAttributes().get("name"));
             followersCount = followService.countFollowers(loginUser);
-            dto.setFollowingUserAccountUserNickname(
+            dto.setFollowingUserAccountUserName(
                     (String) ((OAuth2User) principal).getAttributes().get("name"));
             searchResult = followService.search(dto);
             log.info("searchResult={}", searchResult);
         } else if (authentication.isAuthenticated()) {
             loginUser = userService.findUserByUserName(authentication.getName());
             followersCount = followService.countFollowers(loginUser);
-            dto.setFollowingUserAccountUserNickname(authentication.getName());
+            dto.setFollowingUserAccountUserName(authentication.getName());
             searchResult = followService.search(dto);
             log.info("searchResult={}", searchResult);
         } else {
@@ -309,8 +310,8 @@ public class DashboardController {
     public String settingsChannelInfo(@PathVariable("username") String username,
             Authentication authentication, Model model) {
         log.info("Accessing channel info settings for user: {}", username);
-        
-     // (2) 현재 로그인한 사용자 정보를 가져옵니다.
+
+        // (2) 현재 로그인한 사용자 정보를 가져옵니다.
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("--- home() principal={}", principal);
 
@@ -325,14 +326,14 @@ public class DashboardController {
 
         // (7) 현재 진행 중인 방송의 리스트를 홈으로 보냅니다.
         List<ChatRoom> broadcastList = chatService.findAllRoom();
-        
+
         // (8) 방송 중인 채널 목록을 가져옵니다.
         List<ChannelEntity> channelList = getActiveChannels(broadcastList);
         model.addAttribute("channelList", channelList);
 
         return commonModelSetup(username, authentication, model, "settingsChannelInfo");
     }
-    
+
 
     // 설정 - 채널 브랜드
     @GetMapping("/settings/channel/brand")
@@ -405,8 +406,8 @@ public class DashboardController {
         log.info("Accessing extensions for user: {}", username);
         return commonModelSetup(username, authentication, model, "extensions");
     }
-    
- // (4) OAuth2User 처리
+
+    // (4) OAuth2User 처리
     private void handleOAuth2User(OAuth2User oAuth2User, Model model) {
         String oauth2name = (String) oAuth2User.getAttributes().get("name");
         log.info("---> OAuth2User");
@@ -453,9 +454,9 @@ public class DashboardController {
 
     // (8) 방송 중인 채널 목록을 가져오는 메서드
     private List<ChannelEntity> getActiveChannels(List<ChatRoom> broadcastList) {
-        return broadcastList.stream()
-                .map(this::convertToChannel)
-                .filter(channel -> channel != null && channel.getStreamingStateSet().contains(StreamingState.ON))
+        return broadcastList.stream().map(this::convertToChannel)
+                .filter(channel -> channel != null
+                        && channel.getStreamingStateSet().contains(StreamingState.ON))
                 .collect(Collectors.toList());
     }
 
