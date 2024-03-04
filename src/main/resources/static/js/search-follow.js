@@ -3,13 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function updateButtonVisibility() {
-    // 각 요소들을 가져와서 반복 처리
-    
     try {
-    const loginUserIdElements = document.getElementsByClassName('data-loginUserId');
-    const channelUserIdElements = document.getElementsByClassName('data-channelUserId');
-    const followBtnElements = document.getElementsByClassName('data-followBySearchResult');
-    const unfollowBtnElements = document.getElementsByClassName('data-unfollowBySearchResult');
+        const loginUserIdElements = document.getElementsByClassName('data-loginUserId');
+        const channelUserIdElements = document.getElementsByClassName('data-channelUserId');
+        const followBtnElements = document.getElementsByClassName('data-followBySearchResult');
+        const unfollowBtnElements = document.getElementsByClassName('data-unfollowBySearchResult');
 
         for (let i = 0; i < loginUserIdElements.length; i++) {
             const loginUserId = loginUserIdElements[i].value;
@@ -52,25 +50,26 @@ async function updateButtonVisibility() {
 }
 
 async function followOrUnfollow(isFollow, index) {
+    console.log(`followOrUnfloww(isFollow=${isFollow}, index=${index})`);
+    
     if (!isLoggedIn()) {
         alert("로그인이 필요합니다!");
         return;
     }
 
-    
     try {
-    const channelUserIdElement = document.getElementsByClassName('data-channelUserId')[index].value;
-    const channelUserNicknameElement = document.getElementsByClassName('data-channelUserNickname')[index].value;
+        const channelUserId = document.getElementsByClassName('data-channelUserId')[index].value;
+        const channelUserNickname = document.getElementsByClassName('data-channelUserNickname')[index].value;
 
         const method = isFollow ? 'POST' : 'DELETE';
-        const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${channelUserIdElement}`, {
+        const response = await fetch(`/api/follow/${isFollow ? 'add' : 'delete'}/${channelUserId}`, {
             method: method,
         });
 
         if (response.ok) {
             console.log(response);
             const action = isFollow ? '팔로우' : '언팔로우';
-            alert(`${channelUserNicknameElement}님을 ${action} 하였습니다!`);
+            alert(`${channelUserNickname}님을 ${action} 하였습니다!`);
 
             // 성공 시 버튼 클래스 조작
             const followBtn = document.getElementsByClassName('data-followBySearchResult')[index];
@@ -90,17 +89,15 @@ async function followOrUnfollow(isFollow, index) {
         }
     } catch (error) {
         console.error(error);
-        alert("오류가 발생했습니다!");
+        console.log("오류가 발생했습니다!");
     }
 }
 
-async function follow() {
-    const index = Array.from(document.getElementsByClassName('data-followBySearchResult')).findIndex(btn => btn === event.target);
+async function follow(index) {
     await followOrUnfollow(true, index);
 }
 
-async function unfollow() {
-    const index = Array.from(document.getElementsByClassName('data-unfollowBySearchResult')).findIndex(btn => btn === event.target);
+async function unfollow(index) {
     await followOrUnfollow(false, index);
 }
 

@@ -1,7 +1,7 @@
 package com.itwill.beep.web;
 
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +21,7 @@ import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.service.CategoryService;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
+import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class HomeController {
     private final ChatService chatService;
     private final ChannelService channelService;
     private final CategoryService categoryService;
+    private final FollowService followService;
 
     @GetMapping("/")
     @PreAuthorize("permitAll")
@@ -60,6 +62,61 @@ public class HomeController {
         model.addAttribute("channelList", channelList);
 
         return "home";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof OAuth2User) {
+            handleOAuth2User((OAuth2User) principal, model);
+        } else if (principal instanceof UserDetails) {
+            handleUserDetails((UserDetails) principal, model);
+        } else {
+            log.info("---> ?");
+        }
+
+        return "homesearch";
+    }
+
+    @PostMapping("/search")
+    public String searchBeep(BeepSearchRequestDto dto, Model model) {
+        log.info("searchBeep(dto={})", dto);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof OAuth2User) {
+            handleOAuth2User((OAuth2User) principal, model);
+        } else if (principal instanceof UserDetails) {
+            handleUserDetails((UserDetails) principal, model);
+        } else {
+            log.info("---> ?");
+        }
+
+        List<ChannelEntity> channelUserAccountEntitySearchResult =
+                channelService.findChannelBychannelUserAccountEntity(dto.getKeyword());
+        List<ChannelEntity> channelSearchResult =
+                channelService.findChannelByChannelTitle(dto.getKeyword());
+        List<CategoryEntity> categorySearchResult =
+                categoryService.findCategoryByCategoryName(dto.getKeyword());
+        List<Long> channelFollowerCount = new ArrayList<>();
+
+        for (ChannelEntity entity : channelUserAccountEntitySearchResult) {
+            channelFollowerCount
+                    .add(followService.countFollowers(entity.getChannelUserAccountEntity()));
+        }
+        List<ChannelEntity> StreamingStateOnchannelSearchResult = channelSearchResult.stream()
+                .filter(t -> t.getStreamingStateSet().toString().contains("ON"))
+                .collect(Collectors.toList());
+
+        model.addAttribute("channelUserAccountEntitySearchResult",
+                channelUserAccountEntitySearchResult);
+        model.addAttribute("channelSearchResult", StreamingStateOnchannelSearchResult);
+        model.addAttribute("categorySearchResult", categorySearchResult);
+        model.addAttribute("channelFollowerCount", channelFollowerCount);
+
+        return "homesearch";
     }
 
     // (4) OAuth2User 처리
@@ -124,55 +181,5 @@ public class HomeController {
         return channel;
     }
 
-    @GetMapping("/search")
-    public String search(Model model) {
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof OAuth2User) {
-            handleOAuth2User((OAuth2User) principal, model);
-        } else if (principal instanceof UserDetails) {
-            handleUserDetails((UserDetails) principal, model);
-        } else {
-            log.info("---> ?");
-        }
-
-        return "homesearch";
-    }
-
-    @PostMapping("/search")
-    public String searchBeep(BeepSearchRequestDto dto, Model model) {
-        log.info("searchBeep(dto={})", dto);
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof OAuth2User) {
-            handleOAuth2User((OAuth2User) principal, model);
-        } else if (principal instanceof UserDetails) {
-            handleUserDetails((UserDetails) principal, model);
-        } else {
-            log.info("---> ?");
-        }
-
-        List<ChannelEntity> channelUserAccountEntitySearchResult =
-                channelService.findChannelBychannelUserAccountEntity(dto.getKeyword());
-        List<ChannelEntity> channelSearchResult =
-                channelService.findChannelByChannelTitle(dto.getKeyword());
-        List<CategoryEntity> categorySearchResult =
-                categoryService.findCategoryByCategoryName(dto.getKeyword());
-        List<CategoryEntity> filteredCategories = categorySearchResult.stream()
-                .filter(category -> category.getCategoryTotalView() != null)
-                .collect(Collectors.toList());
-
-        filteredCategories
-                .sort(Comparator.comparing(CategoryEntity::getCategoryTotalView).reversed());
-
-        model.addAttribute("channelUserAccountEntitySearchResult",
-                channelUserAccountEntitySearchResult);
-        model.addAttribute("channelSearchResult", channelSearchResult);
-        model.addAttribute("categorySearchResult", filteredCategories);
-
-        return "homesearch";
-    }
 
 }
