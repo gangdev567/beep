@@ -35,7 +35,18 @@
 
 <div th:replace="~{layout/fragments :: myModal}"></div>
 
-<div id="notification-container" style="z-index: 100;"></div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="30000">
+        <div class="toast-header">
+            <img src="..." class="rounded me-2 notiImg" alt="..." style="max-width: 20px; max-height: 20px;">
+            <strong class="me-auto"></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    <div class="toast-body">
+        
+    </div>
+  </div>
+</div>
 
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
