@@ -1,5 +1,6 @@
 package com.itwill.beep.web;
 
+import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,14 +11,17 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserAccountRepository;
+import com.itwill.beep.dto.ChannelImageRequestDto;
+import com.itwill.beep.service.ChannelService;
+import com.itwill.beep.service.ImageService;
 import com.itwill.beep.service.UserService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -29,47 +33,94 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/settings")
 public class ProfileController {
 
-    private final UserService userService;
     private final UserAccountRepository userAccountRepository;
+    private final UserService userService;
+    private final ImageService imageService;
+    private final ChannelService channelService;
 
-    
+
     @GetMapping("/profile")
     public String profileSettings(@AuthenticationPrincipal UserDetails currentUser, Model model) {
         // 사용자 정보 로드 로직 (인증 로직에 따라 달라질 수 있음)
-        if(currentUser == null) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (currentUser == null) {
+            Object principal =
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String oauth2name = (String) ((OAuth2User) principal).getAttributes().get("name");
 
-            UserAccountEntity user = userAccountRepository.findByUserName(oauth2name);
-            
-            model.addAttribute("user", user);
+            UserAccountEntity loginUser = userAccountRepository.findByUserName(oauth2name);
+
             model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
+
+            ChannelEntity channelEntity = channelService.findChannelByUserAccount(loginUser);
+
+            model.addAttribute("channel", channelEntity);
+            // fragments 에 필요한 모델
+            model.addAttribute("userAccount", loginUser);
+
+            // myModal에 필요한 모델
+            ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+            model.addAttribute("channel", forModal);
+            if (forModal != null) {
+                String status = forModal.getStreamingStateSet().toString();
+                model.addAttribute("status", status);
+            }
 
         } else {
 
-            UserAccountEntity user = userAccountRepository.findByUserName(currentUser.getUsername());
-        
-            model.addAttribute("user", user);
+            UserAccountEntity loginUser =
+                    userAccountRepository.findByUserName(currentUser.getUsername());
+
             model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
-            
+
+            ChannelEntity channelEntity = channelService.findChannelByUserAccount(loginUser);
+
+            model.addAttribute("channel", channelEntity);
+            // fragments 에 필요한 모델
+            model.addAttribute("userAccount", loginUser);
+
+            // myModal에 필요한 모델
+            ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+            model.addAttribute("channel", forModal);
+            if (forModal != null) {
+                String status = forModal.getStreamingStateSet().toString();
+                model.addAttribute("status", status);
+            }
+
         }
-        
+
+
+
         return "settings/profile";
     }
 
     @PostMapping("/profile")
     public String updateProfile(@RequestParam("username") String username,
-        @RequestParam("nickname") String nickname,
-        @RequestParam("selfIntroduction") String selfIntroduction,// 이메일 인증 로직 필요
-        Model model) {
+            @RequestParam("nickname") String nickname,
+            @RequestParam("selfIntroduction") String selfIntroduction, // 이메일 인증 로직 필요
+            Model model) {
         // 프로필 업데이트 로직
         userService.updateProfile(username, nickname, selfIntroduction);
         return "redirect:/settings/profile?success";
     }
 
+    @PostMapping("/channelupdate")
+    public String channelImage(@ModelAttribute ChannelImageRequestDto dto) {
+        if (dto.getImgFile().isEmpty()) {
+            throw new IllegalArgumentException("이미지 파일이 비어 있습니다.");
+        }
+        try {
+            imageService.channelProfileImgUpload(dto);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return "redirect:/settings/profile";
+    }
+
     @PostMapping("/profile/updateUsername")
     public String updateUsername(@AuthenticationPrincipal UserDetails userDetails,
-        @RequestParam("newUsername") String newUsername, HttpServletRequest request) {
+            @RequestParam("newUsername") String newUsername, HttpServletRequest request) {
 
         // 현재 로그인한 사용자의 이메일 인증 상태를 확인
         boolean isEmailVerified = userService.checkIfUserEmailVerified(userDetails.getUsername());
@@ -83,12 +134,14 @@ public class ProfileController {
         userService.updateUsername(userDetails.getUsername(), newUsername);
 
         // 현재 사용자의 Authentication 객체 업데이트
-        Authentication authentication = new UsernamePasswordAuthenticationToken(newUsername, userDetails.getPassword(), userDetails.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(newUsername,
+                userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 세션에 변경된 사용자 이름 적용
         HttpSession session = request.getSession(true);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext());
 
         return "redirect:/logout";
     }
@@ -108,4 +161,5 @@ public class ProfileController {
         // "settings/security" 뷰를 반환합니다. (HTML 파일 이름이 "settings/security.html" 이라고 가정)
         return "settings/security";
     }
+
 }

@@ -10,9 +10,12 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -39,7 +42,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
      */
     // OAuth2UserRequest 클래스는 스프링 시큐리티에서 OAuth 2.0 로그인 프로세스에서 사용되는 중요한 클래스.
     // 이 클래스는 OAuth 2.0 공급자(예: Google, Facebook)로부터 사용자 정보를 요청하고 가져오기 위한 필수 정보들을 담고 있음.
-    // 간단히 말해서, 여러분이 소셜 미디어 계정으로 로그인하려고 할 때, 스프링 시큐리티는 이 클래스를 사용하여 해당 계정에서
+    // 간단히 말해서,  소셜 미디어 계정으로 로그인하려고 할 때, 스프링 시큐리티는 이 클래스를 사용하여 해당 계정에서
     // 사용자 정보를 가져오는데 필요한 정보들을 설정하고 전달. 이를 통해 사용자는 간편하게 소셜 미디어 계정으로 로그인할 수 있고,
     // 애플리케이션은 필요한 사용자 정보를 쉽게 획득할 수 있음.
     @Override
@@ -52,14 +55,28 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String userName = (String) attributes.get("name");
         String userEmail = (String) attributes.get("email");
         
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        
+      
+        
+        
+        
+        UserAccountEntity userEntity;
 
         // 소셜 정보 유효성 검사
         validateSocialInfo(userEmail, userName);
 
-     // 이메일을 기반으로 사용자 엔터티 조회. 존재하면 해당 엔터티를 반환하고, 없으면 새로운 엔터티를 생성.
-        UserAccountEntity userEntity = userAccountRepository.findByUserEmail(userEmail)
-                .orElseGet(() -> createUserAndChannel(userEmail, userName));
-
+        if ("kakao".equals(registrationId)) {
+            // 카카오 로그인 처리
+            userEntity = userAccountRepository.findByUserEmail(userEmail)
+                    .orElseGet(() -> createUserAndChannel(userEmail, userName, registrationId));
+        } else if ("google".equals(registrationId)) {
+            // 구글 로그인 처리
+            userEntity = userAccountRepository.findByUserEmail(userEmail)
+                    .orElseGet(() -> createUserAndChannel(userEmail, userName, registrationId));
+        } else {
+            throw new OAuth2AuthenticationException("Unsupported social media login");
+        }
      // 5. OAuth2 사용자의 권한을 설정
         Set<GrantedAuthority> authorities = userEntity.getUserRoles()
                 .stream()
@@ -77,6 +94,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return new DefaultOAuth2User(authorities, attributes, "sub");
     }
+    
+
 
     /**
      * SocialDto의 정보가 유효한지 검증.
@@ -98,17 +117,25 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
      * @param userName  사용자 이름
      * @return 저장된 사용자 객체
      */
-    private UserAccountEntity createUserAndChannel(String userEmail, String userName) {
-    	  // 유저 닉네임 생성
-        String userNickname = generateUserNickname();
+    private UserAccountEntity createUserAndChannel(String userEmail, String userName, String registrationId) {
+        // 유저 닉네임 생성
+        String userNickname;
+        if ("kakao".equals(registrationId)) {
+            userNickname = generateKakaoNickname();
+        } else if ("google".equals(registrationId)) {
+            userNickname = generateUserNickname();
+        } else {
+            throw new OAuth2AuthenticationException("Unsupported social media login");
+        }
+
         UserAccountEntity newUserEntity = UserAccountEntity.builder()
                 .userEmail(userEmail)
                 .userName(userName)
-                .userNickname(userNickname)  
+                .userNickname(userNickname)
                 .userPassword(passwordEncoder.encode(UUID.randomUUID().toString()))
                 .build();
-        newUserEntity.addUserRole(UserRoleType.SOCIAL);
 
+        newUserEntity.addUserRole(UserRoleType.SOCIAL);
 
         // streamingKey 생성 및 설정
         String streamingKey = generateStreamingKey();
@@ -119,7 +146,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 새 채널을 위한 카테고리 조회 또는 생성
         CategoryEntity categoryEntity = categoryRepository.findById(115L)
-            .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다."));
 
         // 채널 생성 및 사용자 계정과 연결
         ChannelEntity channelEntity = createChannel(newUserEntity, categoryEntity);
@@ -171,6 +198,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String userNickname = prefix + randomNumber;
 
         return userNickname;
+    }
+    public static String generateKakaoNickname() {
+    	// "Google"와 랜덤한 숫자 조합
+    	String prefix = "Kakao";
+    	int randomNumber = generateRandomNumber();
+    	String userNickname = prefix + randomNumber;
+    	
+    	return userNickname;
     }
 
     private static int generateRandomNumber() {

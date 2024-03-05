@@ -11,12 +11,12 @@
 <nav th:replace="~{layout/fragments :: mysidebar}"></nav>
 <section class="home">
 <div class="container mt-5">
-    <div>
-        <h1>팔로워</h1>    
+    <div class="text-white">
+        <h1 >팔로워</h1>    
         <div>
             <span th:text="|내 채널 팔로워 수 / |"></span>
             <span class="fw-bold fs-4" th:text="${followersCount}"></span>
-            <span th:text="| 명|" class="fs-4"></span>
+            <span th:text=" 명" class="fs-4"></span>
         </div>
     </div>
     
@@ -49,7 +49,7 @@
                         <span th:text="*{followerUserAccountUserNickname}"></span>
                     </td>
                     <td th:text="*{#temporals.format(createdTime, 'YYYY년 MM월 dd일 HH:mm:ss')}"></td>
-                    <td th:text="|${followersList.betweenCreatedTimeToNow} 일 동안 팔로우|"></td>
+                    <td th:text="${followersList.betweenCreatedTimeToNow == 0 ? '오늘' : followersList.betweenCreatedTimeToNow + '일 동안 팔로우'}"></td>
                 </tr>
             </tbody>
         </table>        
@@ -74,7 +74,7 @@
                         <span th:text="*{followerUserAccountUserNickname}"></span>
                     </td>
                     <td th:text="*{#temporals.format(createdTime, 'YYYY년 MM월 dd일 HH:mm:ss')}"></td>
-                    <td th:text="|${searchResult.betweenCreatedTimeToNow} 일 동안 팔로우|"></td>
+                    <td th:text="${followersList.betweenCreatedTimeToNow == 0 ? '오늘' : followersList.betweenCreatedTimeToNow + '일 동안 팔로우'}"></td>
                 </tr>
             </tbody>
         </table>

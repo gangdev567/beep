@@ -1,7 +1,9 @@
 package com.itwill.beep.web;
 
 import com.itwill.beep.service.S3Service;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +16,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.FollowEntity;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.ChatRoom;
 import com.itwill.beep.dto.StreamingOnDto;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
+import com.itwill.beep.service.FollowService;
+import com.itwill.beep.service.SseService;
 import com.itwill.beep.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +43,8 @@ public class StreamingController {
     private final ChatService chatService;
     private final ChannelService channelService;
     private final S3Service s3Service;
+    private final SseService sseService;
+    private final FollowService followService;
 
     @PostMapping("/on")
     public String StreamingOn(Model model, StreamingOnDto streamingOnDto) {
@@ -68,9 +76,16 @@ public class StreamingController {
             Long channelId = channel.getChannelId();
 
             ChatRoom room = chatService.findRoomById(channelId);
-
-            log.info("room = {}", room);
-            model.addAttribute("room", room);
+            log.info("first check = {}", room);
+            if(room == null) {
+                chatService.createRoom(oauth2name, channelId);
+                room = chatService.findRoomById(channelId);
+                log.info("2 room = {}", room);
+                model.addAttribute("room", room);
+            } else {            
+                log.info("3 room = {}", room);
+                model.addAttribute("room", room);
+            }
 
             // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
             String streamingKey = user.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
@@ -82,7 +97,18 @@ public class StreamingController {
             String streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
 
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
-
+            List<FollowEntity> followers = followService.getFollowers(user);
+            
+            List<UserAccountEntity> followUser = followers.stream()
+                                        .map(FollowEntity::getFollowerUserAccount)
+                                        .collect(Collectors.toList());
+            
+            List<Long> followersId = followUser.stream()
+                                        .map(UserAccountEntity::getUserId)
+                                        .collect(Collectors.toList());
+            
+            sseService.notification(user, followersId);
+            
             String status = channel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
             log.info("----  Steaming() status={}", status);
@@ -112,9 +138,16 @@ public class StreamingController {
             Long channelId = channel.getChannelId();
 
             ChatRoom room = chatService.findRoomById(channelId);
-
-            log.info("room = {}", room);
-            model.addAttribute("room", room);
+            log.info("first check = {}", room);
+            if(room == null) {
+                chatService.createRoom(username, channelId);
+                room = chatService.findRoomById(channelId);
+                log.info("2 room = {}", room);
+                model.addAttribute("room", room);
+            } else {
+                log.info("room = {}", room);
+                model.addAttribute("room", room);                
+            }
 
             String streamingKey = user.getUserStreamingKey();
             // S3에서 스트리밍 키에 해당하는 최근 m3u8 파일의 URL을 가져온다.
@@ -123,7 +156,20 @@ public class StreamingController {
             model.addAttribute("streamingUrl", streamingUrl);
 
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
-
+            List<FollowEntity> followers = followService.getFollowers(user);
+            
+            List<UserAccountEntity> followUser = followers.stream()
+                                        .map(FollowEntity::getFollowerUserAccount)
+                                        .collect(Collectors.toList());
+            
+            List<Long> followersId = followUser.stream()
+                                        .map(UserAccountEntity::getUserId)
+                                        .collect(Collectors.toList());
+            new Thread(() -> {
+                sseService.notification(user, followersId);
+            }).start();
+            
+            
             String status = channel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
             log.info("----  Steaming() status={}", status);
