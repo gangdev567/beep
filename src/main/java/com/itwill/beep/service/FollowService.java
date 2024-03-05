@@ -113,19 +113,22 @@ public class FollowService {
         }
     }
 
-    public Page<FollowerListRequestDto> followingList(String followingUserAccountUserNickname,
+    public Page<FollowerListRequestDto> followingList(String followingUserAccountUserName,
             int page) {
-        log.info("followingList()");
+        log.info("followingList(followerUserAccountUserNickname={}, page={})",
+                followingUserAccountUserName, page);
 
         Pageable pageable = PageRequest.of(page, 3, Sort.by("createdTime").descending());
 
-        Page<FollowEntity> followerPage = followRepository
-                .findByFollowingUserAccountUserNickname(followingUserAccountUserNickname, pageable);
+        List<FollowEntity> followerPage =
+                followRepository.findByFollowingUserAccountUserName(followingUserAccountUserName);
+
+        log.info("팔로우페이지={}", followerPage.size());
 
         LocalDateTime now = LocalDateTime.now();
 
         List<FollowerListRequestDto> result = new ArrayList<>();
-        for (FollowEntity entity : followerPage.getContent()) {
+        for (FollowEntity entity : followerPage) {
             FollowerListRequestDto followerListRequestDto = FollowerListRequestDto.builder()
                     .followerUserAccountUserNickname(
                             entity.getFollowerUserAccount().getUserNickname())
@@ -137,14 +140,14 @@ public class FollowService {
             result.add(followerListRequestDto);
         }
 
-        return new PageImpl<>(result, pageable, followerPage.getTotalElements());
+        return new PageImpl<>(result, pageable, result.size());
     }
 
     public Page<FollowerListRequestDto> search(FollowerSearchRequestDto dto) {
         log.info("search(dto={})", dto);
 
         List<FollowEntity> followerSearchResult = followRepository
-                .findByFollowingUserAccountUserNickname(dto.getFollowingUserAccountUserNickname());
+                .findByFollowingUserAccountUserName(dto.getFollowingUserAccountUserName());
         LocalDateTime now = LocalDateTime.now();
 
         List<FollowerListRequestDto> result = new ArrayList<>();

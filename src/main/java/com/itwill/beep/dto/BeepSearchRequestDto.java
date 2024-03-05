@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class FollowerSearchRequestDto {
-    private String followingUserAccountUserName;
+public class BeepSearchRequestDto {
+    private String userNickname;
+    private String channelTitle;
+    private String categoryName;
     private String keyword;
-    private int p;
 }

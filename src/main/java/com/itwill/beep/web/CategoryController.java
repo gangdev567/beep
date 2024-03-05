@@ -80,7 +80,6 @@ public class CategoryController {
                     (String) ((OAuth2User) principal).getAttributes().get("name"));
         } else if (authentication.isAuthenticated()) {
             loginUser = userService.findUserByUserName(authentication.getName());
-
         } else {
             log.info("로그인되지 않은 사용자입니다.");
         }

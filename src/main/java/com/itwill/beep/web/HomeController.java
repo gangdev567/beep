@@ -1,9 +1,9 @@
 package com.itwill.beep.web;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,14 +13,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.amazonaws.services.s3.AmazonS3;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import com.itwill.beep.domain.CategoryEntity;
+
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
+import com.itwill.beep.dto.BeepSearchRequestDto;
 import com.itwill.beep.dto.ChatRoom;
+import com.itwill.beep.service.CategoryService;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
+import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,11 +40,14 @@ public class HomeController {
     private final ChatService chatService;
     private final ChannelService channelService;
     private final AmazonS3 amazonS3;
+    private final CategoryService categoryService;
+    private final FollowService followService;
+
 
     @GetMapping("/")
     @PreAuthorize("permitAll")
     public String home(Model model) {
-        // (2) 현재 로그인한 사용자 정보를 가져옵니다.
+        // (2) 현재 로그인한 사용자 정보를 가져옴.
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("--- home() principal={}", principal);
         
@@ -52,17 +61,72 @@ public class HomeController {
         } else if (principal instanceof UserDetails) {
             handleUserDetails((UserDetails) principal, model);
         } else {
-            log.info("---> ?");
+            log.info("---> 누구세요..?");
         }
 
         // (7) 현재 진행 중인 방송의 리스트를 홈으로 보냅니다.
         List<ChatRoom> broadcastList = chatService.findAllRoom();
-        
+
         // (8) 방송 중인 채널 목록을 가져옵니다.
         List<ChannelEntity> channelList = getActiveChannels(broadcastList);
         model.addAttribute("channelList", channelList);
 
         return "home";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof OAuth2User) {
+            handleOAuth2User((OAuth2User) principal, model);
+        } else if (principal instanceof UserDetails) {
+            handleUserDetails((UserDetails) principal, model);
+        } else {
+            log.info("---> ?");
+        }
+
+        return "homesearch";
+    }
+
+    @PostMapping("/search")
+    public String searchBeep(BeepSearchRequestDto dto, Model model) {
+        log.info("searchBeep(dto={})", dto);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof OAuth2User) {
+            handleOAuth2User((OAuth2User) principal, model);
+        } else if (principal instanceof UserDetails) {
+            handleUserDetails((UserDetails) principal, model);
+        } else {
+            log.info("---> ?");
+        }
+
+        List<ChannelEntity> channelUserAccountEntitySearchResult =
+                channelService.findChannelBychannelUserAccountEntity(dto.getKeyword());
+        List<ChannelEntity> channelSearchResult =
+                channelService.findChannelByChannelTitle(dto.getKeyword());
+        List<CategoryEntity> categorySearchResult =
+                categoryService.findCategoryByCategoryName(dto.getKeyword());
+        List<Long> channelFollowerCount = new ArrayList<>();
+
+        for (ChannelEntity entity : channelUserAccountEntitySearchResult) {
+            channelFollowerCount
+                    .add(followService.countFollowers(entity.getChannelUserAccountEntity()));
+        }
+        List<ChannelEntity> StreamingStateOnchannelSearchResult = channelSearchResult.stream()
+                .filter(t -> t.getStreamingStateSet().toString().contains("ON"))
+                .collect(Collectors.toList());
+
+        model.addAttribute("channelUserAccountEntitySearchResult",
+                channelUserAccountEntitySearchResult);
+        model.addAttribute("channelSearchResult", StreamingStateOnchannelSearchResult);
+        model.addAttribute("categorySearchResult", categorySearchResult);
+        model.addAttribute("channelFollowerCount", channelFollowerCount);
+
+        return "homesearch";
     }
 
     // (4) OAuth2User 처리
@@ -112,9 +176,9 @@ public class HomeController {
 
     // (8) 방송 중인 채널 목록을 가져오는 메서드
     private List<ChannelEntity> getActiveChannels(List<ChatRoom> broadcastList) {
-        return broadcastList.stream()
-                .map(this::convertToChannel)
-                .filter(channel -> channel != null && channel.getStreamingStateSet().contains(StreamingState.ON))
+        return broadcastList.stream().map(this::convertToChannel)
+                .filter(channel -> channel != null
+                        && channel.getStreamingStateSet().contains(StreamingState.ON))
                 .collect(Collectors.toList());
     }
 
@@ -126,4 +190,6 @@ public class HomeController {
         log.info("channel = {}", channel);
         return channel;
     }
+
+
 }
