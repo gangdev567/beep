@@ -1,5 +1,6 @@
 package com.itwill.beep.web;
 
+import com.itwill.beep.service.S3Service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,6 +42,7 @@ public class StreamingController {
     private final UserService userService;
     private final ChatService chatService;
     private final ChannelService channelService;
+    private final S3Service s3Service;
     private final SseService sseService;
     private final FollowService followService;
 
@@ -87,9 +89,12 @@ public class StreamingController {
 
             // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
             String streamingKey = user.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
-            log.info("streamingKey = {}", streamingKey);
-            String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
-            model.addAttribute("streamingUrl", streamingUrl);
+            //String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
+            //model.addAttribute("streamingUrl", streamingUrl);
+
+            // S3에서 스트리밍 키에 해당하는 최근 m3u8 파일의 URL을 가져온다.
+            String bucketName = "beepitwill"; // S3 버킷 이름 설정
+            String streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
 
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
             List<FollowEntity> followers = followService.getFollowers(user);
@@ -144,10 +149,10 @@ public class StreamingController {
                 model.addAttribute("room", room);                
             }
 
-            // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
-            String streamingKey = user.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
-            log.info("streamingKey = {}", streamingKey);
-            String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
+            String streamingKey = user.getUserStreamingKey();
+            // S3에서 스트리밍 키에 해당하는 최근 m3u8 파일의 URL을 가져온다.
+            String bucketName = "beepitwill"; // S3 버킷 이름 설정
+            String streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
             model.addAttribute("streamingUrl", streamingUrl);
 
             // TODO: 브로드캐스트 상태를 온으로 만들고 팔로워에게 알림을 보내도록
