@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
@@ -32,6 +33,7 @@ public class HomeController {
     private final UserService userService;
     private final ChatService chatService;
     private final ChannelService channelService;
+    private final AmazonS3 amazonS3;
 
     @GetMapping("/")
     @PreAuthorize("permitAll")
@@ -39,6 +41,10 @@ public class HomeController {
         // (2) 현재 로그인한 사용자 정보를 가져옵니다.
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("--- home() principal={}", principal);
+        
+        String url = amazonS3.getUrl("beepitwill", "default_profile_image.jpg").toString();
+        log.info("url = {}", url);
+        model.addAttribute("testUrl", url);
 
         // (3) OAuth2User 또는 UserDetails에 따라 처리
         if (principal instanceof OAuth2User) {

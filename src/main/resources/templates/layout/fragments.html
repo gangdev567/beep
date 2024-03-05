@@ -564,7 +564,8 @@
             <!-- 더미 데이터를 사용하여 동영상 정보 표시 -->
             <div class="card border-dark">
                 <a class="video-card-thumbnail position-relative" th:href="@{/channel/{roomId}(roomId=*{channelUserAccountEntity.userNickname})}">
-                    <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
+                    <!-- src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" -->
+                    <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg"  class="card-img-top rounded-3" alt="Video Thumbnail">
                     <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
                         <span class="badge bg-danger">LIVE</span>
                         <span class="badge bg-secondary ms-1" th:text="*{channelViewerCount + ' 명'}"></span>
