@@ -23,6 +23,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccountEntity, 
 	// 해당 userStreamingKey와 일치하는 UserAccountEntity를 가져옴.
 	UserAccountEntity findByUserStreamingKey(String userStreamingKey);
 
+	boolean existsByUserStreamingKey(String userStreamingKey);
+
 	// 해당 사용자 아이디가 존재하는지 확인.
 	boolean existsByUserName(String userName);
 

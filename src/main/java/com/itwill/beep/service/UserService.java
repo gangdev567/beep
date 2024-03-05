@@ -47,6 +47,10 @@ public class UserService implements UserDetailsService {
      */
     private final VerificationTokenService verificationTokenService;
 
+    public boolean validateStreamKey(String key) {
+        return userAccountRepository.existsByUserStreamingKey(key);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         log.info("username = {}", userName);

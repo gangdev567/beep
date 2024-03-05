@@ -1,6 +1,9 @@
 package com.itwill.beep.domain;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.NaturalId;
@@ -76,10 +79,15 @@ public class UserAccountEntity{ // -> 원래 Account -> UserAccountEntity 로 �
 
     @Column(name = "user_email_verified")
     private boolean userEmailVerified = false;
-    
 
-    
-    
+    // User와 StreamingInfo 사이의 1:N 관계 설정
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StreamingInfo> streamingInfos;
+
+
+
+
+
 
 
     // 빌더패턴을 이용해서 객체를 생성할 때 nullPointExeption이 발생하는 것을
