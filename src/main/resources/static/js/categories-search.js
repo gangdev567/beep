@@ -42,12 +42,12 @@ function displaySearchResults(results) {
         const card = document.createElement("div");
         card.className = "col-lg-2 col-md-4 mb-4";
         card.innerHTML = `
-            <div class="card category-card">
+            <div class="divCategoryStyle card categoryCard">
                 <a href="/categories/${category.categoryId}" class="card-link text-decoration-none text-white">
-                    <img src="${category.categoryImageUrl}" class="img-fluid card-img-top category-image" alt="Category Image">
-                    <div class="card-body">
-                        <h5 class="card-title category-title text-left text-black text-truncate fs-5">${category.categoryName}</h5>
-                        <h5 class="card-title category-title text-left text-black text-truncate fs-6">
+                    <img src="${category.categoryImageUrl}" class="img-fluid card-img-top" alt="Category Image" style="width: 200px; height: 250px;">
+                    <div class="card-body bg-dark">
+                        <h5 class="text-left text-white text-truncate fs-5">${category.categoryName}</h5>
+                        <h5 class="text-left text-white text-truncate fs-6">
                             <span class="totalViewSpan">${category.categoryTotalView != null ? '시청자 ' + category.categoryTotalView + ' 명' : '시청자 0명'}</span>
                         </h5>
                     </div>
@@ -69,3 +69,11 @@ function displaySearchResults(results) {
     });
     resultContainer.appendChild(clearButton);
 }
+
+// 엔터 키 이벤트 핸들러 추가
+document.getElementById("searchKeyword").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // 기본 엔터 동작 방지
+        searchKeyword(); // 검색 함수 호출
+    }
+});

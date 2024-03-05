@@ -2,6 +2,8 @@ package com.itwill.beep.web;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,6 +64,36 @@ public class HomeController {
         model.addAttribute("channelList", channelList);
 
         return "home";
+    }
+
+    @GetMapping("/lives")
+    public String lives(Model model) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof OAuth2User) {
+            handleOAuth2User((OAuth2User) principal, model);
+        } else if (principal instanceof UserDetails) {
+            handleUserDetails((UserDetails) principal, model);
+        } else {
+            log.info("---> 누구세요..?");
+        }
+
+        // (7) 현재 진행 중인 방송의 리스트를 홈으로 보냅니다.
+        List<ChatRoom> broadcastList = chatService.findAllRoom();
+
+        // (8) 방송 중인 채널 목록을 가져옵니다.
+        List<ChannelEntity> channelList = getActiveChannels(broadcastList);
+        Collections.sort(channelList,
+                Comparator.comparing(ChannelEntity::getChannelViewerCount).reversed());
+
+        List<ChannelEntity> recommendedChannelList = new ArrayList<>(channelList);
+        recommendedChannelList.sort(Comparator.comparing(ChannelEntity::getChannelId).reversed());
+
+        model.addAttribute("channelList", channelList);
+        model.addAttribute("recommendedChannelList", recommendedChannelList);
+
+        return "lives";
     }
 
     @GetMapping("/search")
