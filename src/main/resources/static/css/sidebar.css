@@ -254,6 +254,11 @@ body.sidebar li a:hover .text {
     overflow-y: auto; /* 마우스를 가져다 대면 스크롤 활성화 */
 }
 
+.sidebar .menu-bar::-webkit-scrollbar {
+    width: 0; /* 수직 스크롤바 너비를 0으로 설정하여 숨김 */
+    height: 0; /* 수평 스크롤바 높이를 0으로 설정하여 숨김 */
+}
+
 /* 다크 모드 전환 버튼 스타일 설정 */
 .menu-bar .mode {
 	position: relative; /* 요소를 기본 문서 흐름에 따라 배치하고, 상대 위치 속성을 기준으로 위치를 조정함 */
