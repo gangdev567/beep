@@ -253,20 +253,17 @@ body.sidebar li a:hover .text {
 .sidebar .menu-bar {
     overflow-y: auto; /* 스크롤 활성화 */
 
-<<<<<<< HEAD
  
 }
 /* Chrome, Safari, Edge 스크롤바 숨기기 */
 ::-webkit-scrollbar {
   display: none;
 }
-=======
 .sidebar .menu-bar::-webkit-scrollbar {
     width: 0; /* 수직 스크롤바 너비를 0으로 설정하여 숨김 */
     height: 0; /* 수평 스크롤바 높이를 0으로 설정하여 숨김 */
 }
 
->>>>>>> 011c61e18195271c8d5203647d514cf3d5a159e7
 /* 다크 모드 전환 버튼 스타일 설정 */
 .menu-bar .mode {
 	position: relative; /* 요소를 기본 문서 흐름에 따라 배치하고, 상대 위치 속성을 기준으로 위치를 조정함 */
