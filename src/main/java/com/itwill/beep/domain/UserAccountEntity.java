@@ -78,7 +78,7 @@ public class UserAccountEntity{ // -> 원래 Account -> UserAccountEntity 로 �
     private String userSelfIntroduction; // 자기 소개
 
     @Column(name = "user_email_verified")
-    private boolean userEmailVerified = false;
+    private boolean userEmailVerified;
 
     // User와 StreamingInfo 사이의 1:N 관계 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
