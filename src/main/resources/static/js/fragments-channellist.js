@@ -207,7 +207,7 @@ async function fetchPopularChannels() {
             console.log(data);
 
             const popularListElement = document.getElementById('popularList');
-            popularListElement.innerHTML = '<h5 class="my-2 text-secondary fw-bold" style="white-space: nowrap; overflow: hidden;">추천 채널</h5>';
+            popularListElement.innerHTML = '<h5 class="my-2 text-secondary fw-bold" style="white-space: nowrap; overflow: hidden;">인기 채널</h5>';
 
             const itemsPerPage = 3;
             let currentPage = 1;
