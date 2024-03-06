@@ -249,7 +249,7 @@ public class ChannelController {
             String status = myChannel.getStreamingStateSet().toString();
             model.addAttribute("status", status);
         }
-        return "/channel";
+        return "channel";
 
 
     }
