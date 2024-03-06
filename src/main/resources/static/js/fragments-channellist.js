@@ -1,10 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
-    fetchFollowList();
-    fetchPopularChannels();
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchPopularChannels();
 
     toggle.addEventListener('click', () => {
         detectSidebarState();
-
     });
 });
 
@@ -15,7 +13,7 @@ async function detectSidebarState() {
 
         if (sidebar.classList.contains('close')) {
             channelInfoElements.forEach(element => {
-                element.parentElement.parentElement.style.display = 'none'; // 채널 정보 숨김
+                element.parentElement.parentElement.style.display = 'none'; // 채널 정보 숨김 
             });
         } else {
             channelInfoElements.forEach(element => {
@@ -38,7 +36,7 @@ async function fetchFollowList() {
             // followListElement와 itemsPerPage, currentPage를 초기화
             if (authentication !== 'anonymousUser') {
                 const followListElement = document.getElementById('followList');
-                followListElement.innerHTML = '<h5 class="my-2 text-secondary fw-bold text-truncate">팔로우 목록</h5>';
+                followListElement.innerHTML = '<h5 class="my-2 text-secondary fw-bold" style="white-space: nowrap; overflow: hidden;">팔로우 채널</h5>';
                 const itemsPerPage = 3; // 페이지 당 항목 수
                 let currentPage = 1; // 현재 페이지
                 let closeButton; // 닫기 버튼
@@ -90,8 +88,11 @@ async function fetchFollowList() {
                 function addLoadMoreButton() {
                     const loadMoreButton = document.createElement('button');
                     loadMoreButton.id = 'loadMoreButton'; // 버튼에 ID 추가
-                    loadMoreButton.innerText = '👓';
-                    loadMoreButton.classList.add('btn', 'btn-outline-primary', 'mt-2', 'btn-sm');
+                    loadMoreButton.innerText = '더보기';
+                    loadMoreButton.classList.add('btn', 'btn-outline-secondary', 'mt-2', 'btn-sm');
+                    loadMoreButton.style.border = 'none';
+                    loadMoreButton.style.whiteSpace = 'nowrap';
+                    loadMoreButton.style.overflow = 'hidden';
 
                     loadMoreButton.addEventListener('click', () => {
                         currentPage++; // 다음 페이지로 이동
@@ -105,8 +106,11 @@ async function fetchFollowList() {
                 function addCloseButton() {
                     closeButton = document.createElement('button');
                     closeButton.id = 'closeButton'; // 버튼에 ID 추가
-                    closeButton.innerText = '❌';
+                    closeButton.innerText = '닫기';
                     closeButton.classList.add('btn', 'btn-outline-danger', 'mt-2', 'btn-sm');
+                    closeButton.style.border = 'none';
+                    closeButton.style.whiteSpace = 'nowrap';
+                    closeButton.style.overflow = 'hidden';
 
                     closeButton.addEventListener('click', () => {
                         // 추가된 요소들과 닫기 버튼 제거
@@ -122,11 +126,11 @@ async function fetchFollowList() {
 
                 function createChannelListItem(channel) {
                     const divTag = document.createElement('div');
-                    divTag.classList.add('list-group-item', 'd-flex', 'align-items-center');
+                    divTag.classList.add('list-group-item', 'd-flex', 'align-items-center', 'mb-1');
                     divTag.style.border = "none";
 
                     divTag.addEventListener('mouseenter', () => {
-                        divTag.style.backgroundColor = '#808080'; // 회색 빛 추가
+                        divTag.style.backgroundColor = '#1F1F23'; // 회색 빛 추가
                     });
 
                     divTag.addEventListener('mouseleave', () => {
@@ -143,15 +147,15 @@ async function fetchFollowList() {
                     a.appendChild(div); // <div>를 <a> 태그 내에 추가
 
                     const img = document.createElement('img');
-                    img.src = '/images/default.png'; // TODO: ${channel.channelProfileImg}
+                    img.src = `${channel.channelProfileImg}`;
                     img.alt = '프로필 이미지';
                     img.style.width = '50px';
                     img.style.height = '50px';
-                    img.classList.add('me-3');
+                    img.classList.add('me-3', 'rounded-circle');
                     div.appendChild(img); // 이미지를 <div> 태그 내에 추가
 
                     const channelInfo = document.createElement('div'); // 채널 정보를 감싸는 <div> 생성
-                    channelInfo.classList.add('flex-grow-1'); // 채널 정보가 남은 공간을 차지하도록 설정
+                    channelInfo.classList.add('flex-grow-1', 'my-1'); // 채널 정보가 남은 공간을 차지하도록 설정
                     div.appendChild(channelInfo); // 채널 정보를 <div> 태그 내에 추가
 
                     const channelName = document.createElement('span');
@@ -162,7 +166,7 @@ async function fetchFollowList() {
                     let text = '';
 
                     if (channel.streamingState.includes('ON')) {
-                        text += `<br><span class="badge bg-danger">LIVE</span> 👁️ ${channel.channelViewerCount}<br>${channel.categoryEntityOfChannelCategoryName}`;
+                        text += `<br><span class="badge bg-danger">LIVE</span> 🚀 <span style="color: #FF5454; font-weight: bold;">${channel.channelViewerCount.toLocaleString()}</span><br>${channel.categoryEntityOfChannelCategoryName}`;
                     } else {
                         text += '<br>오프라인';
                     }
@@ -187,10 +191,10 @@ async function fetchFollowList() {
                 }
             }
         } else {
-            console.error('팔로우 목록을 불러오는 중 에러 발생:', response.status);
+            console.error('팔로우 채널을 불러오는 중 에러 발생:', response.status);
         }
     } catch (error) {
-        console.error('팔로우 목록을 불러오는 중 에러 발생:', error);
+        console.error('팔로우 채널을 불러오는 중 에러 발생:', error);
     }
 
 }
@@ -203,7 +207,7 @@ async function fetchPopularChannels() {
             console.log(data);
 
             const popularListElement = document.getElementById('popularList');
-            popularListElement.innerHTML = '<h5 class="my-2 text-secondary fw-bold text-truncate">추천 채널</h5>';
+            popularListElement.innerHTML = '<h5 class="my-2 text-secondary fw-bold" style="white-space: nowrap; overflow: hidden;">추천 채널</h5>';
 
             const itemsPerPage = 3;
             let currentPage = 1;
@@ -250,8 +254,11 @@ async function fetchPopularChannels() {
                 function addLoadMoreButtonByPopular() {
                     const loadMoreButtonByPopular = document.createElement('button');
                     loadMoreButtonByPopular.id = 'loadMoreButtonByPopular'; // 버튼에 ID 추가
-                    loadMoreButtonByPopular.innerText = '👓';
-                    loadMoreButtonByPopular.classList.add('btn', 'btn-outline-primary', 'mt-2', 'btn-sm');
+                    loadMoreButtonByPopular.innerText = '더보기';
+                    loadMoreButtonByPopular.classList.add('btn', 'btn-outline-secondary', 'mt-2', 'btn-sm');
+                    loadMoreButtonByPopular.style.border = 'none';
+                    loadMoreButtonByPopular.style.whiteSpace = 'nowrap';
+                    loadMoreButtonByPopular.style.overflow = 'hidden';
 
                     loadMoreButtonByPopular.addEventListener('click', () => {
                         currentPage++; // 다음 페이지로 이동
@@ -265,8 +272,11 @@ async function fetchPopularChannels() {
                 function addCloseButtonByPopular() {
                     closeButtonByPopular = document.createElement('button');
                     closeButtonByPopular.id = 'closeButtonByPopular'; // 버튼에 ID 추가
-                    closeButtonByPopular.innerText = '❌';
+                    closeButtonByPopular.innerText = '닫기';
                     closeButtonByPopular.classList.add('btn', 'btn-outline-danger', 'mt-2', 'btn-sm');
+                    closeButtonByPopular.style.border = 'none';
+                    closeButtonByPopular.style.whiteSpace = 'nowrap';
+                    closeButtonByPopular.style.overflow = 'hidden';
 
                     closeButtonByPopular.addEventListener('click', () => {
                         // 추가된 요소들과 닫기 버튼 제거
@@ -282,11 +292,11 @@ async function fetchPopularChannels() {
 
                 function createpopularListItem(channel) {
                     const divTag = document.createElement('div');
-                    divTag.classList.add('list-group-item', 'd-flex', 'align-items-center');
+                    divTag.classList.add('list-group-item', 'd-flex', 'align-items-center', 'mb-1');
                     divTag.style.border = "none";
 
                     divTag.addEventListener('mouseenter', () => {
-                        divTag.style.backgroundColor = '#808080'; // 회색 빛 추가
+                        divTag.style.backgroundColor = '#1F1F23'; // 회색 빛 추가
                     });
 
                     divTag.addEventListener('mouseleave', () => {
@@ -303,11 +313,11 @@ async function fetchPopularChannels() {
                     a.appendChild(div); // <div>를 <a> 태그 내에 추가
 
                     const img = document.createElement('img');
-                    img.src = '/images/default.png';
+                    img.src = `${channel.channelProfileImg}`;
                     img.alt = '프로필 이미지';
                     img.style.width = '50px';
                     img.style.height = '50px';
-                    img.classList.add('me-3');
+                    img.classList.add('me-3', 'rounded-circle');
                     div.appendChild(img); // 이미지를 <div> 태그 내에 추가
 
                     const channelInfo = document.createElement('div'); // 채널 정보를 감싸는 <div> 생성
@@ -322,7 +332,7 @@ async function fetchPopularChannels() {
                     let text = '';
 
                     if (channel.streamingState.includes('ON')) {
-                        text += `<br><span class="badge bg-danger">LIVE</span> 👁️ ${channel.channelViewerCount}<br>${channel.categoryEntityOfChannelCategoryName}`;
+                        text += `<br><span class="badge bg-danger">LIVE</span> 🚀 <span style="color: #FF5454; font-weight: bold;">${channel.channelViewerCount.toLocaleString()}</span><br>${channel.categoryEntityOfChannelCategoryName}`;
                     } else {
                         text += '<br>오프라인';
                     }
@@ -347,7 +357,7 @@ async function fetchPopularChannels() {
                 }
 
             }
-
+            await fetchFollowList();
         } else {
             console.error('인기 있는 채널을 불러오는 중 에러 발생:', response.status);
         }

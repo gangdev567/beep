@@ -16,14 +16,13 @@
         <div class="col-md-12 d-flex align-items-center">
             <img th:src="${categoryDetails.categoryImageUrl}" class="card-img-top img-fluid float-md-start me-md-3" alt="Category Image" style="width: 200px; height: 250px;">
             <div class="mx-3 text-center">
-                <h1 class="card-title category-title text-left text-truncate text-white" th:text="${categoryDetails.categoryName}">Category Name</h1>
-                <h5 class="card-title category-title text-left text-truncate text-white my-3" th:text="${categoryDetails.categoryTotalView != null ? '시청자 ' + categoryDetails.categoryTotalView + ' 명' : '시청자 0 명'}"></h5>
+                <h1 class="text-left text-truncate text-white my-3" th:text="${categoryDetails.categoryName}"></h1>
+                <span class="text-left text-truncate text-white" th:text="${categoryDetails.categoryTotalView != null ? '시청자 ' + categoryDetails.categoryTotalView + '명' : '시청자 0명'} + ' • ' + (${not #lists.isEmpty(categoryChannelList)} ? '라이브 ' + ${#lists.size(categoryChannelList.?[streamingStateSet.toString().contains('ON')])} + '개' : '라이브 0개')"></span>
+
             </div>
         </div>
     </div>    
-    <hr class="text-white"/>
-    <h1 class="my-3 text-white">생방송 중인 채널</h1>
-    
+    <hr class="text-white"/>    
     <div class="row mt-3 custom" th:if="${#lists.isEmpty(categoryChannelList)}">
         <div class="col-md-12">
             <h5 class="text-white">생방송 중인 채널이 없습니다.</h5>

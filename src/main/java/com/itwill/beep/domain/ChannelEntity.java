@@ -3,9 +3,7 @@ package com.itwill.beep.domain;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -86,7 +84,7 @@ public class ChannelEntity {
         streamingStateSet.add(streamingState);
         return this;
     }
-    
+
     @Builder.Default
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -102,6 +100,10 @@ public class ChannelEntity {
     /* 방송 OFF시 시청자 수 조정하는 메서드 추가헀습니다. 확인必 */
     public void resetTotalViewerCount(Long channelViewerCount) {
         this.channelViewerCount = channelViewerCount;
+    }
+
+    public void updateChannelProfileImg(String channelProfileImg) {
+        this.channelProfileImg = channelProfileImg;
     }
 
 }
