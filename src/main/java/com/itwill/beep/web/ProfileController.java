@@ -111,7 +111,6 @@ public class ProfileController {
         try {
             imageService.channelProfileImgUpload(dto);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
