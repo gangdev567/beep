@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class ChannelImageRequestDto {
 
-    private Long channelId; // 추가: 채널 ID
+    private Long channelId;
     private MultipartFile imgFile;
     private String channelProfileImg;
 
     public ChannelEntity toEntity(String channelProfileImg) {
-        return ChannelEntity.builder().channelId(channelId) // 추가: 채널 ID 설정
-                .channelProfileImg(channelProfileImg).build();
+        return ChannelEntity.builder().channelId(channelId).channelProfileImg(channelProfileImg)
+                .build();
     }
 }

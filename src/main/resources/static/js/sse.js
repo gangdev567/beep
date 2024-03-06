@@ -27,23 +27,35 @@
     
         function createNotification(data) {
             console.log(data);
-            const notificationElement = document.createElement('div');
-            notificationElement.classList.add('notification');
             
             // JSON 객체 처리
+            let message = JSON.parse(data);
+            const title = message.title;
+            // notificationElement.textContent = JSON.stringify(data);
 
-            notificationElement.textContent = JSON.stringify(data);
+            const strongElement = document.querySelector(".toast-header strong");
+            strongElement.textContent = message.streamer + '님이 방송을 시작했습니다.';
+            
+            const body = document.querySelector('.toast-body');
+            body.textContent = title;
+            
+            const img = document.querySelector('.notiImg');
+            img.src = message.profileImageUrl;
         
-            const notificationContainer = document.getElementById('notification-container');
-            notificationContainer.appendChild(notificationElement);
+        
+            //let notification = document.getElementById('toast-body');
+            //notification.innerHTML = sival;
+            
+            const toastLiveExample = document.getElementById('liveToast')
+            const toast = new bootstrap.Toast(toastLiveExample);
+            
+            toast.show();
             
             // 알림창 보여주기
-            notificationElement.classList.add('active');
             
             // 3초 후 알림창 숨기기
             setTimeout(() => {
-            notificationElement.classList.remove('active');
-            setTimeout(() => notificationContainer.removeChild(notificationElement), 500);
+                toast.hide();
             }, 300000);
             }
     

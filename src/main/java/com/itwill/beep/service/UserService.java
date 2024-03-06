@@ -44,6 +44,10 @@ public class UserService implements UserDetailsService {
      */
     private final VerificationTokenService verificationTokenService;
 
+    public boolean validateStreamKey(String key) {
+        return userAccountRepository.existsByUserStreamingKey(key);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         log.info("username = {}", userName);
@@ -84,7 +88,7 @@ public class UserService implements UserDetailsService {
                 .categoryEntityOfChannel(categoryEntity) // 예시 카테고리
                 .channelContent("Welcome to your new channel!") // 채널 설명 또는 초기 콘텐츠
                 .channelCreatedTime(LocalDateTime.now()) // 생성 시간
-                .channelProfileImg("default_profile.png") // 기본 프로필 이미지 경로
+                .channelProfileImg("/images/default-profile.png") // 기본 프로필 이미지 경로
                 .channelTitle(signupRequestDto.getUserName() + "'s Channel") // 채널 제목
                 .channelViewerCount(0L) // 초기 시청자 수
                 .build();
@@ -137,7 +141,7 @@ public class UserService implements UserDetailsService {
     public boolean isUserNameExists(String userName) {
         return userAccountRepository.existsByUserName(userName);
     }
-    
+
     /**
      * 사용자 이름이 존재하는지 여부를 확인하는 메소드.
      *
@@ -145,9 +149,9 @@ public class UserService implements UserDetailsService {
      * @return 사용자 이름이 존재하면 true, 그렇지 않으면 false
      */
     public boolean isUserNicknameExists(String userNickname) {
-    	return userAccountRepository.existsByUserNickname(userNickname);
+        return userAccountRepository.existsByUserNickname(userNickname);
     }
-    
+
     /**
      * 사용자 이메일이 존재하는지 여부를 확인하는 메소드.
      *
@@ -155,7 +159,7 @@ public class UserService implements UserDetailsService {
      * @return 사용자 이름이 존재하면 true, 그렇지 않으면 false
      */
     public boolean isUserEmailExists(String userEmail) {
-    	return userAccountRepository.existsByUserEmail(userEmail);
+        return userAccountRepository.existsByUserEmail(userEmail);
     }
 
     @Transactional

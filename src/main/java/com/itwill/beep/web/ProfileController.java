@@ -161,4 +161,5 @@ public class ProfileController {
         // "settings/security" 뷰를 반환합니다. (HTML 파일 이름이 "settings/security.html" 이라고 가정)
         return "settings/security";
     }
+
 }

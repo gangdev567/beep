@@ -170,7 +170,7 @@
                 <form class="d-flex my-2 my-lg-0 ms-auto align-items-center" action="/search" method="post">
                     <!-- align-items-center 추가 -->
                     <input class="form-control search me-2 mb-2 mb-lg-0" type="search" name="keyword"
-                           placeholder="스트리머, 게임, 영상 검색" aria-label="Search">
+                           placeholder="스트리머, 게임, 영상 검색" aria-label="Search" required>
                     <button class="btn btn-outline-success" type="submit">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -410,7 +410,7 @@
 
 </nav>
 
-<section th:fragment="myhome" class="home" style="z-index: 11;">
+<section th:fragment="myhome" class="home">
     <div class="custom-top-banner-container">
         <!-- 첫 번째 배너 아이템 -->
         <div class="custom-top-banner-item">
@@ -568,7 +568,7 @@
             <!-- 더미 데이터를 사용하여 동영상 정보 표시 -->
             <div class="card border-dark">
                 <a class="video-card-thumbnail position-relative" th:href="@{/channel/{roomId}(roomId=*{channelUserAccountEntity.userNickname})}">
-                    <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg" class="card-img-top rounded-3" alt="Video Thumbnail">
+                    <img src="https://livecloud-thumb.akamaized.net/chzzk/livecloud/KR/stream/26760407/live/4249524/record/24711646/thumbnail/image_480.jpg"  class="card-img-top rounded-3" alt="Video Thumbnail">
                     <div class="live-badge-container position-absolute top-0 start-0 mt-3 ms-3">
                         <span class="badge bg-danger">LIVE</span>
                         <span class="badge bg-secondary ms-1" th:text="*{channelViewerCount + ' 명'}"></span>
@@ -577,7 +577,7 @@
                 <div class="card-body d-flex flex-column justify-content-between">
                     <div class="video-card-profile mb-2">
                         <a class="video-card-image" th:href="@{/channel/{roomId}(roomId=*{channelUserAccountEntity.userNickname})}">
-                            <img src="https://nng-phinf.pstatic.net/MjAyNDAxMDFfMTQx/MDAxNzA0MDk3MDE3MTE5.ti8d5qLvJeZs0cfg6LZO5V5-rv4ZkWzFE_61jIY2hlwg.L0kBkJh_hcxxZm8Nu-XPIEs0zxxVuJewWpff0vL3Ps8g.PNG/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_2024-01-01_122144.png?type=f120_120_na" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                            <img th:src="*{channelProfileImg}" alt="Streamer Image" class="rounded-circle" style="width: 40px; height: 40px;">
                         </a>
                     </div>
                     <div class="video-card-area mb-2">
@@ -603,7 +603,7 @@
     </div>
 
     <footer th:fragment="myfooter"
-                    class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top" style="color: #18191a; z-index: 10;">
+                    class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top" style="color: #18191a;">
         <p class="col-md-4 mb-0" style="color: #ccc;">© 2024 Spring Boot ITWILL</p>
 
         <a href="/"

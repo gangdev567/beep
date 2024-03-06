@@ -4,19 +4,43 @@
 
 <head th:replace="~{layout/fragments :: myhead}"></head>
 
-<body>
+<style>
+input.inputStyle {
+    border: 2px solid transparent;
+}
+input.inputStyle::placeholder {
+    color: #7d8489; 
+}
 
+input.inputStyle:focus {
+    background-color: #242526; 
+    border-color: #8a2be2; 
+    color: #dfe2ea; 
+    outline: none; 
+}
+
+a.aStyle {
+    border: transparent;
+}
+</style>
+
+<body>
 <header th:replace="~{layout/fragments :: myheader}"></header>
 
 <nav th:replace="~{layout/fragments :: mysidebar}"></nav>
 <section class="home">
 <div class="container mt-5">
-    <div>
-        <h1>팔로워</h1>    
+    <div class="text-white">
+        <h1 class="fw-bold text-start">팔로워</h1>
+        
+        <hr class="text-white">
+        
         <div>
+            <div>
             <span th:text="|내 채널 팔로워 수 / |"></span>
             <span class="fw-bold fs-4" th:text="${followersCount}"></span>
-            <span th:text="| 명|" class="fs-4"></span>
+            <span th:text=" 명" class="fs-4"></span>
+            </div>
         </div>
     </div>
     
@@ -24,17 +48,18 @@
         <div class="row justify-content-center mt-4">
             <div class="col-md-6">
                 <form class="input-group" method="get" th:action="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname})}">
-                    <input id="followersKeyword" class="form-control" name="keyword" placeholder="닉네임을 검색하세요." required/>
+                    <input id="followersKeyword" class="inputStyle form-control bg-dark text-white" name="keyword" placeholder="팔로워를 검색하세요." required/>
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-outline-primary">검색</button>
+                        <button type="submit" class="btn btn-primary mx-2">검색</button>
+
                     </div>
                 </form>
             </div>
         </div>
     </div>
     
-    <div class="card-body">
-        <table class="table" th:if="${followersList != null && followersList.totalElements > 0}">
+    <div>
+        <table class="table table-dark my-3" th:if="${followersList != null && followersList.totalElements > 0}">
             <thead>
                 <tr>
                     <th>닉네임</th>
@@ -45,21 +70,30 @@
             <tbody>
                 <tr th:each="followersList, iterStat : ${followersList}" th:object="${followersList}">
                     <td>
-                        <img th:src="*{followerUserAcoountUserProfileImageUrl}" th:alt="img" style="width: 50px; height: 50px;"/>
                         <span th:text="*{followerUserAccountUserNickname}"></span>
                     </td>
                     <td th:text="*{#temporals.format(createdTime, 'YYYY년 MM월 dd일 HH:mm:ss')}"></td>
-                    <td th:text="|${followersList.betweenCreatedTimeToNow} 일 동안 팔로우|"></td>
+                    <td th:text="${followersList.betweenCreatedTimeToNow == 0 ? '오늘' : followersList.betweenCreatedTimeToNow + '일 동안 팔로우'}"></td>
                 </tr>
             </tbody>
-        </table>        
-        <div class="card my-5" th:if="${followersCount eq 0}">
-            <div class="card-body">
-                <span class="text-secondary">나를 팔로우 한 사람이 없어요...</span>
-            </div>
-        </div>
+        </table>
         
-        <table class="table" th:if="${searchResult != null && searchResult.totalElements > 0}">
+        <table class="table table-dark my-3" th:if="${followersCount eq 0}">
+            <thead>
+                <tr>
+                    <th>닉네임</th>
+                    <th>팔로우 등록일</th>
+                    <th>기간</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="3" class="text-secondary fw-bold">나를 팔로우 한 사람이 없어요...</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table class="table table-dark my-3" th:if="${searchResult != null && searchResult.totalElements > 0}">
             <thead>
                 <tr>
                     <th>닉네임</th>
@@ -74,30 +108,29 @@
                         <span th:text="*{followerUserAccountUserNickname}"></span>
                     </td>
                     <td th:text="*{#temporals.format(createdTime, 'YYYY년 MM월 dd일 HH:mm:ss')}"></td>
-                    <td th:text="|${searchResult.betweenCreatedTimeToNow} 일 동안 팔로우|"></td>
+                    <td th:text="${searchResult.betweenCreatedTimeToNow == 0 ? '오늘' : followersList.betweenCreatedTimeToNow + '일 동안 팔로우'}"></td>
                 </tr>
             </tbody>
-        </table>
-        
+        </table>        
         
         <div th:if="${followersList != null && followersList.totalElements > 0}">
             <ul class="pagination justify-content-center">
                 <li class="page-item"
                     th:classappend="${!followersList.hasPrevious} ? 'disabled'">
-                    <a class="page-link"
+                    <a class="aStyle page-link bg-dark text-white"
                         th:href="@{/dashboard/u/{username}/community/followers-list(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${followersList.number - 1})}">&lt;</a>
                 </li>
                 <li class="page-item"
                     th:each="pageNo : ${#numbers.sequence(0, followersList.totalPages - 1)}"
                     th:if="${pageNo > followersList.number - 5 && pageNo <= followersList.number + 5}"
                     th:classappend="${pageNo == followersList.number} ? 'active'">
-                    <a class="page-link"
+                    <a class="aStyle page-link"
                         th:href="@{/dashboard/u/{username}/community/followers-list(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${pageNo})}"
                         th:text="${pageNo + 1}"></a>
                 </li>
                 <li class="page-item"
                     th:classappend="${!followersList.hasNext} ? 'disabled'">
-                    <a class="page-link"
+                    <a class="aStyle page-link bg-dark text-white"
                         th:href="@{/dashboard/u/{username}/community/followers-list(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${followersList.number + 1})}">&gt;</a>
                 </li>
             </ul>
@@ -107,20 +140,20 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item"
                     th:classappend="${!searchResult.hasPrevious} ? 'disabled'">
-                    <a class="page-link"
+                    <a class="aStyle page-link bg-dark text-white"
                         th:href="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${searchResult.number - 1})}">&lt;</a>
                 </li>
                 <li class="page-item"
                     th:each="pageNo : ${#numbers.sequence(0, searchResult.totalPages - 1)}"
                     th:if="${pageNo > searchResult.number - 5 && pageNo <= searchResult.number + 5}"
                     th:classappend="${pageNo == searchResult.number} ? 'active'">
-                    <a class="page-link"
+                    <a class="aStyle page-link"
                         th:href="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${pageNo})}"
                         th:text="${pageNo + 1}"></a>
                 </li>
                 <li class="page-item"
                     th:classappend="${!searchResult.hasNext} ? 'disabled'">
-                    <a class="page-link"
+                    <a class="aStyle page-link bg-dark text-white"
                         th:href="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${searchResult.number + 1})}">&gt;</a>
                 </li>
             </ul>
