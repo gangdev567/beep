@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.itwill'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.8-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
@@ -37,14 +37,20 @@ dependencies {
 	implementation 'com.amazonaws:aws-lambda-java-events:3.11.4'
 
 	implementation 'commons-io:commons-io:2.8.0'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.2.2'
 	implementation 'org.springframework:spring-context-support:5.3.10'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'javax.mail:javax.mail-api:1.6.2'
+	
 	// Jakarta Mail API 명시적 추가 (필요한 경우)
 	// https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api
 	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 
-	implementation 'io.obs-websocket.community:client:2.0.0'
+//	implementation 'io.obs-websocket.community:client:2.0.0'
+	
+	// logger test
+	// implementation 'ch.qos.logback:logback-classic:1.4.1'
+    // implementation 'org.slf4j:slf4j-api:2.0.3'
 
     // aws s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
@@ -87,11 +93,12 @@ dependencies {
 	// runtimeOnly 'com.mysql:mysql-connector-j'
 
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testAnnotationProcessor 'org.projectlombok:lombok' // 테스트를 위한 세팅
 	testImplementation 'org.projectlombok:lombok' // 테스트를 위한
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
