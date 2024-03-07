@@ -16,203 +16,286 @@
   <link rel="stylesheet" href="/css/switch.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <style>
-  
-    .flex-right {
-      margin-left: auto;
-    }
-          
-    .cnter {
-      display: grid;
-      grid-template-columns: 1fr 5.5fr 1.5fr;
-      height: (100vh - 62px);
-    }
-    .void {
-      height: 62px;
-    }
-    nav.fixed-top {
-      max-height: 62px;
-      overflow: hidden;
-      flex-wrap: nowrap;
-    }
-    ul.nav {
-      overflow: hidden;
-      flex-wrap: nowrap;
-    }
-    .chat-container {
-      position: fixed;
-      height: 100%;
-      width: 1.5fr;
-      overflow-y: auto; /* 채팅창이 내용을 넘어갈 경우 스크롤 표시 */
-      word-break: break-all;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-    .scrollbarContainer::-webkit-scrollbar {
-      display: none;
-    }
+ /* 채팅 환영 메시지 스타일링 */
+.msgArea div {
+  margin-bottom: 5px;
+  padding: 8px;
+}
 
-    .cnter-item {
-        height: 100vh;
-        
-    }
-    
-    input.content {
-      margin-top: auto;
-    }
-    .scrollbarContainer {
-      height: calc(85vh);
-      overflow-y: scroll;
-    }
-    .flexAndBetween {
-        display: flex;
-        justify-content: space-between;
-    }
-     .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px; /* 비디오 컨테이너의 최대 너비를 조절하세요. */
-            margin-top: 30px;
-        }
 
-        #video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+
+.msgArea div span {
+  font-weight: bold;
+}
+
+
+ /* 전체 섹션 스타일 */
+section.home {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 40px; /* Navigation bar의 높이만큼 여백 추가 */
+}
+
+/* 비디오 컨테이너 스타일 */
+.video-container {
+  width: 70%; /* 비디오 컨테이너의 너비 조절 가능 */
+  position: relative;
+  margin-right: 20px; /* 비디오와 채팅 사이 간격 조절 가능 */
+}
+
+.video-container video {
+  width: 800px;
+  height: auto;
+  margin-left: 10px;
+  display: block;
+  border-radius: 8px;
+}
+
+/* 채팅 컨테이너 스타일 */
+.cnter-item:last-child {
+  width: 30%; /* 채팅 컨테이너의 너비 조절 가능 */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 채팅 컨테이너 스타일 추가 및 수정 */
+.cnter-item:last-child {
+  position: fixed; /* 화면 상단에 고정 */
+  top: 60px; /* 화면 상단에 고정시키기 위한 값 */
+  right: 0; /* 화면 우측에 고정시키기 위한 값 */
+  color: #ffffff; /* 글자색 변경 */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+  overflow: hidden; /* 넘치는 내용 감추기 */
+  z-index: 999; /* 다른 요소 위에 표시 */
+}
+
+/* 텍스트에리아 스타일링 */
+textarea {
+  width: 100%;
+  min-height: 50px; /* 최소 높이 (조절 가능) */
+  max-height: 150px; /* 최대 높이 (조절 가능) */
+  padding: 10px;
+  border: 2px solid #2c3e50; /* 다크 테마 테두리 색상 */
+  border-radius: 8px;
+  margin-top: 5px; /* 수정: 5px로 변경 */
+  background-color: #34495e; /* 다크 테마 배경색 */
+  color: #ecf0f1; /* 다크 테마 글자색 */
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s; /* 테두리 색상 변화 애니메이션 */
+  overflow-y: hidden; /* 세로 스크롤을 감춤 */
+  box-sizing: border-box; /* 패딩, 테두리를 요소의 너비와 높이에 포함 */
+  line-height: 1.5; /* 줄 높이 (조절 가능) */
+  font-size: 14px; /* 글자 크기 (조절 가능) */
+}
+
+/* 포커스 시 테두리 색상 변화 */
+textarea:focus {
+  border-color: #3498db; /* 포커스 시 테두리 색상 변경 */
+}
+
+/* Form 내의 input 스타일링 */
+.input-group-sm > .form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #34495e; /* 다크 테마 테두리 색상 */
+  border-radius: 8px;
+  background-color: #fff; /* 다크 테마 배경색 */
+  color: #24262a; /* 다크 테마 글자색 */
+  transition: border-color 0.3s; /* 테두리 색상 변화 애니메이션 */
+}
+
+/* Input 포커스 시 테두리 및 박스 쉐도우 스타일링 */
+.input-group-sm > .form-control:focus {
+  outline: none;
+  border-color: #dfe2ea; /* 포커스 시 테두리 색상 (더 밝은 파란색) */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 포커스 시 박스 쉐도우 (조절 가능) */
+}
+
+
+
+
+
+
+/* 입력창 내부 애니메이션 */
+.input-group:focus-within textarea {
+  transition: height 0.3s, border-color 0.3s; /* 높이 및 테두리 색상 변화 애니메이션 */
+  border-color: #3498db; /* 포커스 시 테두리 색상 변경 */
+}
+
+/* 플레이스홀더 스타일링 */
+textarea::placeholder {
+  color: #95a5a6; /* 플레이스홀더 색상 (조절 가능) */
+}
+/* 텍스트에리아 내용에 따라 늘어나게 하기 */
+textarea:focus {
+  height: auto;
+}
+
+
+
+/* 입력창 내부 애니메이션 */
+.input-group:focus-within textarea {
+  transition: height 0.3s, border-color 0.3s; /* 높이 및 테두리 색상 변화 애니메이션 */
+  border-color: #3498db; /* 포커스 시 테두리 색상 변경 */
+}
+/* 이모지 스타일링 */
+.emoji {
+  font-size: 20px; /* 이모지 크기 */
+  margin-right: 5px; /* 이모지 간격 조절 */
+}
+/* 이모지 애니메이션 효과 */
+.emoji {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* 스크롤바 스타일 */
+.scrollbarContainer {
+
+  overflow-y: scroll; /* 스크롤 항상 표시 */
+  padding: 10px;
+  border-radius: 8px;
+  flex-grow: 1;
+  scroll-behavior: smooth; /* 자동으로 스크롤 이동 애니메이션 적용 */
+  max-height: 500px; /* 적절한 높이로 설정 (조절 가능) */
+}
+
+/* 채팅창 내부 스타일링 */
+.msgArea {
+  scroll-snap-type: y mandatory;
+  animation: scrollDown 0.5s ease-out; /* 스크롤이 최하단으로 이동하는 애니메이션 추가 */
+}
+
+/* 스크롤 이동 애니메이션 keyframes */
+@keyframes scrollDown {
+  to {
+    transform: translateY(calc(-100%)); /* 100%만큼 이동 */
+  }
+}
+
+/* 입력창 및 전송 버튼 스타일 */
+.input-group {
+  margin-top: 10px;
+}
+
+.sendBtn {
+  display: none;
+}
+
+/* 추가된 부분 폰트 크기 조절 스타일 */
+.dropdown-menu li {
+  padding: 5px;
+}
+
+
+
+
+
   </style>
 </head>
 <body>
-<<<<<<< HEAD
 <div th:replace="~{/layout/fragments :: myheader}"></div>
 <div th:replace="~{/layout/fragments :: mysidebar}"></div>
-=======
-<div th:replace="~{layout/fragments :: myheader}"></div>
->>>>>>> a5d65f164e4ef578fc729407fcceb837d8314523
 <div class="void" >
     <input class="dummy"d-none th:value="${channel.channelId}" font-data="medium" auth-data="">
 </div>
 <section class="home">
-<main class="cnter">
-  <div class="cnter-item">
-    <div class="container">
-      <div id="followList"></div>
-    </div>
-  </div>
-  <div class="cnter-item">
-    <!-- 스트리밍 플레이어 추가 -->
-    <div class="video-container">
-      <video id="video" controls autoplay></video>
-    </div>
-
-    <script th:inline="javascript">
-      /*<![CDATA[*/
-      const videoSrc = [[${streamingUrl}]]; // 서버로부터 받은 스트리밍 URL
-      const video = document.getElementById('video');
-
-      if(Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(videoSrc);
-        hls.attachMedia(video);
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = videoSrc;
-      }
-      /*]]>*/
-    </script>
-    <!-- 로그인 정보 확인하기(테스트용) // TODO: 나중에 감춰야합니다.-->
-    <input class="form-control d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />
-    <input class="d-none" id="channelUserId" th:value="${streamer.userId}" />
-    <input class="d-none" id="channelUserNickname" th:value="${streamer.userNickname}" />
-    <input class="d-none" id="loginUserId" th:value="${userAccount.userId}"/>
-
-    <div class="row">
-      <p>팔로워 : <span id="countByFollower"></span></p>
-      <div id="followerList"></div>
-
-      <div class="col-md-6 offset-md-5">
-        <div class="d-flex justify-content-end">
-          <button id="followBtn" type="button" class="btn btn-dark d-none" onclick="follow()">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
-            </svg>
-            팔로우 등록
-          </button>
-
-          <button id="unfollowBtn" type="button" class="btn btn-dark d-none" onclick="unfollow()">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10.0198 6.77894C8.94243 3.98296 3.5 4.39829 3.5 8.6267C3.5 10.6135 4.97427 13.2199 9.20416 15.9063C9.30036 15.9674 9.6265 16.1413 10 16.1427C10.3735 16.1442 10.6793 15.9801 10.7622 15.9276C15.0179 13.2337 16.5 10.6188 16.5 8.6267C16.5 4.42263 11.1031 3.96638 10.0198 6.77894Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
-            </svg>
-            팔로우 취소
-          </button>
+      <!-- 스트리밍 플레이어 추가 -->
+      <div class="video-container">
+        <video id="video" controls autoplay></video>
+        <div style="margin-left: 10px; color: white;">
+        	gg
         </div>
       </div>
-    </div>
+      <script th:inline="javascript">
+        /*<![CDATA[*/
+        const videoSrc = [[${streamingUrl}]];
+        const video = document.getElementById('video');
 
-  </div>
-
-
-<div class="cnter-item">
-    <div class="chat-container">
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(videoSrc);
+          hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = videoSrc;
+        }
+        /*]]>*/
+      </script>
+     
+   
+      
+    <div class="cnter-item">
+      <div class="chat-container">
         <div class="scrollbarContainer">
-            <span>메세지</span>
-            <div class="msgArea"></div>
+          <div class="msgArea"></div>
         </div>
         <div class="input-group input-group-sm">
-            <textarea type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="2" style="margin-bottom: 5px;" maxlength="1000"></textarea>
+          <textarea  type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="2" style="margin-bottom: 5px;" maxlength="1000"></textarea>
         </div>
         <div class="flexAndBetween">
-            <input class="chatState" style="display: none;" th:value="${chatState}">
-            <div class="dropup">
-                <button type="button" class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                    <svg width="20" height="20" viewBox="0 0 20 20" focusable="false" aria-hidden="true" role="presentation" style="margin-right: 0%;">
+          <input class="chatState" style="display: none;" th:value="${chatState}">
+          <div class="dropup">
+           <button type="button" class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+			  <svg width="20" height="20" viewBox="0 0 20 20" focusable="false" aria-hidden="true" role="presentation" style="margin-right: 0%;">
+			    <path fill="#ffffff" d="M10 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
+			    <path fill="#ffffff" fill-rule="evenodd" d="M9 2h2a2.01 2.01 0 0 0 1.235 1.855l.53.22a2.01 2.01 0 0 0 2.185-.439l1.414 1.414a2.01 2.01 0 0 0-.439 2.185l.22.53A2.01 2.01 0 0 0 18 9v2a2.01 2.01 0 0 0-1.855 1.235l-.22.53a2.01 2.01 0 0 0 .44 2.185l-1.415 1.414a2.01 2.01 0 0 0-2.184-.439l-.531.22A2.01 2.01 0 0 0 11 18H9a2.01 2.01 0 0 0-1.235-1.854l-.53-.22a2.009 2.009 0 0 0-2.185.438L3.636 14.95a2.009 2.009 0 0 0 .438-2.184l-.22-.531A2.01 2.01 0 0 0 2 11V9c.809 0 1.545-.487 1.854-1.235l.22-.53a2.009 2.009 0 0 0-.438-2.185L5.05 3.636a2.01 2.01 0 0 0 2.185.438l.53-.22A2.01 2.01 0 0 0 9 2zm-4 8 1.464 3.536L10 15l3.535-1.464L15 10l-1.465-3.536L10 5 6.464 6.464 5 10z" clip-rule="evenodd"></path>
+			  </svg>
+			</button>
+            <ul class="dropdown-menu" style="width: 15vw">
+              <li class="tmtm">
+                <div class="wrapper flexAndBetween">
+                  <span style="font-size: small; padding-top: 4px;">팔로워 챗 활성화</span>
+                  <input type="checkbox" id="switch1">
+                  <label for="switch1" class="switch_label">
+                    <span class="onf_btn"></span>
+                  </label>
+                </div>
+              </li>
+              <li class="tmtm">
+                <div class="wrapper flexAndBetween">
+                  <span style="font-size: small; padding-top: 4px;">익명채팅</span>
+                  <input type="checkbox" id="switch2">
+                  <label for="switch2" class="switch_label">
+                    <span class="onf_btn"></span>
+                  </label>
+                </div>
+              </li>
+              <li>
+                <div class="wrapper flexAndBetween">
+                  <span style="font-size: small; padding-top: 4px;">스트리머만 채팅 (얼리기)</span>
+                  <input type="checkbox" id="switch3">
+                  <label for="switch3" class="switch_label">
+                    <span class="onf_btn"></span>
+                  </label>
+                </div>
+              </li>
+              <!-- 추가된 부분 -->
+              <li>
+                <div class="wrapper flexAndBetween">
+                  <span style="font-size: small; padding-top: 2px;">폰트 크기 조절</span>
+                  <div class="dropup">
+                    <button type="button" class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                      <svg width="20" height="20" viewBox="0 0 20 20" focusable="false" aria-hidden="true" role="presentation" style="margin-right: 0%;">
                         <path d="M10 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
                         <path fill-rule="evenodd" d="M9 2h2a2.01 2.01 0 0 0 1.235 1.855l.53.22a2.01 
-                        2.01 0 0 0 2.185-.439l1.414 1.414a2.01 2.01 0 0 0-.439 2.185l.22.53A2.01 2.01 
-                        0 0 0 18 9v2a2.01 2.01 0 0 0-1.855 1.235l-.22.53a2.01 2.01 0 0 0 .44 2.185l-1.415 
-                        1.414a2.01 2.01 0 0 0-2.184-.439l-.531.22A2.01 2.01 0 0 0 11 18H9a2.01 2.01 0 0 
-                        0-1.235-1.854l-.53-.22a2.009 2.009 0 0 0-2.185.438L3.636 14.95a2.009 2.009 0 0 
-                        0 .438-2.184l-.22-.531A2.01 2.01 0 0 0 2 11V9c.809 0 1.545-.487 1.854-1.235l.22-.53a2.009 
-                        2.009 0 0 0-.438-2.185L5.05 3.636a2.01 2.01 0 0 0 2.185.438l.53-.22A2.01 2.01 0 0 0 9 
-                        2zm-4 8 1.464 3.536L10 15l3.535-1.464L15 10l-1.465-3.536L10 5 6.464 6.464 5 10z" clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                <ul class="dropdown-menu" style="width: 15vw">
-                    <th:block th:if="${userAccount.userId == streamer.userId}">
-                        <li class="tmtm">
-                            <div class="wrapper flexAndBetween">
-                                <span style="font-size: small; padding-top: 4px;">팔로워 챗 활성화</span>
-                                <input type="checkbox" id="switch1">
-                                <label for="switch1" class="switch_label">
-                                    <span class="onf_btn"></span>
-                                </label>
-                            </div>
-                        </li>
-                        <li class="tmtm">
-                            <div class="wrapper flexAndBetween">
-                                <span style="font-size: small; padding-top: 4px;">익명채팅</span>
-                                <input type="checkbox" id="switch2">
-                                <label for="switch2" class="switch_label">
-                                    <span class="onf_btn"></span>
-                                </label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="wrapper flexAndBetween">
-                                <span style="font-size: small; padding-top: 4px;">스트리머만 채팅 (얼리기)</span>
-                                <input type="checkbox" id="switch3">
-                                <label for="switch3" class="switch_label">
-                                    <span class="onf_btn"></span>
-                                </label>
-                            </div>
-                        </li>
-                    </th:block>
-                        <li>
-                            <div class="wrapper flexAndBetween">
-                                <span style="font-size: small; padding-top: 6px;">폰트 크기 조절</span>
-                                <div class="dropup">
-                                    <button type="button" class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" focusable="false" aria-hidden="true" role="presentation" style="margin-right: 0%;">
-                                            <path d="M10 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
-                                            <path fill-rule="evenodd" d="M9 2h2a2.01 2.01 0 0 0 1.235 1.855l.53.22a2.01 
                                             2.01 0 0 0 2.185-.439l1.414 1.414a2.01 2.01 0 0 0-.439 2.185l.22.53A2.01 2.01 
                                             0 0 0 18 9v2a2.01 2.01 0 0 0-1.855 1.235l-.22.53a2.01 2.01 0 0 0 .44 2.185l-1.415 
                                             1.414a2.01 2.01 0 0 0-2.184-.439l-.531.22A2.01 2.01 0 0 0 11 18H9a2.01 2.01 0 0 
@@ -220,48 +303,47 @@
                                             0 .438-2.184l-.22-.531A2.01 2.01 0 0 0 2 11V9c.809 0 1.545-.487 1.854-1.235l.22-.53a2.009 
                                             2.009 0 0 0-.438-2.185L5.05 3.636a2.01 2.01 0 0 0 2.185.438l.53-.22A2.01 2.01 0 0 0 9 
                                             2zm-4 8 1.464 3.536L10 15l3.535-1.464L15 10l-1.465-3.536L10 5 6.464 6.464 5 10z" clip-rule="evenodd"></path>
-                                        </svg>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown-item" style="font-size: xx-large;" id="XXL">
-                                            <span>노인네 사이즈</span>
-                                        </li>
-                                        <li class="dropdown-item" style="font-size: x-large;" id="XL">
-                                            <span>아주 크게</span>
-                                        </li>
-                                        <li class="dropdown-item" style="font-size: large;" id="L">
-                                            <span>크게</span>
-                                        </li>
-                                        <li class="dropdown-item" style="font-size: medium;" id="M">
-                                            <span>중간</span>
-                                        </li>
-                                        <li class="dropdown-item" style="font-size: small;" id="S">
-                                            <span>작게</span>
-                                        </li>
-                                        <li class="dropdown-item" style="font-size: x-small;" id="XS">
-                                            <span>아주 작게</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="wrapper flexAndBetween">
-                                <span style="font-size: small; padding-top: 2px;">스트리머만 채팅 (얼리기)</span>
-                                <input type="checkbox" id="switch5">
-                                <label for="switch5" class="switch_label">
-                                    <span class="onf_btn"></span>
-                                </label>
-                            </div>
-                        </li>
-                </ul>
-            </div>
-            <button type="button" class="sendBtn btn btn-sm text-white flex-right" 
-                style="background-color: blueviolet; margin-left: auto;" onclick="sendMsg()">전송</button>
+                      </svg>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-item" style="font-size: xx-large;" id="XXL">
+                        <span>노인네 사이즈</span>
+                      </li>
+                      <li class="dropdown-item" style="font-size: x-large;" id="XL">
+                        <span>아주 크게</span>
+                      </li>
+                      <li class="dropdown-item" style="font-size: large;" id="L">
+                        <span>크게</span>
+                      </li>
+                      <li class="dropdown-item" style="font-size: medium;" id="M">
+                        <span>중간</span>
+                      </li>
+                      <li class="dropdown-item" style="font-size: small;" id="S">
+                        <span>작게</span>
+                      </li>
+                      <li class="dropdown-item" style="font-size: x-small;" id="XS">
+                        <span>아주 작게</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              <!-- 추가된 부분 끝 -->
+              <li>
+                <div class="wrapper flexAndBetween">
+                  <span style="font-size: small; padding-top: 2px;">스트리머만 채팅 (얼리기)</span>
+                  <input type="checkbox" id="switch5">
+                  <label for="switch5" class="switch_label">
+                    <span class="onf_btn"></span>
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <button type="button" class="sendBtn btn btn-sm text-white flex-right" style="background-color: blueviolet; margin-left: auto;" onclick="sendMsg()">전송</button>
         </div>
+      </div>
     </div>
-</div>
-</main>
 </section>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
@@ -339,29 +421,35 @@
         element.setAttribute('font-data', 'x-small');   
     });
     
-    function enterRoom(socket){
-        var enterMsg={"type" : "ENTER", 
-                    "userType" : [[${userState}]],
-                    "veiwers" : 0, 
-                    "roomId":[[${room.roomId}]], 
-                    "sender":[[${userAccount.userNickname}]],
-                    "message":""};
+    function enterRoom(socket) {
+        var enterMsg = {
+            "type": "ENTER",
+            "userType": [[${userState}]],
+            "veiwers": 0,
+            "roomId": [[${room.roomId}]],
+            "sender": [[${userAccount.userNickname}]],
+            "message": ""
+        };
         console.log(enterMsg);
         socket.send(JSON.stringify(enterMsg));
+
         let user = [[${userAccount.userNickname}]];
-        let entMsg = user + "님 환영합니다!"
+        let entMsg = user + "님 환영합니다!";
         let msgArea = document.querySelector('.msgArea');
         let newMsg = document.createElement('div');
-        if(user !== 'anonymousUser') {
+
+        if (user !== 'anonymousUser') {
             newMsg.innerText = entMsg;
-            msgArea.append(newMsg);    
-        } else if(user === 'anonymousUser') {
-            newMsg.innerText = [[${streamer.userNickname}]] + "님의 방송에 오신 것을 환영합니다!"
+            newMsg.style.color = '#3498db'; // 적절한 색상으로 변경
+            msgArea.append(newMsg);
+        } else if (user === 'anonymousUser') {
+            newMsg.innerText = [[${streamer.userNickname}]] + "님의 방송에 오신 것을 환영합니다!";
+            newMsg.style.color = '#e74c3c'; // 적절한 색상으로 변경
             msgArea.append(newMsg);
         }
     }
     
-    let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
+    let socket = new WebSocket("ws://localhost:8081/ws/chat");
 
     socket.onopen = function (e) {
         console.log('open server!')
@@ -453,39 +541,53 @@
         `   </ul>             
         </div>`;
         
-        // sender가 해당 채널의 스트리머일 경우 강조해서 표시
-        if(message.sender === [[${streamer.userNickname}]]) {
-            newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.message + '</strong>';        
-        } else if (message.userType === "MANAGER") {
-            
-            if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]]) {
-                newMsg.innerHTML = '⚔' + sender + ':' + message.message;                
-            } else {
-                newMsg.innerHTML = '⚔' + message.sender + ':' + message.message;
+     // sender가 해당 채널의 스트리머일 경우 강조해서 표시
+        if (message.sender === [[${streamer.userNickname}]]) {
+            newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.message + '</strong>';
+        } else {
+            let senderDisplayName = message.sender;
+
+            // 랜덤 색상 매핑 객체
+            let colorMapping = {};
+
+            // 랜덤 색상 생성 함수
+            function getRandomColor() {
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
             }
-            
-        } else if(message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
-        
-            if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]] || userAuth === 'MANAGER') {
-                newMsg.innerHTML = '👍︎' + sender + ':' + message.message;                
+
+            // 저장된 닉네임과 색상 사용 여부 확인
+            if (colorMapping[senderDisplayName]) {
+                const senderColor = colorMapping[senderDisplayName];
+
+                if (message.userType === "MANAGER") {
+                    senderDisplayName = '⚔' + senderDisplayName;
+                } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
+                    senderDisplayName = '👍︎' + senderDisplayName;
+                }
+
+                newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
             } else {
-                newMsg.innerHTML = '👍︎' + message.sender + ':' + message.message;
+                // 닉네임에 대한 랜덤 색상 생성
+                const senderColor = getRandomColor();
+                colorMapping[senderDisplayName] = senderColor;
+
+                if (message.userType === "MANAGER") {
+                    senderDisplayName = '⚔' + senderDisplayName;
+                } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
+                    senderDisplayName = '👍︎' + senderDisplayName;
+                }
+
+                newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
             }
-            
-        } else if(message.userType === "NON_FOLLOW") {
-            
-            if ([[${streamer.userNickname}]] === [[${userAccount.userNickname}]] || userAuth === 'MANAGER') {
-                newMsg.innerHTML = sender + ':' + message.message;                
-            } else {
-                newMsg.innerHTML = message.sender + ':' + message.message;
-            }
-             
-        } else if(message.userType === "ANONYMOUS") {
-            newMsg.innerHTML = message.sender + ':' + message.message;  
         }
-        
-        if(message.type === 'TALK') {
-          msgArea.append(newMsg);
+
+        if (message.type === 'TALK') {
+            msgArea.append(newMsg);
         }
 
         updateScroll();
@@ -631,6 +733,15 @@
 
     function handlePageUnload() {
         quit();
+    }
+    // 추가된 부분: 랜덤으로 색상을 생성하는 함수
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     }
 
 
