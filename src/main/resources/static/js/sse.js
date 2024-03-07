@@ -4,7 +4,7 @@
 
  document.addEventListener('DOMContentLoaded', () => {
      
-    const sse = new EventSource("http://192.168.20.26:8081/connect");
+    const sse = new EventSource("http://localhost:8081/connect");
 
     sse.addEventListener('connect', (e) => {
         console.log(e);
