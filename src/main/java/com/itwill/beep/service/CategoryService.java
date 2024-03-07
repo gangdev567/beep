@@ -19,6 +19,7 @@ import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
+import com.itwill.beep.domain.GenreType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -173,7 +174,41 @@ public class CategoryService {
      *
      * @param keyword 검색 키워드
      * @return 검색된 카테고리 목록
+     * @throws RequestException
      */
+    public List<GenreType> saveGenre(Long categoryId) {
+        log.info("saveGenre(categoryId={})", categoryId);
+
+        setTwitchAuthCredentials();
+
+        List<GenreType> list = new ArrayList<>();
+
+        String c = categoryRepository.findByCategoryId(categoryId).getCategoryName();
+        log.info(c);
+
+        APICalypse gameFindQuery = new APICalypse().search(c).fields("*");
+        try {
+            var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gameFindQuery);
+            for (var game : games) {
+                log.info("갯수={}", game.getGenresCount());
+
+                for (int i = 0; i < game.getGenresCount(); i++) {
+                    String genreStr = game.getGenres(i).toString();
+                    // "id =" 문자열을 제거하고, 숫자 값으로 변환
+                    int genreId = Integer.parseInt(genreStr.replaceAll("[^\\d]", ""));
+                    GenreType genreType = GenreType.getByValue(genreId);
+                    list.add(genreType);
+                }
+
+            }
+        } catch (RequestException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     @Transactional
     public List<CategoryEntity> searchGames(String keyword) {
         log.info("searchGames(keyword={})", keyword);
@@ -201,7 +236,7 @@ public class CategoryService {
                     String imageUrl =
                             (cover != null) ? cover.getUrl().replace("/t_thumb/", "/t_cover_big/")
                                     : defaultStaticUrl;
-                    
+
                     log.info("갯수={}", game.getGenresCount());
                     if (game.getGenresCount() > 0) {
                         for (int i = 0; i < game.getGenresCount(); i++) {
@@ -235,7 +270,6 @@ public class CategoryService {
             log.error("RequestException");
             e.printStackTrace();
         }
-
         return foundGames;
     }
 
