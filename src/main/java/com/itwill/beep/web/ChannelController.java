@@ -239,15 +239,13 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
-            String streamingKey = streamer.getUserStreamingKey();
-            // S3에서 스트리밍 키에 해당하는 최근 m3u8 파일의 URL을 가져온다.
-            String bucketName = "beepitwill"; // S3 버킷 이름 설정
-            String streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
-            model.addAttribute("streamingUrl", streamingUrl); // 스트리밍
-                                                                                                // URL
-                                                                                                // 동적
-                                                                                                // 생성
-            model.addAttribute("streamingUrl", streamingUrl);
+			/*
+			 * String streamingKey = streamer.getUserStreamingKey(); // S3에서 스트리밍 키에 해당하는 최근
+			 * m3u8 파일의 URL을 가져온다. String bucketName = "beepitwill"; // S3 버킷 이름 설정 String
+			 * streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
+			 * model.addAttribute("streamingUrl", streamingUrl); // 스트리밍 // URL // 동적 // 생성
+			 * model.addAttribute("streamingUrl", streamingUrl);
+			 */
 
 
 

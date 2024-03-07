@@ -130,11 +130,7 @@ async function fetchFollowList() {
                     divTag.style.border = "none";
 
                     divTag.addEventListener('mouseenter', () => {
-<<<<<<< HEAD
-                        divTag.style.backgroundColor = '#695CFE'; // 회색 빛 추가
-=======
                         divTag.style.backgroundColor = '#1F1F23'; // 회색 빛 추가
->>>>>>> 011c61e18195271c8d5203647d514cf3d5a159e7
                     });
 
                     divTag.addEventListener('mouseleave', () => {
@@ -155,16 +151,7 @@ async function fetchFollowList() {
                     img.alt = '프로필 이미지';
                     img.style.width = '50px';
                     img.style.height = '50px';
-<<<<<<< HEAD
-                    img.style.borderRadius = '50%'; // 보더 레디어스 추가
-
-					// 호버 효과를 위한 스타일
-					img.style.transition = 'border 0.3s'; // 트랜지션 효과 추가
-					img.style.border = '1px solid transparent'; // 초기에 투명한 테두리 설정
-                    img.classList.add('me-3');
-=======
                     img.classList.add('me-3', 'rounded-circle');
->>>>>>> 011c61e18195271c8d5203647d514cf3d5a159e7
                     div.appendChild(img); // 이미지를 <div> 태그 내에 추가
 
                     const channelInfo = document.createElement('div'); // 채널 정보를 감싸는 <div> 생성
@@ -309,11 +296,7 @@ async function fetchPopularChannels() {
                     divTag.style.border = "none";
 
                     divTag.addEventListener('mouseenter', () => {
-<<<<<<< HEAD
-                        divTag.style.backgroundColor = '#695CFE'; // 보라 빛 추가
-=======
                         divTag.style.backgroundColor = '#1F1F23'; // 회색 빛 추가
->>>>>>> 011c61e18195271c8d5203647d514cf3d5a159e7
                     });
 
                     divTag.addEventListener('mouseleave', () => {
@@ -334,16 +317,7 @@ async function fetchPopularChannels() {
                     img.alt = '프로필 이미지';
                     img.style.width = '50px';
                     img.style.height = '50px';
-<<<<<<< HEAD
-                    img.style.borderRadius = '50%'; // 보더 레디어스 추가
-
-					// 호버 효과를 위한 스타일
-					img.style.transition = 'border 0.3s'; // 트랜지션 효과 추가
-					img.style.border = '1px solid transparent'; // 초기에 투명한 테두리 설정
-                    img.classList.add('me-3');
-=======
                     img.classList.add('me-3', 'rounded-circle');
->>>>>>> 011c61e18195271c8d5203647d514cf3d5a159e7
                     div.appendChild(img); // 이미지를 <div> 태그 내에 추가
 
                     const channelInfo = document.createElement('div'); // 채널 정보를 감싸는 <div> 생성
