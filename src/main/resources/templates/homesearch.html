@@ -3,16 +3,14 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head th:replace="~{layout/fragments :: myhead}"></head>
+
 <style>
 div.divUserStyle {
     border: transparent;
 }
-
-
 div.divCategoryStyle {
     border: transparent;
 }
-
 .categoryCard:hover {
         box-shadow: -5px 5px 10px rgba(138, 43, 226, 0.5); /* 왼쪽에 보라색 그림자 추가 */
         transform: translate(1px, -1px);
@@ -116,15 +114,14 @@ div.divCategoryStyle {
         </div>
     </div>
 
-
     <h5 class="my-3 fw-bold text-start">카테고리</h5>     
     <hr class="text-white">
     
-    <div class="row">
+    <div class="row" id="categoryContainer">
         <div th:if="${categorySearchResult}" th:each="category, iterStat : ${categorySearchResult}" class="col-lg-2 col-md-4 mb-4">
-            <div class="divCategoryStyle card categoryCard" th:if="${iterStat.index} < 6">
+            <div class="divCategoryStyle card categoryCard">
                 <a th:href="@{/categories/{categoryId}(categoryId=${category.categoryId})}" class="card-link text-decoration-none">
-                    <img th:src="${category.categoryImageUrl}" class="card-img-top img-fluid" alt="Category Image">
+                    <img th:src="${category.categoryImageUrl}" class="card-img-top img-fluid" alt="Category Image" style="width: 200px; height: 250px;">
                     <div class="card-body bg-dark">
                         <h5 class="text-left text-white text-truncate fs-5" th:text="${category.categoryName}">Category Name</h5>
                         <h5 class="text-left text-white text-truncate fs-6" th:text="${category.categoryTotalView != null ? '시청자 ' + category.categoryTotalView + '명' : '시청자 0명'}"></h5>
@@ -150,11 +147,12 @@ div.divCategoryStyle {
 
 
 <div th:replace="~{layout/fragments :: myModal}"></div>
-
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script src="/js/broadcast.js"></script>
 <script src="/js/fragments-categories-search.js"></script>
-</body>
+<script type="text/javascript">
 
+</script>
+</body>
 </html>

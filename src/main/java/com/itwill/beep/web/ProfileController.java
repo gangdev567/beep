@@ -104,16 +104,10 @@ public class ProfileController {
     }
 
     @PostMapping("/channelupdate")
-    public String channelImage(@ModelAttribute ChannelImageRequestDto dto) {
-        if (dto.getImgFile().isEmpty()) {
-            throw new IllegalArgumentException("이미지 파일이 비어 있습니다.");
-        }
-        try {
-            imageService.channelProfileImgUpload(dto);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public String channelImage(@ModelAttribute ChannelImageRequestDto dto) throws IOException {
+        log.info("dto={}", dto);
+
+        imageService.uploadImageToS3(dto);
 
         return "redirect:/settings/profile";
     }

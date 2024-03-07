@@ -63,7 +63,7 @@ textarea.textareaStyle:focus {
             </div>
         
             <form id="uploadForm" action="/settings/channelupdate" method="post" enctype="multipart/form-data" class="text-white">
-                <input id="channelId" name="channelId" th:value="${channel.channelId}" type="hidden"/>
+                <input id="channelId" name="channelId" th:value="${channel.channelId}" class="d-none"/>
                 <div class="mb-3">
                     <label for="channelProfileImg" class="form-label my-3 visually-hidden">프로필 이미지 업로드</label>
                     <input type="file" id="channelProfileImg" name="imgFile" accept=".jpg, .png" class="form-control d-none" required/>

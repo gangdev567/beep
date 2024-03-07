@@ -2,7 +2,6 @@ package com.itwill.beep.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import lombok.RequiredArgsConstructor;
 
@@ -16,11 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "GET", "POST", "PUT", "DELETE");
     }
 
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**") // --1
-                .addResourceLocations("file:///uploads/"); // --2
-    }
+    // @Override
+    // public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    // registry.addResourceHandler("/uploads/**") // --1
+    // .addResourceLocations("file:///uploads/"); // --2
+    // }
 
 }

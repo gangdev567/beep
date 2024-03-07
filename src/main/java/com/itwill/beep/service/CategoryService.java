@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.api.igdb.apicalypse.APICalypse;
 import com.api.igdb.apicalypse.Sort;
@@ -20,6 +19,7 @@ import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.CategoryRepository;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.ChannelRepository;
+import com.itwill.beep.domain.GenreType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -117,8 +117,6 @@ public class CategoryService {
         return sortedCategories;
     }
 
-
-
     public CategoryEntity findByCategoryIdIs(Long categoryId) {
         log.info("findByCategoryId(categoryId={})", categoryId);
 
@@ -155,7 +153,6 @@ public class CategoryService {
                 // 해당 카테고리의 채널들의 뷰어 수를 합산
                 Long totalViewerCount =
                         channelRepository.getTotalViewerCountByCategoryId(game.getId());
-                log.info("totalViewerCount={}", totalViewerCount);
 
                 // CategoryEntity 엔터티 생성 및 저장
                 CategoryEntity category = CategoryEntity.builder().categoryId(game.getId())
@@ -172,11 +169,50 @@ public class CategoryService {
         return savedCategories;
     }
 
+
+    public List<GenreType> saveGenre(Long categoryId) {
+        log.info("saveGenre(categoryId={})", categoryId);
+
+        setTwitchAuthCredentials();
+
+        List<GenreType> list = new ArrayList<>();
+
+        String c = categoryRepository.findByCategoryId(categoryId).getCategoryName();
+        log.info(c);
+
+        APICalypse gameFindQuery = new APICalypse().search(c).fields("*");
+        try {
+            var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gameFindQuery);
+
+            // 첫 번째 게임만 가져오기
+            if (!games.isEmpty()) {
+                var game = games.get(0);
+                log.info("갯수={}", game.getGenresCount());
+
+                // 첫 번째 게임의 모든 장르 가져오기
+                for (int i = 0; i < game.getGenresCount(); i++) {
+                    String genreStr = game.getGenres(i).toString();
+                    // "id =" 문자열을 제거하고, 숫자 값으로 변환
+                    int genreId = Integer.parseInt(genreStr.replaceAll("[^\\d]", ""));
+                    GenreType genreType = GenreType.getByValue(genreId);
+                    list.add(genreType);
+                }
+            }
+        } catch (RequestException e) {
+            log.error("RequestException");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
     /**
      * IGDB API를 통해 키워드로 게임을 검색하고 결과를 카테고리로 저장합니다.
      *
      * @param keyword 검색 키워드
      * @return 검색된 카테고리 목록
+     * @throws RequestException
      */
     @Transactional
     public List<CategoryEntity> searchGames(String keyword) {
@@ -198,15 +234,20 @@ public class CategoryService {
             }
 
             for (var game : games) {
-
                 CategoryEntity existingCategory = categoryRepository.findByCategoryId(game.getId());
                 if (existingCategory == null) {
                     // 각 게임에 대한 커버 정보 가져오기
                     Cover cover = getCoverForGame(game.getId());
-
                     String imageUrl =
                             (cover != null) ? cover.getUrl().replace("/t_thumb/", "/t_cover_big/")
                                     : defaultStaticUrl;
+
+                    log.info("갯수={}", game.getGenresCount());
+                    if (game.getGenresCount() > 0) {
+                        for (int i = 0; i < game.getGenresCount(); i++) {
+                            log.info("인덱스={}, id={}", i + 1, game.getGenres(i));
+                        }
+                    }
 
                     // CategoryEntity 엔터티 생성 및 저장
                     CategoryEntity category = CategoryEntity.builder().categoryId(game.getId())
@@ -218,6 +259,12 @@ public class CategoryService {
                     foundGames.add(categoryRepository.save(category));
                 } else {
                     // 이미 존재하면 넘어감
+                    log.info("갯수={}", game.getGenresCount());
+                    if (game.getGenresCount() > 0) {
+                        for (int i = 0; i < game.getGenresCount(); i++) {
+                            log.info("인덱스={}, id={}", i + 1, game.getGenres(i));
+                        }
+                    }
                     existingCategory.updateCategoryTotalView(
                             channelRepository.getTotalViewerCountByCategoryId(game.getId()));
                     foundGames.add(existingCategory);
@@ -228,13 +275,7 @@ public class CategoryService {
             log.error("RequestException");
             e.printStackTrace();
         }
-
         return foundGames;
-    }
-
-    public List<CategoryEntity> findCategoryByCategoryName(String keyword) {
-
-        return categoryRepository.findByCategoryNameContainingIgnoreCase(keyword);
     }
 
     /**
@@ -260,8 +301,6 @@ public class CategoryService {
         TwitchToken twitchToken = twitchAuthenticator.requestTwitchToken(clientId, clientSecret);
         // clientId와 twitchToken.getAccess_token()을 인자로 전달하여 IGDB API에 접근할 수 있는 인증 정보 설정.
         IGDBWrapper.INSTANCE.setCredentials(clientId, twitchToken.getAccess_token());
-
     }
-
 
 }

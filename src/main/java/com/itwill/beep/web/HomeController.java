@@ -13,12 +13,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.amazonaws.services.s3.AmazonS3;
-
 import org.springframework.web.bind.annotation.PostMapping;
+import com.amazonaws.services.s3.AmazonS3;
 import com.itwill.beep.domain.CategoryEntity;
-
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
@@ -52,7 +49,7 @@ public class HomeController {
         // (2) 현재 로그인한 사용자 정보를 가져옴.
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("--- home() principal={}", principal);
-        
+
         String url = amazonS3.getUrl("beepitwill", "default_profile_image.jpg").toString();
         log.info("url = {}", url);
         model.addAttribute("testUrl", url);
@@ -140,8 +137,11 @@ public class HomeController {
                 channelService.findChannelBychannelUserAccountEntity(dto.getKeyword());
         List<ChannelEntity> channelSearchResult =
                 channelService.findChannelByChannelTitle(dto.getKeyword());
-        List<CategoryEntity> categorySearchResult =
-                categoryService.findCategoryByCategoryName(dto.getKeyword());
+        List<CategoryEntity> categorySearchResult = categoryService.searchGames(dto.getKeyword());
+        if (dto.getKeyword().toLowerCase().contains("just")
+                || dto.getKeyword().toLowerCase().contains("chat")) {
+            categorySearchResult.add(categoryService.findByCategoryIdIs(100_000_000L));
+        }
         List<Long> channelFollowerCount = new ArrayList<>();
 
         for (ChannelEntity entity : channelUserAccountEntitySearchResult) {
@@ -222,6 +222,5 @@ public class HomeController {
         log.info("channel = {}", channel);
         return channel;
     }
-
 
 }
