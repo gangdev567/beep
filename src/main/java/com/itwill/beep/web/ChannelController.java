@@ -163,19 +163,17 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
-<<<<<<< HEAD
-=======
             // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
-//            String streamingKey = streamer.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
-            //String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8", streamingKey); // 스트리밍 URL 동적 생성
-            //model.addAttribute("streamingUrl", streamingUrl);
+            // String streamingKey = streamer.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
+            // String streamingUrl = String.format("http://localhost:8088/streaming/hls/%s.m3u8",
+            // streamingKey); // 스트리밍 URL 동적 생성
+            // model.addAttribute("streamingUrl", streamingUrl);
 
             // S3에서 스트리밍 키에 해당하는 최근 m3u8 파일의 URL을 가져온다.
-//            String bucketName = "beepitwill"; // S3 버킷 이름 설정
-//            String streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
-//            model.addAttribute("streamingUrl", streamingUrl);
-            
->>>>>>> 376eeb4a5ed1283eb59cd86c5d02a58fa20c60bc
+            // String bucketName = "beepitwill"; // S3 버킷 이름 설정
+            // String streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
+            // model.addAttribute("streamingUrl", streamingUrl);
+
         } else if (!"anonymousUser".equals(authentication.getName())) {
             // 로그인한 유저 정보를 불러온다.
 
@@ -243,6 +241,7 @@ public class ChannelController {
 
 
     }
+
 
     @ResponseBody
     @GetMapping("/api/channel/popular")

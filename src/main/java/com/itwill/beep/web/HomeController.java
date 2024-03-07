@@ -152,8 +152,6 @@ public class HomeController {
                 .filter(t -> t.getStreamingStateSet().toString().contains("ON"))
                 .collect(Collectors.toList());
 
-
-
         model.addAttribute("channelUserAccountEntitySearchResult",
                 channelUserAccountEntitySearchResult);
         model.addAttribute("channelSearchResult", StreamingStateOnchannelSearchResult);

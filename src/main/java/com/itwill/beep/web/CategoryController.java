@@ -88,8 +88,8 @@ public class CategoryController {
         CategoryEntity categoryEntityDetails = categoryService.findByCategoryIdIs(categoryId);
         List<ChannelEntity> categoryChannelList =
                 channelService.findByCategoryCategoryId(categoryId);
-        List<GenreType> list = categoryService.saveGenre(categoryId);
-        list.forEach(x -> log.info(x.toString()));
+        List<GenreType> genreList = categoryService.saveGenre(categoryId);
+        model.addAttribute("genreList", genreList);
         model.addAttribute("categoryDetails", categoryEntityDetails);
         model.addAttribute("categoryChannelList", categoryChannelList);
 
@@ -105,7 +105,6 @@ public class CategoryController {
         }
         return "categories-channellist";
     }
-
 
     @ResponseBody
     @GetMapping("/api/search")

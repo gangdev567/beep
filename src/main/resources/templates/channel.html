@@ -45,7 +45,7 @@ section.home {
 }
 
 .video-container video {
-  width: 800px;
+  width: 1050px;
   height: auto;
   margin-left: 10px;
   display: block;
@@ -204,11 +204,6 @@ textarea:focus {
 .dropdown-menu li {
   padding: 5px;
 }
-
-
-
-
-
   </style>
 </head>
 <body>
@@ -219,12 +214,46 @@ textarea:focus {
 </div>
 <section class="home">
       <!-- 스트리밍 플레이어 추가 -->
-      <div class="video-container">
-        <video id="video" controls autoplay></video>
-        <div style="margin-left: 10px; color: white;">
-        	gg
+<div class="video-container">
+    <video id="video" controls autoplay></video>
+    <div style="margin-left: 10px; color: white;">
+        <div class="align-items-center d-flex my-3">
+            <div class="position-relative">
+                <img id="channelImage" class="channelImageStyle my-3 img-fluid rounded-circle me-3 position-relative z-index-1" alt="channelImg" th:src="${channel.channelProfileImg}" style="width: 75px; height: 75px;">
+                <span id="liveBadge" class="position-absolute bottom-0 start-50 translate-middle badge bg-danger d-none" style="transform: translate(-50%, 50%);">LIVE</span>
+            </div>
+            <div>
+                <span class="fw-bold d-block mb-1 fs-5" th:text="${channel.channelUserAccountEntity.userNickname}"></span>
+                <span class="d-block mb-1" th:text="${channel.channelTitle}"></span>
+                <span class="d-block mb-1" th:text="${channel.categoryEntityOfChannel.categoryName}"></span>
+                <small class="d-block" th:text="|${channel.channelViewerCount} 명 시청중|"></small>
+            </div>
+            <div class="ms-auto" style="margin-right: 112px">
+                <input class="d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />
+                <input class="d-none" id="channelUserId" th:value="${streamer.userId}" />
+                <input class="d-none" id="channelUserNickname" th:value="${streamer.userNickname}" />
+                <input class="d-none" id="loginUserId" th:value="${userAccount.userId}"/>
+                <input class="d-none" id="channelStateSet" th:value="${channel.streamingStateSet}"/>
+                <button id="followBtn" type="button" class="btn btn-outline-primary mb-2" onclick="follow()">팔로우 <i class="fas fa-heart"></i></button>
+                <button id="unfollowBtn" type="button" class="btn btn-outline-danger d-none" onclick="unfollow()">팔로우 <i class="fas fa-heart-broken"></i></button>
+            </div>
         </div>
-      </div>
+    </div>
+</div>
+<script>
+const channelStateSet = document.getElementById('channelStateSet');
+const channelImage = document.getElementById('channelImage');
+const liveBadge = document.getElementById('liveBadge');
+
+if (channelStateSet.value.includes('ON')) {
+    liveBadge.classList.remove('d-none');
+    if (channelImage) {
+        channelImage.style.border = '5px solid #05BB83';
+    }
+}
+
+</script>
+
       <script th:inline="javascript">
         /*<![CDATA[*/
         const videoSrc = [[${streamingUrl}]];
@@ -254,11 +283,11 @@ textarea:focus {
           <input class="chatState" style="display: none;" th:value="${chatState}">
           <div class="dropup">
            <button type="button" class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-			  <svg width="20" height="20" viewBox="0 0 20 20" focusable="false" aria-hidden="true" role="presentation" style="margin-right: 0%;">
-			    <path fill="#ffffff" d="M10 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
-			    <path fill="#ffffff" fill-rule="evenodd" d="M9 2h2a2.01 2.01 0 0 0 1.235 1.855l.53.22a2.01 2.01 0 0 0 2.185-.439l1.414 1.414a2.01 2.01 0 0 0-.439 2.185l.22.53A2.01 2.01 0 0 0 18 9v2a2.01 2.01 0 0 0-1.855 1.235l-.22.53a2.01 2.01 0 0 0 .44 2.185l-1.415 1.414a2.01 2.01 0 0 0-2.184-.439l-.531.22A2.01 2.01 0 0 0 11 18H9a2.01 2.01 0 0 0-1.235-1.854l-.53-.22a2.009 2.009 0 0 0-2.185.438L3.636 14.95a2.009 2.009 0 0 0 .438-2.184l-.22-.531A2.01 2.01 0 0 0 2 11V9c.809 0 1.545-.487 1.854-1.235l.22-.53a2.009 2.009 0 0 0-.438-2.185L5.05 3.636a2.01 2.01 0 0 0 2.185.438l.53-.22A2.01 2.01 0 0 0 9 2zm-4 8 1.464 3.536L10 15l3.535-1.464L15 10l-1.465-3.536L10 5 6.464 6.464 5 10z" clip-rule="evenodd"></path>
-			  </svg>
-			</button>
+              <svg width="20" height="20" viewBox="0 0 20 20" focusable="false" aria-hidden="true" role="presentation" style="margin-right: 0%;">
+                <path fill="#ffffff" d="M10 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
+                <path fill="#ffffff" fill-rule="evenodd" d="M9 2h2a2.01 2.01 0 0 0 1.235 1.855l.53.22a2.01 2.01 0 0 0 2.185-.439l1.414 1.414a2.01 2.01 0 0 0-.439 2.185l.22.53A2.01 2.01 0 0 0 18 9v2a2.01 2.01 0 0 0-1.855 1.235l-.22.53a2.01 2.01 0 0 0 .44 2.185l-1.415 1.414a2.01 2.01 0 0 0-2.184-.439l-.531.22A2.01 2.01 0 0 0 11 18H9a2.01 2.01 0 0 0-1.235-1.854l-.53-.22a2.009 2.009 0 0 0-2.185.438L3.636 14.95a2.009 2.009 0 0 0 .438-2.184l-.22-.531A2.01 2.01 0 0 0 2 11V9c.809 0 1.545-.487 1.854-1.235l.22-.53a2.009 2.009 0 0 0-.438-2.185L5.05 3.636a2.01 2.01 0 0 0 2.185.438l.53-.22A2.01 2.01 0 0 0 9 2zm-4 8 1.464 3.536L10 15l3.535-1.464L15 10l-1.465-3.536L10 5 6.464 6.464 5 10z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
             <ul class="dropdown-menu" style="width: 15vw">
               <li class="tmtm">
                 <div class="wrapper flexAndBetween">
@@ -344,7 +373,11 @@ textarea:focus {
         </div>
       </div>
     </div>
+    
 </section>
+<div>
+    <footer th:replace="layout/fragments :: myfooter"></footer>
+</div>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script src="/js/fragments-categories-search.js"></script>
@@ -449,7 +482,7 @@ textarea:focus {
         }
     }
     
-    let socket = new WebSocket("ws://localhost:8081/ws/chat");
+    let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
 
     socket.onopen = function (e) {
         console.log('open server!')

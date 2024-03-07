@@ -169,13 +169,7 @@ public class CategoryService {
         return savedCategories;
     }
 
-    /**
-     * IGDB API를 통해 키워드로 게임을 검색하고 결과를 카테고리로 저장합니다.
-     *
-     * @param keyword 검색 키워드
-     * @return 검색된 카테고리 목록
-     * @throws RequestException
-     */
+
     public List<GenreType> saveGenre(Long categoryId) {
         log.info("saveGenre(categoryId={})", categoryId);
 
@@ -189,9 +183,13 @@ public class CategoryService {
         APICalypse gameFindQuery = new APICalypse().search(c).fields("*");
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gameFindQuery);
-            for (var game : games) {
+
+            // 첫 번째 게임만 가져오기
+            if (!games.isEmpty()) {
+                var game = games.get(0);
                 log.info("갯수={}", game.getGenresCount());
 
+                // 첫 번째 게임의 모든 장르 가져오기
                 for (int i = 0; i < game.getGenresCount(); i++) {
                     String genreStr = game.getGenres(i).toString();
                     // "id =" 문자열을 제거하고, 숫자 값으로 변환
@@ -199,16 +197,23 @@ public class CategoryService {
                     GenreType genreType = GenreType.getByValue(genreId);
                     list.add(genreType);
                 }
-
             }
         } catch (RequestException e) {
-            // TODO Auto-generated catch block
+            log.error("RequestException");
             e.printStackTrace();
         }
 
         return list;
     }
 
+
+    /**
+     * IGDB API를 통해 키워드로 게임을 검색하고 결과를 카테고리로 저장합니다.
+     *
+     * @param keyword 검색 키워드
+     * @return 검색된 카테고리 목록
+     * @throws RequestException
+     */
     @Transactional
     public List<CategoryEntity> searchGames(String keyword) {
         log.info("searchGames(keyword={})", keyword);
