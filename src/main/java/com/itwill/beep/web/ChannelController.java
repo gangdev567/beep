@@ -124,10 +124,7 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 273615fb00181477d14374f2504e7cb47a4de10d
             // channel.status는 Set 타입 객체다. 문자열로 변환하여 전송
             ChannelEntity myChannel = channelSvc.findChannelByUserAccount(user);
             String status = myChannel.getStreamingStateSet().toString();
@@ -234,7 +231,6 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
-<<<<<<< HEAD
         
                                                                                                 // URL
                                                                                                 // 동적
@@ -242,8 +238,6 @@ public class ChannelController {
 
 
 
-=======
->>>>>>> 273615fb00181477d14374f2504e7cb47a4de10d
             // channel.status는 Set타입 객체다 그래서인지 th:if 조건문에서 계속 실패했다.
             // 타임리프로 해결하는 방안이 있을 것이라고 생각은 하지만 공식문서를 뒤져봐도 해결법은 찾지 못했다.
             // 그래서 그냥 컨트롤러 부분에서 문자열로 변환하여 보내기로 했다. (해결법은 찾았지만 결국엔 이게 정답이었다.)
