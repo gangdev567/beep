@@ -365,6 +365,6 @@ body.dark .switch::before {
     width: calc(100% - 78px); /* 전체 너비에서 사이드바를 뺀 값으로 설정하여 사이드바를 닫았을 때의 너비 조정 */
 }
 .sidebar.close ~ .home .video-container video {
-	width: 1120px;
+	width: 1500px;
 	 left: 78px; /* 왼쪽 여백을 78px으로 설정하여 사이드바를 닫았을 때의 위치 조정 */
 }
