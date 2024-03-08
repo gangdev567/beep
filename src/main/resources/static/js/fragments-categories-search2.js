@@ -41,8 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log('Selected category ID:', categoryId);
 
-        document.getElementById('categoryId').value = categoryId;
+        document.getElementById('categoryId2').value = categoryId;
     }
+    
+let isClicked = false;
+
+categoryInput.addEventListener('click', function() {
+    if (!isClicked) {
+        categoryInput.value = ''; // 입력란의 값(value)을 빈 문자열로 설정하여 텍스트를 지웁니다.
+        isClicked = true;
+    }
+});
 
     // 검색된 카테고리를 표시하는 함수
     function displayCategories(categories) {
