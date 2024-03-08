@@ -88,7 +88,7 @@ public class CategoryController {
         CategoryEntity categoryEntityDetails = categoryService.findByCategoryIdIs(categoryId);
         List<ChannelEntity> categoryChannelList =
                 channelService.findByCategoryCategoryId(categoryId);
-        List<GenreType> genreList = categoryService.saveGenre(categoryId);
+        List<GenreType> genreList = categoryService.findGenre(categoryId);
         model.addAttribute("genreList", genreList);
         model.addAttribute("categoryDetails", categoryEntityDetails);
         model.addAttribute("categoryChannelList", categoryChannelList);

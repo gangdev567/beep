@@ -169,25 +169,22 @@ public class CategoryService {
         return savedCategories;
     }
 
-
-    public List<GenreType> saveGenre(Long categoryId) {
-        log.info("saveGenre(categoryId={})", categoryId);
+    public List<GenreType> findGenre(Long categoryId) {
+        log.info("findGenre(categoryId={})", categoryId);
 
         setTwitchAuthCredentials();
 
         List<GenreType> list = new ArrayList<>();
 
         String c = categoryRepository.findByCategoryId(categoryId).getCategoryName();
-        log.info(c);
 
-        APICalypse gameFindQuery = new APICalypse().search(c).fields("*");
+        APICalypse gameFindQuery = new APICalypse().search(c).fields("*").limit(1);
         try {
             var games = ProtoRequestKt.games(IGDBWrapper.INSTANCE, gameFindQuery);
 
             // 첫 번째 게임만 가져오기
             if (!games.isEmpty()) {
                 var game = games.get(0);
-                log.info("갯수={}", game.getGenresCount());
 
                 // 첫 번째 게임의 모든 장르 가져오기
                 for (int i = 0; i < game.getGenresCount(); i++) {
