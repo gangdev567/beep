@@ -1,13 +1,10 @@
 package com.itwill.beep.web;
 
 import java.io.IOException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +16,13 @@ import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.domain.UserAccountRepository;
 import com.itwill.beep.dto.ChannelImageRequestDto;
+import com.itwill.beep.dto.FollowerListRequestDto;
+import com.itwill.beep.dto.FollowerSearchRequestDto;
+import com.itwill.beep.dto.StreamingOnDto;
 import com.itwill.beep.service.ChannelService;
+import com.itwill.beep.service.FollowService;
 import com.itwill.beep.service.ImageService;
 import com.itwill.beep.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,15 +36,18 @@ public class ProfileController {
     private final UserService userService;
     private final ImageService imageService;
     private final ChannelService channelService;
+    private final FollowService followService;
 
 
     @GetMapping("/profile")
-    public String profileSettings(@AuthenticationPrincipal UserDetails currentUser, Model model) {
-        // 사용자 정보 로드 로직 (인증 로직에 따라 달라질 수 있음)
-        if (currentUser == null) {
-            Object principal =
-                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public String profileSettings(Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            // OAuth2 사용자의 정보
             String oauth2name = (String) ((OAuth2User) principal).getAttributes().get("name");
+            log.info("oauth2name = {}", oauth2name);
 
             UserAccountEntity loginUser = userAccountRepository.findByUserName(oauth2name);
 
@@ -66,9 +68,8 @@ public class ProfileController {
             }
 
         } else {
-
-            UserAccountEntity loginUser =
-                    userAccountRepository.findByUserName(currentUser.getUsername());
+            String username = authentication.getName();
+            UserAccountEntity loginUser = userService.findUserByUserName(username);
 
             model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
 
@@ -88,9 +89,7 @@ public class ProfileController {
 
         }
 
-
-
-        return "settings/profile";
+        return "profile";
     }
 
     @PostMapping("/profile")
@@ -112,48 +111,152 @@ public class ProfileController {
         return "redirect:/settings/profile";
     }
 
-    @PostMapping("/profile/updateUsername")
-    public String updateUsername(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam("newUsername") String newUsername, HttpServletRequest request) {
+    @GetMapping("/followers-list")
+    public String followerPage(@RequestParam(name = "p", defaultValue = "0") int p, Model model) {
+        log.info("followerPage(p={})", p);
 
-        // 현재 로그인한 사용자의 이메일 인증 상태를 확인
-        boolean isEmailVerified = userService.checkIfUserEmailVerified(userDetails.getUsername());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (!isEmailVerified) {
-            // 이메일이 인증되지 않았다면, 에러 메시지와 함께 리다이렉트
-            return "redirect:/settings/profile?error=email-not-verified";
+        Page<FollowerListRequestDto> followersList = null;
+        UserAccountEntity loginUser = null;
+        Long followersCount = 0L;
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            loginUser = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            followersCount = followService.countFollowers(loginUser);
+            followersList = followService.followingList(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"), p);
+        } else if (authentication.isAuthenticated()) {
+            loginUser = userService.findUserByUserName(authentication.getName());
+            followersCount = followService.countFollowers(loginUser);
+            followersList = followService.followingList(authentication.getName(), p);
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
         }
 
-        // 이메일 인증이 확인된 경우, 아이디 변경 처리
-        userService.updateUsername(userDetails.getUsername(), newUsername);
+        log.info("followerList={}", followersList);
+        model.addAttribute("followersCount", followersCount);
+        model.addAttribute("followersList", followersList);
 
-        // 현재 사용자의 Authentication 객체 업데이트
-        Authentication authentication = new UsernamePasswordAuthenticationToken(newUsername,
-                userDetails.getPassword(), userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // fragments 에 필요한 모델
+        model.addAttribute("userAccount", loginUser);
 
-        // 세션에 변경된 사용자 이름 적용
-        HttpSession session = request.getSession(true);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                SecurityContextHolder.getContext());
+        // myModal에 필요한 모델
+        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+        model.addAttribute("channel", forModal);
+        if (forModal != null) {
+            String status = forModal.getStreamingStateSet().toString();
+            model.addAttribute("status", status);
+        }
 
-        return "redirect:/logout";
+        return "follower";
     }
 
-    // "/profile/security" 경로로 요청이 오면 이 메소드가 처리합니다.
-    @GetMapping("/security")
-    public String securitySettings(Authentication authentication, Model model) {
-        String userName = authentication.getName(); // 현재 인증된 사용자의 이메일(Username)을 가져옵니다.
+    @GetMapping("/followers-search")
+    public String followerSearch(@ModelAttribute FollowerSearchRequestDto dto, Model model) {
+        log.info("followerSearch(dto={})", dto);
 
-        // 이메일을 사용하여 사용자 정보를 조회합니다.
-        UserAccountEntity currentUser = userAccountRepository.findByUserName(userName);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // Model 객체에 현재 사용자 정보와 활성 탭을 추가합니다.
-        model.addAttribute("user", currentUser);
-        model.addAttribute("active", "security"); // 활성 탭을 표시하기 위한 속성
+        Page<FollowerListRequestDto> searchResult = null;
+        UserAccountEntity loginUser = null;
+        Long followersCount = 0L;
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            loginUser = userService.findUserByUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            followersCount = followService.countFollowers(loginUser);
+            dto.setFollowingUserAccountUserName(
+                    (String) ((OAuth2User) principal).getAttributes().get("name"));
+            searchResult = followService.search(dto);
+            log.info("searchResult={}", searchResult);
+        } else if (authentication.isAuthenticated()) {
+            loginUser = userService.findUserByUserName(authentication.getName());
+            followersCount = followService.countFollowers(loginUser);
+            dto.setFollowingUserAccountUserName(authentication.getName());
+            searchResult = followService.search(dto);
+            log.info("searchResult={}", searchResult);
+        } else {
+            log.info("로그인되지 않은 사용자입니다.");
+        }
 
-        // "settings/security" 뷰를 반환합니다. (HTML 파일 이름이 "settings/security.html" 이라고 가정)
-        return "settings/security";
+        model.addAttribute("followersCount", followersCount);
+        model.addAttribute("searchResult", searchResult);
+
+        // fragments 에 필요한 모델
+        model.addAttribute("userAccount", loginUser);
+
+        // myModal에 필요한 모델
+        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+        model.addAttribute("channel", forModal);
+        if (forModal != null) {
+            String status = forModal.getStreamingStateSet().toString();
+            model.addAttribute("status", status);
+        }
+
+        return "follower";
+    }
+
+    @GetMapping("/channelinfo")
+    public String channelInfo(Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            // OAuth2 사용자의 정보
+            String oauth2name = (String) ((OAuth2User) principal).getAttributes().get("name");
+            log.info("oauth2name = {}", oauth2name);
+
+            UserAccountEntity loginUser = userAccountRepository.findByUserName(oauth2name);
+
+            model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
+
+            ChannelEntity channelEntity = channelService.findChannelByUserAccount(loginUser);
+
+            model.addAttribute("channel", channelEntity);
+            // fragments 에 필요한 모델
+            model.addAttribute("userAccount", loginUser);
+
+            // myModal에 필요한 모델
+            ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+            model.addAttribute("channel", forModal);
+            if (forModal != null) {
+                String status = forModal.getStreamingStateSet().toString();
+                model.addAttribute("status", status);
+            }
+
+        } else {
+            String username = authentication.getName();
+            UserAccountEntity loginUser = userService.findUserByUserName(username);
+
+            model.addAttribute("active", "profile"); // 현재 활성화된 섹션을 모델에 추가
+
+            ChannelEntity channelEntity = channelService.findChannelByUserAccount(loginUser);
+
+            model.addAttribute("channel", channelEntity);
+            // fragments 에 필요한 모델
+            model.addAttribute("userAccount", loginUser);
+
+            // myModal에 필요한 모델
+            ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
+            model.addAttribute("channel", forModal);
+            if (forModal != null) {
+                String status = forModal.getStreamingStateSet().toString();
+                model.addAttribute("status", status);
+            }
+
+        }
+
+        return "settingsChannelInfo";
+    }
+
+    @PostMapping("/channelinfo")
+    public String channelInfoUpdate(@ModelAttribute StreamingOnDto dto) {
+
+        channelService.update(dto);
+
+        return "redirect:/settings/channelinfo";
     }
 
 }

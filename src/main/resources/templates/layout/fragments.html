@@ -256,11 +256,6 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" th:href="@{/dashboard/u/{username}/home(username=${userAccount.userName})}">
-                                    <i class="fas fa-tachometer-alt me-2"></i> 대시보드
-                                </a>
-                            </li>
-                            <li sec:authorize="isAuthenticated()">
                                 <a class="dropdown-item" th:href="@{/settings/profile}">
                                     <i class="fas fa-tachometer-alt me-2"></i> 설정
                                 </a>
