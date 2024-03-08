@@ -127,11 +127,6 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
-            // 스트리머의 스트림키를 기반으로 스트리밍 URL 생성
-            String streamingKey = streamer.getUserStreamingKey(); // 스트리머의 스트리밍 키를 가져온다.
-// AWS S3 버킷을 사용한 스트리밍 URL 동적 생성
-            String streamingUrl = String.format("https://beepitwill.s3.ap-northeast-2.amazonaws.com/hls/%s.m3u8", streamingKey);
-            model.addAttribute("streamingUrl", streamingUrl);
 
             // channel.status는 Set 타입 객체다. 문자열로 변환하여 전송
             ChannelEntity myChannel = channelSvc.findChannelByUserAccount(user);
@@ -239,15 +234,10 @@ public class ChannelController {
             log.info("room = {}", room);
             model.addAttribute("room", room);
 
-            String streamingKey = streamer.getUserStreamingKey();
-            // S3에서 스트리밍 키에 해당하는 최근 m3u8 파일의 URL을 가져온다.
-            String bucketName = "beepitwill"; // S3 버킷 이름 설정
-            String streamingUrl = s3Service.getM3U8UrlForStreamKey(bucketName, streamingKey);
-            model.addAttribute("streamingUrl", streamingUrl); // 스트리밍
+        
                                                                                                 // URL
                                                                                                 // 동적
-                                                                                                // 생성
-            model.addAttribute("streamingUrl", streamingUrl);
+        
 
 
 
