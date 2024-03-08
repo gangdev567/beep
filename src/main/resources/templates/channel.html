@@ -45,7 +45,7 @@ section.home {
 }
 
 .video-container video {
-  width: 1050px;
+  width: 950px;
   height: auto;
   margin-left: 10px;
   display: block;
@@ -72,6 +72,7 @@ section.home {
   top: 60px; /* 화면 상단에 고정시키기 위한 값 */
   right: 0; /* 화면 우측에 고정시키기 위한 값 */
   color: #ffffff; /* 글자색 변경 */
+  width: 320px;
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
@@ -572,49 +573,42 @@ if (channelStateSet.value.includes('ON')) {
         `   </ul>             
         </div>`;
         
-     // sender가 해당 채널의 스트리머일 경우 강조해서 표시
+     // 랜덤 색상 매핑 객체
+        let colorMapping = {};
+
+        // 랜덤 색상 생성 함수
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // sender가 해당 채널의 스트리머일 경우 강조해서 표시
         if (message.sender === [[${streamer.userNickname}]]) {
             newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.message + '</strong>';
         } else {
             let senderDisplayName = message.sender;
 
-            // 랜덤 색상 매핑 객체
-            let colorMapping = {};
+            // 저장된 닉네임에 대한 랜덤 색상 확인
+            let senderColor = colorMapping[senderDisplayName];
 
-            // 랜덤 색상 생성 함수
-            function getRandomColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            }
-
-            // 저장된 닉네임과 색상 사용 여부 확인
-            if (colorMapping[senderDisplayName]) {
-                const senderColor = colorMapping[senderDisplayName];
-
-                if (message.userType === "MANAGER") {
-                    senderDisplayName = '⚔' + senderDisplayName;
-                } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
-                    senderDisplayName = '👍︎' + senderDisplayName;
-                }
-
-                newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
-            } else {
-                // 닉네임에 대한 랜덤 색상 생성
-                const senderColor = getRandomColor();
+            // 색상이 없다면 새로운 랜덤 색상 생성
+            if (!senderColor) {
+                senderColor = getRandomColor();
                 colorMapping[senderDisplayName] = senderColor;
-
-                if (message.userType === "MANAGER") {
-                    senderDisplayName = '⚔' + senderDisplayName;
-                } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
-                    senderDisplayName = '👍︎' + senderDisplayName;
-                }
-
-                newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
             }
+
+            // 채팅 타입에 따라 닉네임과 메시지 출력
+            if (message.userType === "MANAGER") {
+                senderDisplayName = '⚔' + senderDisplayName;
+            } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
+                senderDisplayName = '👍︎' + senderDisplayName;
+            }
+
+            newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
         }
 
         if (message.type === 'TALK') {
