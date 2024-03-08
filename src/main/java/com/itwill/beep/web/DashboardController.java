@@ -2,7 +2,6 @@ package com.itwill.beep.web;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,16 +9,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.itwill.beep.domain.ChannelEntity;
 import com.itwill.beep.domain.StreamingState;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.dto.ChatRoom;
-import com.itwill.beep.dto.FollowerListRequestDto;
-import com.itwill.beep.dto.FollowerSearchRequestDto;
 import com.itwill.beep.service.ChannelService;
 import com.itwill.beep.service.ChatService;
 import com.itwill.beep.service.FollowService;
@@ -90,92 +85,6 @@ public class DashboardController {
         return pathPrefix;
     }
 
-    @GetMapping("/community/followers-list")
-    public String followerPage(@RequestParam(name = "p", defaultValue = "0") int p, Model model) {
-        log.info("followerPage(p={})", p);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Page<FollowerListRequestDto> followersList = null;
-        UserAccountEntity loginUser = null;
-        Long followersCount = 0L;
-        if (authentication.getPrincipal() instanceof OAuth2User) {
-            loginUser = userService.findUserByUserName(
-                    (String) ((OAuth2User) principal).getAttributes().get("name"));
-            followersCount = followService.countFollowers(loginUser);
-            followersList = followService.followingList(
-                    (String) ((OAuth2User) principal).getAttributes().get("name"), p);
-        } else if (authentication.isAuthenticated()) {
-            loginUser = userService.findUserByUserName(authentication.getName());
-            followersCount = followService.countFollowers(loginUser);
-            followersList = followService.followingList(authentication.getName(), p);
-        } else {
-            log.info("로그인되지 않은 사용자입니다.");
-        }
-
-        log.info("followerList={}", followersList);
-        model.addAttribute("followersCount", followersCount);
-        model.addAttribute("followersList", followersList);
-
-        // fragments 에 필요한 모델
-        model.addAttribute("userAccount", loginUser);
-
-        // myModal에 필요한 모델
-        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
-        model.addAttribute("channel", forModal);
-        if (forModal != null) {
-            String status = forModal.getStreamingStateSet().toString();
-            model.addAttribute("status", status);
-        }
-
-        return "follower";
-    }
-
-    @GetMapping("/community/followers-search")
-    public String followerSearch(@ModelAttribute FollowerSearchRequestDto dto, Model model) {
-        log.info("followerSearch(dto={})", dto);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Page<FollowerListRequestDto> searchResult = null;
-        UserAccountEntity loginUser = null;
-        Long followersCount = 0L;
-        if (authentication.getPrincipal() instanceof OAuth2User) {
-            loginUser = userService.findUserByUserName(
-                    (String) ((OAuth2User) principal).getAttributes().get("name"));
-            followersCount = followService.countFollowers(loginUser);
-            dto.setFollowingUserAccountUserName(
-                    (String) ((OAuth2User) principal).getAttributes().get("name"));
-            searchResult = followService.search(dto);
-            log.info("searchResult={}", searchResult);
-        } else if (authentication.isAuthenticated()) {
-            loginUser = userService.findUserByUserName(authentication.getName());
-            followersCount = followService.countFollowers(loginUser);
-            dto.setFollowingUserAccountUserName(authentication.getName());
-            searchResult = followService.search(dto);
-            log.info("searchResult={}", searchResult);
-        } else {
-            log.info("로그인되지 않은 사용자입니다.");
-        }
-
-        model.addAttribute("followersCount", followersCount);
-        model.addAttribute("searchResult", searchResult);
-
-        // fragments 에 필요한 모델
-        model.addAttribute("userAccount", loginUser);
-
-        // myModal에 필요한 모델
-        ChannelEntity forModal = channelService.findChannelByUserAccount(loginUser);
-        model.addAttribute("channel", forModal);
-        if (forModal != null) {
-            String status = forModal.getStreamingStateSet().toString();
-            model.addAttribute("status", status);
-        }
-
-        return "follower";
-    }
 
     // 대시보드 홈
     @GetMapping("/home")
