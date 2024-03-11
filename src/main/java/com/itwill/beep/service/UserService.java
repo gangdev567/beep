@@ -270,4 +270,7 @@ public class UserService implements UserDetailsService {
         log.info("Password reset successfully for user: {}", user.getUserName());
     }
 
+    /* 채널 이미지 변경 서비스 */
+
+
 }

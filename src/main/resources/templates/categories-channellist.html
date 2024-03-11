@@ -16,9 +16,15 @@
         <div class="col-md-12 d-flex align-items-center">
             <img th:src="${categoryDetails.categoryImageUrl}" class="card-img-top img-fluid float-md-start me-md-3" alt="Category Image" style="width: 200px; height: 250px;">
             <div class="mx-3 text-center">
-                <h1 class="text-left text-truncate text-white my-3" th:text="${categoryDetails.categoryName}"></h1>
-                <span class="text-left text-truncate text-white" th:text="${categoryDetails.categoryTotalView != null ? '시청자 ' + categoryDetails.categoryTotalView + '명' : '시청자 0명'} + ' • ' + (${not #lists.isEmpty(categoryChannelList)} ? '라이브 ' + ${#lists.size(categoryChannelList.?[streamingStateSet.toString().contains('ON')])} + '개' : '라이브 0개')"></span>
-
+                <h1 id="Cname" class="text-left text-truncate my-3" th:text="${categoryDetails.categoryName}"></h1>
+                <span id="VC" class="text-left text-truncate" th:text="${categoryDetails.categoryTotalView != null ? '시청자 ' + categoryDetails.categoryTotalView + '명' : '시청자 0명'} + ' • ' + (${not #lists.isEmpty(categoryChannelList)} ? '라이브 ' + ${#lists.size(categoryChannelList.?[streamingStateSet.toString().contains('ON')])} + '개' : '라이브 0개')"></span>
+        <div class="container my-5">
+            <div class="text-white genre-list d-flex flex-wrap" id="genre-list">
+                <!-- Thymeleaf를 사용하여 장르 리스트를 출력 -->
+                <span class="genreElement badge me-2 mb-2" th:each="genre : ${genreList}" th:text="${genre}"></span>
+            </div>
+        </div>
+            
             </div>
         </div>
     </div>    
@@ -69,17 +75,16 @@
     
 </div>
 
-
 <footer th:replace="layout/fragments :: myfooter"></footer>
 </section>
 
 <!-- 방송하기/방송종료 -->
 <div th:replace="layout/fragments :: myModal"></div>
-<script src="/js/broadcast.js"></script>
 
 <script th:replace="~{layout/fragments :: bootstrap_js}"></script>
 <script th:replace="~{layout/fragments :: sidebar_js}"></script>
-
+<script src="/js/broadcast.js"></script>
+<script src="/js/categories-channellist-genres.js"></script>
 </body>
 
 </html>

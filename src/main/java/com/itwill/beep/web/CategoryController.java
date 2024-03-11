@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.itwill.beep.domain.CategoryEntity;
 import com.itwill.beep.domain.ChannelEntity;
+import com.itwill.beep.domain.GenreType;
 import com.itwill.beep.domain.UserAccountEntity;
 import com.itwill.beep.service.CategoryService;
 import com.itwill.beep.service.ChannelService;
@@ -87,7 +88,8 @@ public class CategoryController {
         CategoryEntity categoryEntityDetails = categoryService.findByCategoryIdIs(categoryId);
         List<ChannelEntity> categoryChannelList =
                 channelService.findByCategoryCategoryId(categoryId);
-
+        List<GenreType> genreList = categoryService.findGenre(categoryId);
+        model.addAttribute("genreList", genreList);
         model.addAttribute("categoryDetails", categoryEntityDetails);
         model.addAttribute("categoryChannelList", categoryChannelList);
 
@@ -103,7 +105,6 @@ public class CategoryController {
         }
         return "categories-channellist";
     }
-
 
     @ResponseBody
     @GetMapping("/api/search")
