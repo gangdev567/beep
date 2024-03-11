@@ -41,6 +41,7 @@ public class ImageService {
         PutObjectResult putObjectResult = amazonS3.putObject(
                 new PutObjectRequest(bucketName, urlS3, dto.getImgFile().getInputStream(), metadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
+        log.info("metadata={}", putObjectResult.toString());
         ChannelEntity channelEntity = channelRepository.findByChannelId(dto.getChannelId());
         // 데이터베이스에 저장할 이미지가 저장된 주소
         channelEntity.updateChannelProfileImg(amazonS3.getUrl(bucketName, urlS3).toString());
