@@ -10,6 +10,12 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.15.0/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/sidebar.css" >
   <link rel="stylesheet" href="/css/nav.css" >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.20.1/video-js.min.css"
+    integrity="sha512-D/n19dhr+LY8HOoGuybX+bJYsZOFKb0r7YpAWBMPg5Hnke6lxdHl6q21d7qiwIsMgdSnBG9pSMQlwTtZ+6ISmw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.20.1/video.min.js"
+    integrity="sha512-xT61DWoPRoAa4ir+LqER5L4/zzuO5tQOQywZYqU8BaZVqolq78bRobozDxozcCZ6tmo92zetGVQHRp+sQHIi/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://kit.fontawesome.com/1306328925.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/css/nav.css" >
@@ -253,19 +259,135 @@ if (channelStateSet.value.includes('ON')) {
     }
 }
 </script>
-      <script th:inline="javascript">
-        /*<![CDATA[*/
-        const videoSrc = [[${streamingUrl}]];
+    <script th:inline="javascript">
+        const videoSrc = "https://beepitwill.s3.ap-northeast-2.amazonaws.com/hls/61869921-b94a-4a95-98fa-a638e5d12af8_20240311110340.m3u8";
         const video = document.getElementById('video');
 
         if (Hls.isSupported()) {
-          const hls = new Hls();
+          const hls = new Hls({
+              /* startLevel: 1,
+              autoStartLoad: true,
+              retryAttempts: 100,
+              retryDelay: 1000,
+              timeout: 10000,
+              debug: true,
+              capLevelToPlayerSize: true */
+              maxBufferSize: 1024 * 1024 * 100,
+              maxBufferLength: 60
+          });
+          console.log(hls);
+          hls.config.fragLoadingMaxRetry = 100;
+          hls.config.fragLoadingRetryDelay = 10000;
+          
+          hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+              console.log('Media attached');
+            });
+            
+            hls.on(Hls.Events.BUFFER_CREATED, () => {
+              console.log('Buffer created');
+            });
+            
+            hls.on(Hls.Events.ERROR, (event, error) => {
+                console.log(error);
+                console.log(error.details);
+                
+                const retryCount = 100;
+                
+                if (error.details === 'fragLoadError') {
+                    function loadTsFile(url) {
+                        return new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', videoSrc);
+                        xhr.responseType = 'arraybuffer';
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                resolve(xhr.response);
+                            } else if (xhr.status === 403 && retryCount > 0) {
+                                retryCount--;
+                                console.log(`403 오류 발생. 재시도: ${retryCount}회`);
+                                setTimeout(() => loadTsFile(videoSrc), 1000); // 1초 후 재시도
+                                hls.attachMedia(video);
+                            } else {
+                                reject(new Error(`TS 파일 로드 실패: ${xhr.status}`));
+                            }
+                        };
+                        xhr.onerror = () => {
+                            reject(new Error('TS 파일 로드 실패'));
+                        };
+                        xhr.send();
+                        });
+                    }
+
+                    if (error.details === 'fragLoadError') {
+                          var segmentNo = error.frag.sn;
+                    }
+                    let segmentUrl = "https://beepitwill.s3.ap-northeast-2.amazonaws.com/hls/61869921-b94a-4a95-98fa-a638e5d12af8_20240308203009-"+segmentNo+".ts";
+                    // 예시
+                    loadTsFile(segmentUrl).then((data) => {
+                    // TS 파일 데이터 처리
+                    console.log(data);
+                    }).catch((error) => {
+                    // 오류 처리
+                    });
+                    
+                }
+                    
+                setTimeout(function() {
+                    console.log('제발 5초만 멈춰봐라');
+                }, 5000);
+                
+
+                    /*
+                    // 현재 재시도 횟수를 저장하는 변수
+                    let currentRetryCount = 0;
+                    
+                    
+                    //재시도 함수
+                    function retry() {
+                      currentRetryCount++;
+                
+                      // 최대 재시도 횟수를 초과하면 재생 중단
+                      if (currentRetryCount > hls.retryAttempts) {
+                        console.log('@@@@@@재시도 횟수 초과@@@@@@');
+                        hls.destroy();
+                        return;
+                      }
+                      // 에러가 발생한 ts 파일 URL을 추출
+                      if (error.details === 'fragLoadError') {
+                          var segmentNo = error.frag.sn;
+                      }
+                      let segmentUrl = "https://beepitwill.s3.ap-northeast-2.amazonaws.com/hls/61869921-b94a-4a95-98fa-a638e5d12af8_20240308174750-"+segmentNo+".ts";                          
+                      
+                      console.log(segmentUrl);
+                      
+                      // 재시도 간격만큼 대기 후 다시 로드
+                      setTimeout(() => {
+                        if (error.details === 'fragLoadError') {                            
+                            hls.loadSource(segmentUrl);
+                            console.log('sival')
+                            } 
+                      }, 1000);
+                      
+                      setTimeout(() => {
+                        if (error.details === 'levelSwitchError') {
+                            hls.loadSource(videoSrc);
+                            } 
+                      }, 100000);
+                      
+                    };
+                    
+                      // 네트워크 오류 발생 시 재시도 함수 실행
+                      retry(); */
+                
+                console.error('Error:', error);
+                hls.recoverMediaError();
+            });
           hls.loadSource(videoSrc);
           hls.attachMedia(video);
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
           video.src = videoSrc;
         }
-        /*]]>*/
+        video.play();
       </script>
      
    
@@ -354,16 +476,6 @@ if (channelStateSet.value.includes('ON')) {
                       </li>
                     </ul>
                   </div>
-                </div>
-              </li>
-              <!-- 추가된 부분 끝 -->
-              <li>
-                <div class="wrapper flexAndBetween">
-                  <span style="font-size: small; padding-top: 2px;">스트리머만 채팅 (얼리기)</span>
-                  <input type="checkbox" id="switch5">
-                  <label for="switch5" class="switch_label">
-                    <span class="onf_btn"></span>
-                  </label>
                 </div>
               </li>
             </ul>
@@ -481,7 +593,7 @@ if (channelStateSet.value.includes('ON')) {
         }
     }
     
-    let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
+    let socket = new WebSocket("ws://13.209.122.0:8081/ws/chat");
 
     socket.onopen = function (e) {
         console.log('open server!')
@@ -771,10 +883,12 @@ if (channelStateSet.value.includes('ON')) {
 
 
 </script>
-<script th:inline="javascript">
+<!-- <script th:inline="javascript">
   const authentication = /*[[${#authentication.name}]]*/ null;
-</script>
-
+</script> -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/follow.js"></script>
+<script src="/js/broadcast.js"></script>
 
 </body>
 </html>
