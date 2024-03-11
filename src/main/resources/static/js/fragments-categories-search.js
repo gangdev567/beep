@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const keyword = categoryInput.value;
         console.log(keyword);
     
-        const requestURL = 'http://localhost:8081/' + 'categories/api/search' + '?keyword=' + keyword;
+        const requestURL = 'http://13.209.122.0:8081/' + 'categories/api/search' + '?keyword=' + keyword;
         
         const xhr = new XMLHttpRequest();
         xhr.open('GET', requestURL, true);

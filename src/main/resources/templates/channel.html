@@ -260,7 +260,7 @@ if (channelStateSet.value.includes('ON')) {
 }
 </script>
     <script th:inline="javascript">
-        const videoSrc = "https://beepitwill.s3.ap-northeast-2.amazonaws.com/hls/61869921-b94a-4a95-98fa-a638e5d12af8_20240308203009.m3u8";
+        const videoSrc = "https://beepitwill.s3.ap-northeast-2.amazonaws.com/hls/61869921-b94a-4a95-98fa-a638e5d12af8_20240311110340.m3u8";
         const video = document.getElementById('video');
 
         if (Hls.isSupported()) {
@@ -593,7 +593,7 @@ if (channelStateSet.value.includes('ON')) {
         }
     }
     
-    let socket = new WebSocket("ws://192.168.20.26:8081/ws/chat");
+    let socket = new WebSocket("ws://13.209.122.0:8081/ws/chat");
 
     socket.onopen = function (e) {
         console.log('open server!')
