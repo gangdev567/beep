@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all,macos,windows,java,gradle,eclipse,maven,python,node
 
 # Ignore application-secret.properties file
-application-secret.properties
+.application-secret.properties
 
 ### Eclipse ###
 .metadata

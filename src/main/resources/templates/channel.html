@@ -51,7 +51,7 @@ section.home {
 }
 
 .video-container video {
-  width: 1050px;
+  width: 1320px;
   height: auto;
   margin-left: 10px;
   display: block;
@@ -78,6 +78,7 @@ section.home {
   top: 60px; /* 화면 상단에 고정시키기 위한 값 */
   right: 0; /* 화면 우측에 고정시키기 위한 값 */
   color: #ffffff; /* 글자색 변경 */
+  width: 320px;
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
@@ -181,7 +182,7 @@ textarea:focus {
   border-radius: 8px;
   flex-grow: 1;
   scroll-behavior: smooth; /* 자동으로 스크롤 이동 애니메이션 적용 */
-  max-height: 500px; /* 적절한 높이로 설정 (조절 가능) */
+  max-height: 700px; /* 적절한 높이로 설정 (조절 가능) */
 }
 
 /* 채팅창 내부 스타일링 */
@@ -234,13 +235,13 @@ textarea:focus {
                 <span class="d-block mb-1" th:text="${channel.categoryEntityOfChannel.categoryName}"></span>
                 <small class="d-block" th:text="|${channel.channelViewerCount} 명 시청중|"></small>
             </div>
-            <div class="ms-auto" style="margin-right: 112px">
+            <div class="ms-auto" style="position: relative; left: 150px">
                 <input class="d-none" id="authentication" th:value="${#authentication != null ? #authentication.name : null}" />
                 <input class="d-none" id="channelUserId" th:value="${streamer.userId}" />
                 <input class="d-none" id="channelUserNickname" th:value="${streamer.userNickname}" />
                 <input class="d-none" id="loginUserId" th:value="${userAccount.userId}"/>
                 <input class="d-none" id="channelStateSet" th:value="${channel.streamingStateSet}"/>
-                <button id="followBtn" type="button" class="btn btn-outline-primary mb-2" onclick="follow()">팔로우 <i class="fas fa-heart"></i></button>
+                <button id="followBtn" type="button" class="btn btn-outline-primary" onclick="follow()">팔로우 <i class="fas fa-heart"></i></button>
                 <button id="unfollowBtn" type="button" class="btn btn-outline-danger d-none" onclick="unfollow()">팔로우 <i class="fas fa-heart-broken"></i></button>
             </div>
         </div>
@@ -397,7 +398,7 @@ if (channelStateSet.value.includes('ON')) {
           <div class="msgArea"></div>
         </div>
         <div class="input-group input-group-sm">
-          <textarea  type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="2" style="margin-bottom: 5px;" maxlength="1000"></textarea>
+          <textarea type="text" placeholder="보낼 메세지를 입력하세요." class="form-control content" rows="2" style="margin-bottom: 5px;" maxlength="1000"></textarea>
         </div>
         <div class="flexAndBetween">
           <input class="chatState" style="display: none;" th:value="${chatState}">
@@ -684,49 +685,42 @@ if (channelStateSet.value.includes('ON')) {
         `   </ul>             
         </div>`;
         
-     // sender가 해당 채널의 스트리머일 경우 강조해서 표시
+     // 랜덤 색상 매핑 객체
+        let colorMapping = {};
+
+        // 랜덤 색상 생성 함수
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // sender가 해당 채널의 스트리머일 경우 강조해서 표시
         if (message.sender === [[${streamer.userNickname}]]) {
             newMsg.innerHTML = '👑' + '<strong>' + message.sender + ':' + message.message + '</strong>';
         } else {
             let senderDisplayName = message.sender;
 
-            // 랜덤 색상 매핑 객체
-            let colorMapping = {};
+            // 저장된 닉네임에 대한 랜덤 색상 확인
+            let senderColor = colorMapping[senderDisplayName];
 
-            // 랜덤 색상 생성 함수
-            function getRandomColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            }
-
-            // 저장된 닉네임과 색상 사용 여부 확인
-            if (colorMapping[senderDisplayName]) {
-                const senderColor = colorMapping[senderDisplayName];
-
-                if (message.userType === "MANAGER") {
-                    senderDisplayName = '⚔' + senderDisplayName;
-                } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
-                    senderDisplayName = '👍︎' + senderDisplayName;
-                }
-
-                newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
-            } else {
-                // 닉네임에 대한 랜덤 색상 생성
-                const senderColor = getRandomColor();
+            // 색상이 없다면 새로운 랜덤 색상 생성
+            if (!senderColor) {
+                senderColor = getRandomColor();
                 colorMapping[senderDisplayName] = senderColor;
-
-                if (message.userType === "MANAGER") {
-                    senderDisplayName = '⚔' + senderDisplayName;
-                } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
-                    senderDisplayName = '👍︎' + senderDisplayName;
-                }
-
-                newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
             }
+
+            // 채팅 타입에 따라 닉네임과 메시지 출력
+            if (message.userType === "MANAGER") {
+                senderDisplayName = '⚔' + senderDisplayName;
+            } else if (message.userType === "FOLLOW") { // 팔로워일 경우 채팅 변경
+                senderDisplayName = '👍︎' + senderDisplayName;
+            }
+
+            newMsg.innerHTML = `<span style="color: ${senderColor};">${senderDisplayName}:</span> ${message.message}`;
         }
 
         if (message.type === 'TALK') {

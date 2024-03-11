@@ -29,8 +29,24 @@ a.aStyle {
 <nav th:replace="~{layout/fragments :: mysidebar}"></nav>
 <section class="home">
 <div class="container mt-5">
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: transparent;">
+    <div class="container">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item me-3">
+                <a class="nav-link btn btn-outline-secondary fs-5" style="border-bottom: 1px solid white;" th:href="@{/settings/profile}">프로필 편집</a>
+            </li>
+            <li class="nav-item me-3">
+                <a class="nav-link btn btn-outline-secondary fs-5" style="border-bottom: 5px double #8a2be2;" th:href="@{/settings/followers-list}">팔로워 목록</a>
+            </li>
+            <li class="nav-item me-3">
+                <a class="nav-link btn btn-outline-secondary fs-5" style="border-bottom: 1px solid white;" th:href="@{/settings/channelinfo}">방송 정보 편집</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
     <div class="text-white">
-        <h1 class="fw-bold text-start">팔로워</h1>
         
         <hr class="text-white">
         
@@ -46,7 +62,7 @@ a.aStyle {
     <div class="container">
         <div class="row justify-content-center mt-4">
             <div class="col-md-6">
-                <form class="input-group" method="get" th:action="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname})}">
+                <form class="input-group" method="get" th:action="@{/settings/followers-search(username=${userAccount.userNickname})}">
                     <input id="followersKeyword" class="inputStyle form-control bg-dark text-white" name="keyword" placeholder="팔로워를 검색하세요." required/>
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary mx-2">검색</button>
@@ -103,11 +119,10 @@ a.aStyle {
             <tbody>
                 <tr th:each="searchResult, iterStat : ${searchResult}" th:object="${searchResult}">
                     <td>
-                        <img th:src="*{followerUserAcoountUserProfileImageUrl}" th:alt="img" style="width: 50px; height: 50px;"/>
                         <span th:text="*{followerUserAccountUserNickname}"></span>
                     </td>
                     <td th:text="*{#temporals.format(createdTime, 'YYYY년 MM월 dd일 HH:mm:ss')}"></td>
-                    <td th:text="${searchResult.betweenCreatedTimeToNow == 0 ? '오늘' : followersList.betweenCreatedTimeToNow + '일 동안 팔로우'}"></td>
+                    <td th:text="${searchResult.betweenCreatedTimeToNow == 0 ? '오늘' : searchResult.betweenCreatedTimeToNow + '일 동안 팔로우'}"></td>
                 </tr>
             </tbody>
         </table>        
@@ -117,20 +132,20 @@ a.aStyle {
                 <li class="page-item"
                     th:classappend="${!followersList.hasPrevious} ? 'disabled'">
                     <a class="aStyle page-link bg-dark text-white"
-                        th:href="@{/dashboard/u/{username}/community/followers-list(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${followersList.number - 1})}">&lt;</a>
+                        th:href="@{/settings/followers-list(keyword=${param.keyword}, p=${followersList.number - 1})}">&lt;</a>
                 </li>
                 <li class="page-item"
                     th:each="pageNo : ${#numbers.sequence(0, followersList.totalPages - 1)}"
                     th:if="${pageNo > followersList.number - 5 && pageNo <= followersList.number + 5}"
                     th:classappend="${pageNo == followersList.number} ? 'active'">
                     <a class="aStyle page-link"
-                        th:href="@{/dashboard/u/{username}/community/followers-list(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${pageNo})}"
+                        th:href="@{/settings/followers-list(keyword=${param.keyword}, p=${pageNo})}"
                         th:text="${pageNo + 1}"></a>
                 </li>
                 <li class="page-item"
                     th:classappend="${!followersList.hasNext} ? 'disabled'">
                     <a class="aStyle page-link bg-dark text-white"
-                        th:href="@{/dashboard/u/{username}/community/followers-list(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${followersList.number + 1})}">&gt;</a>
+                        th:href="@{/settings/followers-list(keyword=${param.keyword}, p=${followersList.number + 1})}">&gt;</a>
                 </li>
             </ul>
         </div>
@@ -140,20 +155,20 @@ a.aStyle {
                 <li class="page-item"
                     th:classappend="${!searchResult.hasPrevious} ? 'disabled'">
                     <a class="aStyle page-link bg-dark text-white"
-                        th:href="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${searchResult.number - 1})}">&lt;</a>
+                        th:href="@{/settings/followers-search(keyword=${param.keyword}, p=${searchResult.number - 1})}">&lt;</a>
                 </li>
                 <li class="page-item"
                     th:each="pageNo : ${#numbers.sequence(0, searchResult.totalPages - 1)}"
                     th:if="${pageNo > searchResult.number - 5 && pageNo <= searchResult.number + 5}"
                     th:classappend="${pageNo == searchResult.number} ? 'active'">
                     <a class="aStyle page-link"
-                        th:href="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${pageNo})}"
+                        th:href="@{/settings/followers-search(keyword=${param.keyword}, p=${pageNo})}"
                         th:text="${pageNo + 1}"></a>
                 </li>
                 <li class="page-item"
                     th:classappend="${!searchResult.hasNext} ? 'disabled'">
                     <a class="aStyle page-link bg-dark text-white"
-                        th:href="@{/dashboard/u/{username}/community/followers-search(username=${userAccount.userNickname}, keyword=${param.keyword}, p=${searchResult.number + 1})}">&gt;</a>
+                        th:href="@{/settings/followers-search(keyword=${param.keyword}, p=${searchResult.number + 1})}">&gt;</a>
                 </li>
             </ul>
         </div>
